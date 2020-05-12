@@ -4,6 +4,7 @@ HallProbe::HallProbe(String name, int pin)
 {
   _name = name;  
   _pin = pin;
+  _last_positive_time = 0;
 
   pinMode(_pin, INPUT_PULLUP);
 }
@@ -19,13 +20,16 @@ void HallProbe::updateState()
   if ((millis() - _lastDebounceTime) > DEBOUNCE_DELAY) {
     if (_reading != _state) {
       _state = _reading;
-      if (_state == HIGH) {
-        Serial.print(_name);
-        Serial.print(":");
-        Serial.println(_pin);
+      if (_state == LOW) {
+        _last_positive_time = millis();
       }
     }
   }
 
   _lastState = _reading;
+}
+
+unsigned long HallProbe::getLastPositive()
+{
+  return _last_positive_time;
 }

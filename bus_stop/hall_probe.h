@@ -11,10 +11,13 @@ class HallProbe
   public:
     HallProbe(String name, int pin);
     void updateState();
+    unsigned long getLastPositive();
     
    private: 
     String _name;
     int _pin;
+
+    unsigned long _last_positive_time;
 
     int _reading;
     int _lastState;
