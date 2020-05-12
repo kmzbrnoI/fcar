@@ -1,9 +1,9 @@
 #include "hall_probe.h"
 
-HallProbe::HallProbe(String name, int pin)
+HallProbe::HallProbe(int pin)
+  :
+  _pin(pin)
 {
-  _name = name;  
-  _pin = pin;
   _last_positive_time = 0;
 
   pinMode(_pin, INPUT_PULLUP);

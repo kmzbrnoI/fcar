@@ -2,29 +2,24 @@
 #define JUNCTION_H
 
 #include <Arduino.h>
-#include <Servo.h>
+#include "servo_handler.h"
 
-#define PLUS_STATE 0
-#define MINUS_STATE 1
+#define JUNCTION_PLUS_DIRECTION 1
+#define JUNCTION_MINUS_DIRECTION 2
 
 class Junction
 {
   public:
-    Junction(String name, int pin, int plus_angle, int minus_angle);
-    int getState();
+    Junction(int pin, int plus_angle, int minus_angle);
+    int getDirection();
     void to_plus();
     void to_minus();
 
   private: 
-    Servo _servo;
-    const String _name;
-    const int _pin;
+    ServoHandler* _servo_handler;
     const int _plus_angle;
     const int _minus_angle;
     int _state;
-    
-    int _current_angle;
 
-    void move_to(int angle);
 };
 #endif /* JUNCTION_H */

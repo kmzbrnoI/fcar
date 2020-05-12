@@ -1,61 +1,51 @@
 #include "hall_probe.h"
 #include "junction.h"
+#include "semaphore.h"
 
-HallProbe* controll_probe;
+HallProbe* drive_probe;
 HallProbe* type_probe;
-Junction* junction_a;
-Junction* stop_signal;
+Junction* junction;
+Semaphore* semaphore;
 
-//TODO: Rename Junction to servo_handler and define which position means what
-
-
-#define BUS_TRANSIT 5000
-
+#define SWITCH_PASSAGE_TIME 4000  // projeti vyhybkou
+#define TOTAL_PASSAGE_TIME  8000  // projeti celym usekem zastavky
 
 void setup() {
 
-  // controll_probe = new HallProbe("Controll Probe", 2);
-  type_probe = new HallProbe("Type Probe", 5);
-  junction_a = new Junction("Switch A", 9, 30, 120);
-  // stop_signal = new Junction("Stop Signal", 10, 0, 90);
+  drive_probe = new HallProbe(2);
+  type_probe = new HallProbe(5);
+  junction = new Junction(9, 30, 120);
+  semaphore = new Semaphore(10, 0, 90);
 
-  junction_a->to_plus();
+  junction->to_plus();
+  semaphore->signal_green();
 
+/*
   Serial.begin(9600);
   while (!Serial) {
     ;
   }
+*/
+
 }
 
 void loop() {
 
-  // controll_probe->updateState();
+  drive_probe->updateState();
   type_probe->updateState();
 
-  // Switch junction if bus (and return it back)
-  unsigned long delta = millis() - type_probe->getLastPositive();
-  if (delta < BUS_TRANSIT && (junction_a->getState() == PLUS_STATE)) {
-    junction_a->to_minus();
-
-    Serial.print("A last_positive: ");
-    Serial.print(type_probe->getLastPositive());
-    Serial.print(" millis: ");
-    Serial.print(millis());
-    Serial.print(" :: ");
-    Serial.println(delta);
+  // switch junction if the vehicle is a bus (and return it back)
+  unsigned long switch_delta = millis() - type_probe->getLastPositive();
+  if (switch_delta < SWITCH_PASSAGE_TIME && (junction->getDirection() == JUNCTION_PLUS_DIRECTION)) {
+    junction->to_minus();
+    semaphore->signal_red();
+  } else if (switch_delta > SWITCH_PASSAGE_TIME && (junction->getDirection() == JUNCTION_MINUS_DIRECTION)) {
+    junction->to_plus();
   }
 
-  if (delta > BUS_TRANSIT && (junction_a->getState() == MINUS_STATE)) {
-    junction_a->to_plus();
-
-    Serial.print("B last_positive: ");
-    Serial.print(type_probe->getLastPositive());
-    Serial.print(" millis: ");
-    Serial.print(millis());
-    Serial.print(" :: ");
-    Serial.println(delta);
+  // departure from the bus stop
+  unsigned long drive_delta = millis() - drive_probe->getLastPositive();
+  if (drive_delta > TOTAL_PASSAGE_TIME && semaphore->getSignal() == SEMAPHORE_RED) {
+      semaphore->signal_green();
   }
-
-
-
 }
