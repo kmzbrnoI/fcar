@@ -4,11 +4,8 @@
 #include <Arduino.h>
 #include "servo_handler.h"
 
-/* Constant for PLUS direction */
-#define JUNCTION_PLUS_DIRECTION 1
-
-/* Constant for RED direction */
-#define JUNCTION_MINUS_DIRECTION 2
+/* Constants for direction */
+enum class JDirection { plus, minus }; 
 
 /* Junction logic */
 class Junction
@@ -22,8 +19,8 @@ class Junction
      */
     Junction(int pin, int plus_angle, int minus_angle);
     
-    /* Returns JUNCTION_PLUS_DIRECTION or JUNCTION_MINUS_DIRECTION according to current state */
-    int getDirection();
+    /* Returns JunctionDirection according to current state */
+    JDirection getDirection();
     
     /* Turn junction to PLUS */
     void to_plus();
@@ -35,7 +32,7 @@ class Junction
     ServoHandler* _servo_handler;   // ServoHandler, see servo_handler.h
     const int _plus_angle;          // servo angle for plus direction
     const int _minus_angle;         // servo angle for minus direction
-    int _state;                     // state of junction (JUNCTION_PLUS_DIRECTION or JUNCTION_MINUS_DIRECTION)
+    JDirection _state;              // state of junction (plus or minus)
 
 };
 #endif /* JUNCTION_H */
