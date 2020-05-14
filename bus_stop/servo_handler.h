@@ -5,7 +5,7 @@
 #include <Servo.h>
 
 /* to reduce the power consumption, we move the servo slowly */
-#define SERVO_MOVE_DELAY 3
+const int SERVO_MOVE_DELAY = 3;
 
 /* Direct communication with the servo */
 class ServoHandler
