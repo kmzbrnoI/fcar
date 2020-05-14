@@ -27,12 +27,12 @@ void setup() {
   /* Start uo of hardware blocks*/
   drive_probe_a = new HallProbe(5);
   type_probe_a = new HallProbe(4);
-  junction_a = new Junction(9, 30, 120);
+  junction_a = new Junction(9, 0, 30);
   semaphore_a = new Semaphore(11, 0, 90);
 
   drive_probe_b = new HallProbe(3);
   type_probe_b = new HallProbe(2);
-  junction_b = new Junction(6, 30, 120);
+  junction_b = new Junction(6, 0, 30);
   semaphore_b = new Semaphore(10, 0, 90);
 }
 
