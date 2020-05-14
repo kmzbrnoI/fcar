@@ -6,10 +6,10 @@ Junction::Junction(int pin, int plus_angle, int minus_angle)
   _minus_angle(minus_angle)
 {
   _servo_handler = new ServoHandler(pin, _plus_angle);
-  _state = JUNCTION_PLUS_DIRECTION; 
+  _state = JDirection::plus; 
 }
 
-int Junction::getDirection()
+JDirection Junction::getDirection()
 {
   return _state;  
 }
@@ -17,11 +17,11 @@ int Junction::getDirection()
 void Junction::to_plus()
 {
   _servo_handler->move_to(_plus_angle);
-  _state = JUNCTION_PLUS_DIRECTION;
+  _state = JDirection::plus;
 }
 
 void Junction::to_minus()
 {
   _servo_handler->move_to(_minus_angle);
-  _state = JUNCTION_MINUS_DIRECTION;
+  _state = JDirection::minus;
 }
