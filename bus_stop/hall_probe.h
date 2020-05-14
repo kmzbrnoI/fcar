@@ -4,7 +4,7 @@
 #include "Arduino.h"
 
 /* Constant for DEBOUNCE delay */
-#define DEBOUNCE_DELAY 15
+const int DEBOUNCE_DELAY = 15;
 
 /* Direct communication with Hall's probe */
 class HallProbe

@@ -4,11 +4,8 @@
 #include <Arduino.h>
 #include "servo_handler.h"
 
-/* Constant for GREEN signal */
-#define SEMAPHORE_GREEN 1
-
-/* Constant for RED signal */
-#define SEMAPHORE_RED 2
+/* Constant for signals */
+enum class SSignal { green, red };
 
 /* Semaphore logic */
 class Semaphore
@@ -22,20 +19,20 @@ class Semaphore
      */
     Semaphore(int pin, int green_angle, int red_angle);
     
-    /* Returns SEMAPHORE_GREEN or SEMAPHORE_RED according to current state */
-    int getSignal();
+    /* Returns SSignal according to current state */
+    SSignal getSignal();
     
-    /* Turn semaphore to GREEN */
+    /* Turn semaphore to green */
     void signal_green();
     
-    /* Turn semaphore to RED */
+    /* Turn semaphore to red */
     void signal_red();
 
   private: 
     ServoHandler* _servo_handler;   // ServoHandler, see servo_handler.h
     const int _green_angle;         // servo angle for green signal
     const int _red_angle;           // servo angle for red signal
-    int _state;                     // state of semaphore (SEMAPHORE_GREEN or SEMAPHORE_RED)
+    SSignal _state;                 // state of semaphore (green or red)
 
 };
 #endif /* SEMAPHORE_H */
