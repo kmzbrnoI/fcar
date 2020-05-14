@@ -15,8 +15,8 @@ Junction* junction_b;
 Semaphore* semaphore_b;
 
 /* Time constants describing the situation */
-#define SWITCH_PASSAGE_TIME 4000  // projeti vyhybkou
-#define TOTAL_PASSAGE_TIME  8000  // projeti celym usekem zastavky
+#define SWITCH_PASSAGE_TIME 3000  // projeti vyhybkou
+#define TOTAL_PASSAGE_TIME  9000  // projeti celym usekem zastavky
 
 
 void setup() {
