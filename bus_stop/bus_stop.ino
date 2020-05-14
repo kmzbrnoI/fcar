@@ -3,10 +3,16 @@
 #include "semaphore.h"
 
 /* All hardware blocks connected to Arduino */
-HallProbe* drive_probe;
-HallProbe* type_probe;
-Junction* junction;
-Semaphore* semaphore;
+// direction A
+HallProbe* drive_probe_a;
+HallProbe* type_probe_a;
+Junction* junction_a;
+Semaphore* semaphore_a;
+// direction B
+HallProbe* drive_probe_b;
+HallProbe* type_probe_b;
+Junction* junction_b;
+Semaphore* semaphore_b;
 
 /* Time constants describing the situation */
 #define SWITCH_PASSAGE_TIME 4000  // projeti vyhybkou
@@ -16,14 +22,22 @@ Semaphore* semaphore;
 void setup() {
 
   /* Start uo of hardware blocks*/
-  drive_probe = new HallProbe(2);
-  type_probe = new HallProbe(5);
-  junction = new Junction(9, 30, 120);
-  semaphore = new Semaphore(10, 0, 90);
+  drive_probe_a = new HallProbe(2);
+  type_probe_a = new HallProbe(5);
+  junction_a = new Junction(9, 30, 120);
+  semaphore_a = new Semaphore(10, 0, 90);
+
+  drive_probe_b = new HallProbe(3);
+  type_probe_b = new HallProbe(6);
+  junction_b = new Junction(7, 30, 120);
+  semaphore_b = new Semaphore(8, 0, 90);
 
   /* set up defaults */
-  junction->to_plus();
-  semaphore->signal_green();
+  junction_a->to_plus();
+  semaphore_a->signal_green();
+
+  junction_b->to_plus();
+  semaphore_b->signal_green();
 
   /* use this if you want degug */
   /*
@@ -35,8 +49,8 @@ void setup() {
 
 }
 
-void loop() {
-
+void manage_bus_stop(HallProbe* drive_probe, HallProbe* type_probe, Junction* junction, Semaphore* semaphore)
+{
   // Read signals from probes
   drive_probe->updateState();
   type_probe->updateState();
@@ -57,4 +71,11 @@ void loop() {
   if (drive_delta > TOTAL_PASSAGE_TIME && semaphore->getSignal() == SEMAPHORE_RED) {
     semaphore->signal_green();
   }
+}
+
+void loop() {
+
+  manage_bus_stop(drive_probe_a, type_probe_a, junction_a, semaphore_a);
+  manage_bus_stop(drive_probe_b, type_probe_b, junction_b, semaphore_b);
+
 }
