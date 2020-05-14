@@ -43,7 +43,9 @@ void loop() {
 
   // switch junction if the vehicle is a bus (and return it back)
   unsigned long switch_delta = millis() - type_probe->getLastPositive();
-  if (switch_delta < SWITCH_PASSAGE_TIME && (junction->getDirection() == JUNCTION_PLUS_DIRECTION)) {
+  if (switch_delta < SWITCH_PASSAGE_TIME &&
+      junction->getDirection() == JUNCTION_PLUS_DIRECTION &&
+      semaphore->getSignal() == SEMAPHORE_GREEN) {
     junction->to_minus();
     semaphore->signal_red();
   } else if (switch_delta > SWITCH_PASSAGE_TIME && (junction->getDirection() == JUNCTION_MINUS_DIRECTION)) {
