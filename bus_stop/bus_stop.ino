@@ -27,13 +27,13 @@ void setup() {
   /* Start uo of hardware blocks*/
   drive_probe_a = new HallProbe(5);
   type_probe_a = new HallProbe(4);
-  junction_a = new Junction(9, 0, 30);
-  semaphore_a = new Semaphore(11, 0, 90);
+  junction_a = new Junction(9, 5, 45);
+  semaphore_a = new Semaphore(11, 0, 80);
 
   drive_probe_b = new HallProbe(3);
   type_probe_b = new HallProbe(2);
-  junction_b = new Junction(6, 0, 30);
-  semaphore_b = new Semaphore(10, 0, 90);
+  junction_b = new Junction(6, 5, 45);
+  semaphore_b = new Semaphore(10, 0, 80);
 }
 
 void manage_bus_stop(HallProbe* drive_probe, HallProbe* type_probe, Junction* junction, Semaphore* semaphore)
