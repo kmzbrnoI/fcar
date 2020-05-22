@@ -24,7 +24,7 @@ const int TOTAL_PASSAGE_TIME = 9000;  // projeti celym usekem zastavky
 
 void setup() {
 
-  /* Start uo of hardware blocks*/
+  /* Start up of hardware blocks*/
   drive_probe_a = new HallProbe(5);
   type_probe_a = new HallProbe(4);
   junction_a = new Junction(9, 5, 45);
@@ -32,8 +32,9 @@ void setup() {
 
   drive_probe_b = new HallProbe(3);
   type_probe_b = new HallProbe(2);
-  junction_b = new Junction(6, 5, 45);
+  junction_b = new Junction(6, 45, 5);
   semaphore_b = new Semaphore(10, 0, 80);
+
 }
 
 void manage_bus_stop(HallProbe* drive_probe, HallProbe* type_probe, Junction* junction, Semaphore* semaphore)

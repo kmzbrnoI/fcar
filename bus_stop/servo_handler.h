@@ -5,7 +5,7 @@
 #include <Servo.h>
 
 /* to reduce the power consumption, we move the servo slowly */
-const int SERVO_MOVE_DELAY = 3;
+const int SERVO_MOVE_DELAY = 12;
 
 /* Direct communication with the servo */
 class ServoHandler
@@ -26,6 +26,7 @@ class ServoHandler
 
   private: 
     Servo _servo;           // servo object from Servo library
+    const int _pin;
     int _current_angle;     // current angle
 };
 #endif /* SERVO_HANDLER_H */
