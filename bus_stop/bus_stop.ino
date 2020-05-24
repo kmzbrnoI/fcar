@@ -27,7 +27,7 @@ void setup() {
   /* Start up of hardware blocks*/
   drive_probe_a = new HallProbe(5);
   type_probe_a = new HallProbe(4);
-  junction_a = new Junction(9, 5, 45);
+  junction_a = new Junction(9, 45, 5);
   semaphore_a = new Semaphore(11, 0, 80);
 
   drive_probe_b = new HallProbe(3);
