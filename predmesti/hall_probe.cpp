@@ -1,8 +1,9 @@
 #include "hall_probe.h"
 
-HallProbe::HallProbe(int pin)
+HallProbe::HallProbe(int pin, const char* name)
   :
-  _pin(pin)
+  _pin(pin),
+  _name(name)
 {
   _last_positive_time = 0;
 
@@ -22,6 +23,8 @@ void HallProbe::updateState()
       _state = _reading;
       if (_state == LOW) {
         _last_positive_time = millis();
+        Serial.print("----- Hall probe: ");
+        Serial.println(_name);
       }
     }
   }

@@ -14,7 +14,7 @@ class HallProbe
      * Constructor
      * int pin (IN) arduino pin number
      */
-    HallProbe(int pin);
+    HallProbe(int pin, const char* name);
     
     /* Update state from probe */
     void updateState();
@@ -25,7 +25,7 @@ class HallProbe
    private: 
     unsigned long _last_positive_time;  // timestamp of last positive state
     const int _pin;                     // arduino pin wehere probe is connected
-    
+    const char* _name;
     /*
      * The logic of Hall's sond is not straightforward, it cannot remember about
      * it's states in past. Those variables help us to implement it.
