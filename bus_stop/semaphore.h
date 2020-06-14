@@ -1,6 +1,10 @@
 #ifndef SEMAPHORE_H
 #define SEMAPHORE_H
 
+////////////////////////////////////////////////////////////////////////////////
+// Zastavovaci magnet ovladany servem
+////////////////////////////////////////////////////////////////////////////////
+
 #include <Arduino.h>
 #include "servo_handler.h"
 
@@ -18,17 +22,17 @@ class Semaphore
      * int red_angle (IN) servo angle for red signal
      */
     Semaphore(int pin, int green_angle, int red_angle);
-    
+
     /* Returns SSignal according to current state */
     SSignal getSignal();
-    
+
     /* Turn semaphore to green */
     void signal_green();
-    
+
     /* Turn semaphore to red */
     void signal_red();
 
-  private: 
+  private:
     ServoHandler* _servo_handler;   // ServoHandler, see servo_handler.h
     const int _green_angle;         // servo angle for green signal
     const int _red_angle;           // servo angle for red signal

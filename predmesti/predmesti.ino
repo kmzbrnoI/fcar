@@ -1,4 +1,6 @@
 #include "hall_probe.h"
+#include "coil_semaphore.h"
+#include "switch_junction.h"
 #include "path.h"
 
 /* All hardware blocks connected to Arduino */
@@ -64,15 +66,15 @@ void setup() {
   /* Start up of hardware blocks*/
   type_probe_01 = new HallProbe(1, "tp_01");
   fh01 = new HallProbe(2, "FH01");
-  fh02 = new HallProbe(4, "FH02"); // OK
-  fh03 = new HallProbe(6, "FH03");  // OK
-  fh05 = new HallProbe(11, "FH05"); // OK
-  fh06 = new HallProbe(9, "FH06"); // OK
-  fh07 = new HallProbe(14, "FH07");  // OK
-  fh09 = new HallProbe(18, "FH09");  // OK
-  fh10 = new HallProbe(17, "FH10"); // OK
-  fh11 = new HallProbe(23, "FH11"); // OK
-  fh13 = new HallProbe(22, "FH13");  // OK
+  fh02 = new HallProbe(4, "FH02");
+  fh03 = new HallProbe(6, "FH03");
+  fh05 = new HallProbe(11, "FH05");
+  fh06 = new HallProbe(9, "FH06");
+  fh07 = new HallProbe(14, "FH07");
+  fh09 = new HallProbe(18, "FH09");
+  fh10 = new HallProbe(17, "FH10");
+  fh11 = new HallProbe(23, "FH11");
+  fh13 = new HallProbe(22, "FH13");
   fh21 = new HallProbe(7, "FH21"); // nefunguje FH21
   fh22 = new HallProbe(5, "FH22"); // nefunguje FH22
   fh23 = new HallProbe(10, "FH23");
