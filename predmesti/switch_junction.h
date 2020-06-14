@@ -9,7 +9,7 @@
 #include "servo_handler.h"
 
 /* Constants for direction */
-enum class SJDirection { zero, plus, minus };
+enum class SJDirection { released, plus, minus };
 
 /* Junction logic */
 class Junction
@@ -22,7 +22,7 @@ class Junction
     JDirection getDirection();
 
     /* Turn junction to ZERO (uvoleni zaveru) */
-    void to_zero();
+    void release();
 
     /* Turn junction to PLUS */
     void to_plus();
