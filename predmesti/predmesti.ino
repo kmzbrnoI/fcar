@@ -60,7 +60,7 @@ VPath* s07_fh08;
 VPath* fh08_s08;
 
 
-const int TECHNOLOGY_TIME = 600;
+const int TECHNOLOGY_TIME = 25;
 
 void setup() {
   /* Start up of hardware blocks*/
