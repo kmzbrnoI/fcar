@@ -19,13 +19,13 @@ HallProbe* fh10;
 HallProbe* fh11;
 HallProbe* fh12;
 HallProbe* fh13;
+HallProbe* fh20;
 HallProbe* fh21;
 HallProbe* fh22;
 HallProbe* fh23;
 HallProbe* fh30;
 
 HallProbe* fhaa;
-HallProbe* fhbb;
 
 // pin 19 -- přejezd G ve výstraze
 // pin 20 -- přejezd G ve obsazen
@@ -59,29 +59,53 @@ VPath* fh07_s07;
 VPath* s07_fh08;
 VPath* fh08_s08;
 
+/*
+CoilSemaphore(int pin);
+Junction(int pin_plus, int pin_minus);
+Crossing(int caution_pin, int occupation_pin);
+*/
+
+Junction* j_a;
+Junction* j_b;
+Junction* j_c;
+
+CoilSemaphore* s02;
+CoilSemaphore* s06;
+CoilSemaphore* s07;
+CoilSemaphore* s09;
+CoilSemaphore* s11;
+CoilSemaphore* s13;
+
+CoilSemaphore* s_a1;
+CoilSemaphore* s_a2;
+CoilSemaphore* s_a3;
+CoilSemaphore* s_a4;
+CoilSemaphore* s_a5;
+CoilSemaphore* s_a6;
 
 const int TECHNOLOGY_TIME = 25;
 
 void setup() {
   /* Start up of hardware blocks*/
-  type_probe_01 = new HallProbe(1, "tp_01");
-  fh01 = new HallProbe(2, "FH01");
+  //type_probe_01 = new HallProbe(1, "tp_01");
+  //fh01 = new HallProbe(, "FH01");
   fh02 = new HallProbe(4, "FH02");
   fh03 = new HallProbe(6, "FH03");
   fh05 = new HallProbe(11, "FH05");
   fh06 = new HallProbe(9, "FH06");
   fh07 = new HallProbe(14, "FH07");
+  fh08 = new HallProbe(15, "FH08");
   fh09 = new HallProbe(18, "FH09");
   fh10 = new HallProbe(17, "FH10");
   fh11 = new HallProbe(23, "FH11");
   fh13 = new HallProbe(22, "FH13");
-  fh21 = new HallProbe(7, "FH21"); // nefunguje FH21
+  fh20 = new HallProbe(2, "FH20");
+  fh21 = new HallProbe(7, "FH21");
   fh22 = new HallProbe(5, "FH22"); // nefunguje FH22
   fh23 = new HallProbe(10, "FH23");
   fh30 = new HallProbe(16, "FH30");
 
   fhaa = new HallProbe(8, "FHaa"); // nepouzito
-  fhbb = new HallProbe(15, "FHbb"); //
 
   fh02_s02 = new VPath("fh02_s02");
   s02_fh03 = new VPath("s02_fh03");
@@ -108,6 +132,25 @@ void setup() {
   fh08_s08 = new VPath("fh08_s08");
   s08_fh09 = new VPath("s08_fh09");
 
+  j_a = new Junction(40, 41);
+  j_b = new Junction(42, 43);
+  j_c = new Junction(27, 39);
+
+  s02 = new CoilSemaphore(29);
+  s06 = new CoilSemaphore(36);
+  s07 = new CoilSemaphore(37);
+  s09 = new CoilSemaphore(33);
+  s11 = new CoilSemaphore(30);
+  s13 = new CoilSemaphore(34); // FM13_next
+
+  s_a1 = new CoilSemaphore(26); // FM10
+  s_a2 = new CoilSemaphore(28); // FM12 (XX)
+  s_a3 = new CoilSemaphore(31); // FM08
+  s_a4 = new CoilSemaphore(32); // FM20
+  s_a5 = new CoilSemaphore(38); // FM13
+  s_a6 = new CoilSemaphore(35); // FM29
+  
+
   Serial.begin(9600);
   while (!Serial) {
     ;
@@ -116,8 +159,8 @@ void setup() {
 
 void loop() {
   // Read signals from probes
-  type_probe_01->updateState();
-  fh01->updateState();
+  //type_probe_01->updateState();
+  //fh01->updateState();
   fh02->updateState();
   fh03->updateState();
   fh05->updateState();
@@ -129,12 +172,32 @@ void loop() {
   fh11->updateState();
   fh12->updateState();
   fh13->updateState();
+  fh21->updateState();
   fh22->updateState();
   fh23->updateState();
 
   fhaa->updateState();
-  fhbb->updateState();
   fh30->updateState();
+
+  j_a->to_plus();
+  j_b->to_plus();
+  j_c->to_plus();
+
+  s02->signal_green();
+  s06->signal_green();
+  s07->signal_green();
+  s09->signal_green();
+  s11->signal_green();
+  s13->signal_green();
+
+  s_a1->signal_green();
+  s_a2->signal_green();
+  s_a3->signal_green();
+  s_a4->signal_green();
+  s_a5->signal_green();
+  s_a6->signal_green();
+
+            
 
   unsigned long drive_delta_02 = millis() - fh02->getLastPositive();
   if (drive_delta_02 < TECHNOLOGY_TIME) {
@@ -176,7 +239,6 @@ void loop() {
     // logika s10
     fh10_s10->occupy();
 
-
     s10_fh02->occupy();
     fh10_s10->occupy();
     fh10_s10->occupy();
@@ -205,4 +267,5 @@ void loop() {
     fh22_fh23->release();
     s10_fh02->release();
   }
+
 }

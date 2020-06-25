@@ -1,6 +1,6 @@
 #include "coil_semaphore.h"
 
-Semaphore::Semaphore(int pin)
+CoilSemaphore::CoilSemaphore(int pin)
   :
   _pin(pin)
 {
@@ -8,18 +8,18 @@ Semaphore::Semaphore(int pin)
   signal_green();
 }
 
-SSignal Semaphore::getSignal()
+SSignal CoilSemaphore::getSignal()
 {
   return _state;
 }
 
-void Semaphore::signal_green()
+void CoilSemaphore::signal_green()
 {
   digitalWrite(_pin, LOW);
   _state = SSignal::green;
 }
 
-void Semaphore::signal_red()
+void CoilSemaphore::signal_red()
 {
   digitalWrite(_pin, HIGH);
   _state = SSignal::red;

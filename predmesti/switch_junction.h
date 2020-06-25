@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Arduino.h>
-#include "servo_handler.h"
 
 /* Constants for direction */
 enum class SJDirection { released, plus, minus };
@@ -19,7 +18,7 @@ class Junction
     Junction(int pin_plus, int pin_minus);
 
     /* Returns JunctionDirection according to current state */
-    JDirection getDirection();
+    SJDirection getDirection();
 
     /* Turn junction to ZERO (uvoleni zaveru) */
     void release();

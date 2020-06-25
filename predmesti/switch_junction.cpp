@@ -8,7 +8,7 @@ Junction::Junction(int plus_pin, int minus_pin)
   pinMode(_plus_pin, OUTPUT);
   pinMode(_minus_pin, OUTPUT);
 
-  release();
+  this->release();
 }
 
 SJDirection Junction::getDirection()
@@ -21,6 +21,7 @@ void Junction::release()
   digitalWrite(_plus_pin, LOW);
   digitalWrite(_minus_pin, LOW);
   _state = SJDirection::released;
+  //Serial.println("release");
 }
 
 void Junction::to_plus()
@@ -28,6 +29,7 @@ void Junction::to_plus()
   digitalWrite(_plus_pin, HIGH);
   digitalWrite(_minus_pin, LOW);
   _state = SJDirection::plus;
+  //Serial.println("plus");
 }
 
 void Junction::to_minus()
@@ -35,4 +37,5 @@ void Junction::to_minus()
   digitalWrite(_plus_pin, LOW);
   digitalWrite(_minus_pin, HIGH);
   _state = SJDirection::minus;
+  //Serial.println("minus");
 }
