@@ -3,16 +3,17 @@
 
 #include <Arduino.h>
 
-/* Constant for signals */
-enum class VPathStatus { clear, occupied };
+enum class VPathStatus { clear, occupied, reserved };
 
-/* Semaphore logic */
 class VPath
 {
   public:
     VPath(const char* name);
     void occupy();
     void release();
+    void reserve();
+    void cancel_reservation();
+    bool is_clear();
     
   private: 
     const char* _name;
