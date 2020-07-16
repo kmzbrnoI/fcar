@@ -9,6 +9,8 @@ class VPath
 {
   public:
     VPath(const char* name);
+    void car_in();
+    void car_out();
     void occupy();
     void release();
     void reserve();

@@ -3,6 +3,12 @@
 
 #include "Arduino.h"
 
+#include "blocks.h"
+#include "path.h"
+#include "coil_semaphore.h"
+#include "switch_junction.h"
+
+
 /* Constant for DEBOUNCE delay */
 const int DEBOUNCE_DELAY = 15;
 
@@ -14,7 +20,7 @@ class HallProbe
      * Constructor
      * int pin (IN) arduino pin number
      */
-    HallProbe(int id, int pin, const char* name, int* occupies, int* releases, int* reserves, int* cancels_reservation);
+    HallProbe(int id, int pin, const char* name);
     
     /* Update state from probe */
     void updateState();
@@ -27,10 +33,6 @@ class HallProbe
     const int _id; 
     const int _pin;                     // arduino pin wehere probe is connected
     const char* _name;
-    int* _occupies;
-    int* _releases;
-    int* _reserves;
-    int* _cancels_reservation;
 
     /*
      * The logic of Hall's sond is not straightforward, it cannot remember about

@@ -4,7 +4,17 @@ VPath::VPath(const char* name)
   : _name(name),
   _state(VPathStatus::clear)
 {
-  ;
+  _state = VPathStatus::clear;
+}
+
+void VPath::car_in() {
+
+  
+}
+
+void VPath::car_out() {
+  
+  
 }
 
 bool VPath::is_clear() {

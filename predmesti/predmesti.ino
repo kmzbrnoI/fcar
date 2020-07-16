@@ -47,6 +47,7 @@ const char* probe_names[PROBE_COUNT] = {
   // "FHaa" -- nepouzito
 };
 
+/*
 int occupies[PROBE_COUNT][2] = {
   {FH02FH03, FH02FH12},
   {FH03FH05, FH03FH06},
@@ -117,10 +118,32 @@ int cancels_reservation[PROBE_COUNT][2] = {
   {FH10FH02, -1},
   {-1, -1}
 };
+*/
 
-
-const int PATH_COUNT = 18;
+const int PATH_COUNT = 19;
 VPath* paths[PATH_COUNT];
+
+const char* path_names[PATH_COUNT] = {
+  "FH02FM02",
+  "FM02FH03",
+  "FM02FH13",
+  "FH03FH06",
+  "FH03FH05",
+  "FH05FH07",
+  "FH06FH07",
+  "FH07FH08",
+  "FH07FH30",
+  "FH08FH09",
+  "FH09FH10",
+  "FH09FH11",
+  "FH10FH02",
+  "FH11FH22",
+  "FH22FH23",
+  "FH12FH13",
+  "FH13FH09",
+  "FH20FH21",
+  "FH21FH22",
+};
 
 
 // pin 19 -- přejezd G ve výstraze
@@ -172,32 +195,16 @@ void setup() {
     // nefunguje FH22
     // FHaa nepouzito
 
-    probes[i] = new HallProbe(i, probe_pins[i], probe_names[i], occupies[i], releases[i], reserves[i], cancels_reservation[i]);
+    probes[i] = new HallProbe(i, probe_pins[i], probe_names[i]);
   }
 
   for (int i=0; i < MAGNET_COUNT; i++) {
-    magnets[i] = new CoilSemaphore(magnet_pins[i]);
+    magnets[i] = new CoilSemaphore(magnet_pins[i], magnet_names[i]);
   }
 
-  paths[0] = new VPath("FH02_FH03");
-  paths[1] = new VPath("FH02_FH12");
-  paths[2] = new VPath("FH03_FH06");
-  paths[3] = new VPath("FH03_FH05");
-  paths[4] = new VPath("FH05_FH07");
-  paths[5] = new VPath("FH06_FH07");
-  paths[6] = new VPath("FH07_FH08");
-  paths[7] = new VPath("FH07_FH30");
-  paths[8] = new VPath("FH08_FH09");
-  paths[9] = new VPath("FH09_FH10");
-  paths[10] = new VPath("FH09_FH11");
-  paths[11] = new VPath("FH10_FH02");
-  paths[12] = new VPath("FH11_FH12");
-  paths[13] = new VPath("FH12_FH22");
-  paths[14] = new VPath("FH22_FH23");
-  paths[15] = new VPath("FH12_FH13");
-  paths[16] = new VPath("FH13_FH09");
-  paths[17] = new VPath("FH20_FH21");
-  paths[18] = new VPath("FH21_FH22");
+  for (int i=0; i < PATH_COUNT; i++) {
+    paths[i] = new VPath(path_names[i]);
+  }
 
   j_a = new Junction(40, 41);
   j_b = new Junction(42, 43);
@@ -214,11 +221,13 @@ void loop() {
   for (int i=0; i < PROBE_COUNT; i++) {
     probes[i]->updateState();
   }
-
-
   
   j_b->to_plus();
   j_c->to_plus();
-  //s02->signal_green();
 
+  for (int i=0; i < MAGNET_COUNT; i++) {
+    if (magnets[i]->getSignal() == SSignal::red) {
+      magnets[i]->make_decision(i);
+    }
+  }
 }

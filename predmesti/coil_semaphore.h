@@ -7,6 +7,11 @@
 
 #include <Arduino.h>
 
+#include "blocks.h"
+#include "path.h"
+#include "switch_junction.h"
+
+
 /* Constant for signals */
 enum class SSignal { green, red };
 
@@ -15,11 +20,13 @@ class CoilSemaphore
 {
   public:
     /* Constructor */
-    CoilSemaphore(int pin);
+    CoilSemaphore(int pin, const char* name);
 
     /* Returns SSignal according to current state */
     SSignal getSignal();
 
+    void make_decision(int id);
+    
     /* Turn semaphore to green */
     void signal_green();
 
@@ -28,6 +35,7 @@ class CoilSemaphore
 
   private:
     const int _pin;
+    const char* _name;
     SSignal _state;
 
 };

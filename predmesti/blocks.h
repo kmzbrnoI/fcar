@@ -19,24 +19,25 @@
 #define FH30 14
 
 // useky
-#define FH02FH03 0
-#define FH02FH12 1
-#define FH03FH06 2
-#define FH03FH05 3
-#define FH05FH07 4
-#define FH06FH07 5
-#define FH07FH08 6
-#define FH07FH30 7
-#define FH08FH09 8
-#define FH09FH10 9
-#define FH09FH11 10
-#define FH10FH02 11
-#define FH11FH22 12
-#define FH22FH23 13
-#define FH12FH13 14
-#define FH13FH09 15
-#define FH20FH21 16
-#define FH21FH22 17
+#define FH02FM02 0
+#define FM02FH03 1
+#define FM02FH13 2
+#define FH03FH06 3
+#define FH03FH05 4
+#define FH05FH07 5
+#define FH06FH07 6
+#define FH07FH08 7
+#define FH07FH30 8
+#define FH08FH09 9
+#define FH09FH10 10
+#define FH09FH11 11
+#define FH10FH02 12
+#define FH11FH22 13
+#define FH22FH23 14
+#define FH13FM13 15
+#define FM13FH09 16
+#define FH20FH21 17
+#define FH21FH22 18
 
 // zastavovaci magnety
 #define FM02 0
