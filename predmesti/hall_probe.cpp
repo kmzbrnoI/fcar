@@ -1,16 +1,41 @@
 #include "hall_probe.h"
+#include "switch_junction.h"
+#include "coil_semaphore.h"
 #include "path.h"
 #include "blocks.h"
 
 void probe_event(int id, const char* name, int* occupies, int* releases, int* reserves, int* cancels_reservation) {
 
   extern VPath* paths[];
+  extern Junction *j_a;
   
   Serial.print("-- Hall probe: ");
   Serial.print(name);
   Serial.println("");
 
+  if (id == FH02) {
+    if (paths[FH03FH05]->is_clear() && paths[FH03FH06]->is_clear()) {
+      // na velky okruh
+      j_a->to_plus();
+      paths[occupies[0]]->occupy();
+      //s02->signal_green();
+    } else if (paths[FH12FH13]->is_clear()) {
+      // na maly okruh
+      j_a->to_minus();
+      paths[occupies[1]]->occupy();
+      //s02->signal_green();
+    } else {
+      // na maly okruh
+      //s02->signal_red();
+    }    
+  }
+
   for (int i=0; i < 2; i++) {
+
+    if (id == FH02) {
+      break;
+    }
+
     if (occupies[i] != -1) {
       paths[occupies[i]]->occupy();
     }
@@ -33,6 +58,9 @@ void probe_event(int id, const char* name, int* occupies, int* releases, int* re
       paths[cancels_reservation[i]]->cancel_reservation();
     }
   }
+
+
+  
 }
 
 

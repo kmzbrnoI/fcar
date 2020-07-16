@@ -131,18 +131,39 @@ Junction* j_a;
 Junction* j_b;
 Junction* j_c;
 
-CoilSemaphore* s02;
-CoilSemaphore* s06;
-CoilSemaphore* s07;
-CoilSemaphore* s08;
-CoilSemaphore* s09;
-CoilSemaphore* s10;
-CoilSemaphore* s11;
-CoilSemaphore* s12;
-CoilSemaphore* s13;
-CoilSemaphore* s14;
-CoilSemaphore* s20;
-CoilSemaphore* s29;
+
+const int MAGNET_COUNT = 12;
+CoilSemaphore* magnets[MAGNET_COUNT];
+
+int magnet_pins[MAGNET_COUNT] = {
+  29,
+  36,
+  37,
+  31,
+  33,
+  26,
+  30,
+  28,
+  38,
+  34,
+  32,
+  35,
+};
+
+const char* magnet_names[MAGNET_COUNT] = {
+  "FM02",
+  "FM06",
+  "FM07",
+  "FM08",
+  "FM09",
+  "FM10",
+  "FM11",
+  "FM12",
+  "FM13",
+  "FM14",
+  "FM20",
+  "FM29",
+};
 
 
 void setup() {
@@ -152,6 +173,10 @@ void setup() {
     // FHaa nepouzito
 
     probes[i] = new HallProbe(i, probe_pins[i], probe_names[i], occupies[i], releases[i], reserves[i], cancels_reservation[i]);
+  }
+
+  for (int i=0; i < MAGNET_COUNT; i++) {
+    magnets[i] = new CoilSemaphore(magnet_pins[i]);
   }
 
   paths[0] = new VPath("FH02_FH03");
@@ -178,20 +203,6 @@ void setup() {
   j_b = new Junction(42, 43);
   j_c = new Junction(27, 39);
 
-  s02 = new CoilSemaphore(29);
-  s06 = new CoilSemaphore(36);
-  s07 = new CoilSemaphore(37);
-  s08 = new CoilSemaphore(31);
-  s09 = new CoilSemaphore(33);
-  s10 = new CoilSemaphore(26);
-  s11 = new CoilSemaphore(30);
-  s12 = new CoilSemaphore(28);
-  s13 = new CoilSemaphore(38);
-  s14 = new CoilSemaphore(34);
-  s20 = new CoilSemaphore(32);
-  s29 = new CoilSemaphore(35);
-  
-
   Serial.begin(9600);
   while (!Serial) {
     ;
@@ -205,8 +216,9 @@ void loop() {
   }
 
 
-  j_a->to_minus();
+  
   j_b->to_plus();
   j_c->to_plus();
+  //s02->signal_green();
 
 }
