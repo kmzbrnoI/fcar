@@ -47,6 +47,9 @@ const char* probe_names[PROBE_COUNT] = {
   // "FHaa" -- nepouzito
 };
 
+
+
+
 /*
 int occupies[PROBE_COUNT][2] = {
   {FH02FH03, FH02FH12},
@@ -139,10 +142,10 @@ const char* path_names[PATH_COUNT] = {
   "FH10FH02",
   "FH11FH22",
   "FH22FH23",
-  "FH12FH13",
-  "FH13FH09",
+  "FH13FM13",
+  "FM13FH09",
   "FH20FH21",
-  "FH21FH22",
+  "FH21FH22"
 };
 
 
