@@ -10,6 +10,7 @@
 #include "blocks.h"
 #include "path.h"
 #include "switch_junction.h"
+#include "vehicle.h"
 
 
 /* Constant for signals */

@@ -3,8 +3,12 @@
 #include "coil_semaphore.h"
 #include "switch_junction.h"
 #include "path.h"
+#include "vehicle.h"
 
 /* All hardware blocks connected to Arduino */
+
+
+Vehicle* vehicles[VEHICLE_COUNT];
 
 const int PROBE_COUNT = 15;
 HallProbe* probes[PROBE_COUNT];
@@ -48,82 +52,7 @@ const char* probe_names[PROBE_COUNT] = {
 };
 
 
-
-
-/*
-int occupies[PROBE_COUNT][2] = {
-  {FH02FH03, FH02FH12},
-  {FH03FH05, FH03FH06},
-  {FH05FH07, -1},
-  {FH06FH07, -1},
-  {FH07FH08, -1},
-  {FH08FH09, -1},
-  {FH09FH10, FH09FH11},
-  {FH10FH02, -1},
-  {FH11FH22, -1},
-  {FH13FH09, -1},
-  {FH20FH21, -1},
-  {FH21FH22, -1},  
-  {FH22FH23, -1},
-  {-1, -1},
-  {-1, -1} 
-};
-
-int releases[PROBE_COUNT][2] = {
-  {FH10FH02, -1},
-  {FH02FH03, -1},
-  {FH03FH05, -1},
-  {FH03FH06, -1},
-  {FH05FH07, FH06FH07},
-  {FH07FH08, -1},
-  {FH08FH09, -1},
-  {FH09FH10, -1},
-  {FH09FH11, -1},
-  {FH12FH13, -1},
-  {-1, -1},
-  {FH20FH21, -1},
-  {FH11FH22, FH21FH22},
-  {FH22FH23, -1},
-  {-1, -1}
-};
-
-int reserves[PROBE_COUNT][2] = {
-  {-1, FH21FH22},
-  {-1, -1},
-  {FH06FH07, -1},
-  {-1, -1},
-  {-1, -1},  
-  {FH13FH09, -1},
-  {-1, -1},
-  {FH22FH23, -1},
-  {FH02FH12, -1},
-  {FH08FH09, -1},
-  {-1, -1},
-  {FH11FH22, FH02FH12},
-  {FH10FH02, -1},
-  {-1, -1},
-  {-1, -1}
-};
-
-int cancels_reservation[PROBE_COUNT][2] = {
-  {FH22FH23, -1},
-  {-1, -1},
-  {-1, -1}, 
-  {FH06FH07, -1},
-  {-1, -1},
-  {FH08FH09, FH13FH09},
-  {-1, -1},  
-  {-1, -1},
-  {FH02FH12, FH11FH22},
-  {-1, -1},
-  {-1, -1},
-  {FH02FH12, -1},
-  {FH10FH02, -1},
-  {-1, -1}
-};
-*/
-
-const int PATH_COUNT = 19;
+const int PATH_COUNT = 23;
 VPath* paths[PATH_COUNT];
 
 const char* path_names[PATH_COUNT] = {
@@ -134,12 +63,16 @@ const char* path_names[PATH_COUNT] = {
   "FH03FH05",
   "FH05FH07",
   "FH06FH07",
-  "FH07FH08",
-  "FH07FH30",
-  "FH08FH09",
-  "FH09FH10",
-  "FH09FH11",
-  "FH10FH02",
+  "FH07FM07",
+  "FM07FH08",
+  "FM07FH30",
+  "FH08FM08",
+  "FM08FH09",
+  "FH09FM09",
+  "FM09FH01",
+  "FM09FH11",
+  "FH10FM10",
+  "FM10FH02",
   "FH11FH22",
   "FH22FH23",
   "FH13FM13",
@@ -191,9 +124,12 @@ const char* magnet_names[MAGNET_COUNT] = {
   "FM29",
 };
 
-
 void setup() {
 
+  for (int i=0; i < VEHICLE_COUNT; i++) {
+    vehicles[i] = new Vehicle(i);
+  }
+  
   for (int i=0; i < PROBE_COUNT; i++) {
     // nefunguje FH22
     // FHaa nepouzito
@@ -206,7 +142,7 @@ void setup() {
   }
 
   for (int i=0; i < PATH_COUNT; i++) {
-    paths[i] = new VPath(path_names[i]);
+    paths[i] = new VPath(i, path_names[i]);
   }
 
   j_a = new Junction(40, 41);
@@ -224,13 +160,16 @@ void loop() {
   for (int i=0; i < PROBE_COUNT; i++) {
     probes[i]->updateState();
   }
-  
-  j_b->to_plus();
-  j_c->to_plus();
 
   for (int i=0; i < MAGNET_COUNT; i++) {
     if (magnets[i]->getSignal() == SSignal::red) {
       magnets[i]->make_decision(i);
+    }
+  }
+
+  for (int i=0; i < PATH_COUNT; i++) {
+    if (! paths[i]->is_clear()) {
+      paths[i]->occupation_timeout();
     }
   }
 }

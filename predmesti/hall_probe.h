@@ -7,10 +7,11 @@
 #include "path.h"
 #include "coil_semaphore.h"
 #include "switch_junction.h"
+#include "vehicle.h"
 
 
 /* Constant for DEBOUNCE delay */
-const int DEBOUNCE_DELAY = 15;
+const int DEBOUNCE_DELAY = 30;
 
 /* Direct communication with Hall's probe */
 class HallProbe
@@ -24,10 +25,7 @@ class HallProbe
     
     /* Update state from probe */
     void updateState();
-    
-    /* Returns the last timestamp (milliseconds) when the state was positive */
-    unsigned long getLastPositive();
-    
+
    private: 
     unsigned long _last_positive_time;  // timestamp of last positive state
     const int _id; 
