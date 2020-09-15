@@ -4,78 +4,113 @@ void probe_event(int id, const char* name) {
 
   extern HallProbe* probes[];
   extern VPath* paths[];
+  extern Vehicle* vehicles[];
   extern CoilSemaphore* magnets[];
 
   //Serial.print("-- Hall probe: ");
   //Serial.println(name);
 
+  if (id == FHA2) {
+    paths[FHA2FHA0]->reserve(true);
+    paths[FHA0FH02]->reserve(true);
+    paths[FH02FM02]->reserve(true);
+    paths[FM10FH02]->reserve(false);
+    move_car(FHA2FHA0, FHA2FHA0);
+    Serial.println("Neco prijelo od Depa...");
+  }
+  if (id == FHA0) {
+    move_car(FHA2FHA0, FHA0FH02);
+    paths[FHA2FHA0]->unreserve();
+    Serial.println("...a uz to vjizdi do Predmesti");
+  }
+
+  if (id == FHA1) {
+    paths[FHA2FHA0]->expect_bus();
+    Serial.println("... a je to autobus... ");
+  }
+
   // prijezd od depa
   if (id == FH02) {
-    move_car(FM10FH02, FH02FM02, VehicleType::car);
-    paths[FM10FH02]->release();
-    paths[FH22FH23]->cancel_reservation();
-    magnets[FM02]->make_decision(FM02);
+    if (paths[FM10FH02]->is_occupied()) {
+      move_car(FM10FH02, FH02FM02);
+      paths[FH22FH23]->unreserve();
+    } else {
+      move_car(FHA0FH02, FH02FM02);
+      paths[FH22FH23]->unreserve();
+    }
+    magnets[FM02]->make_decision(FM02, paths[FH02FM02]);
   }
 
   // velky okruh
   if (id == FH03) {
-    move_car(FM02FH03, FH03FH05, VehicleType::car);    
-    paths[FM02FH03]->release();
+    if(paths[FM02FH03]->get_vehicle_type() == VehicleType::bus) {
+      move_car(FM02FH03, FH03FH06);
+    } else {    
+      move_car(FM02FH03, FH03FH05);
+    }    
   }
   if (id == FH05) {
-    move_car(FH03FH05, FH05FH07, VehicleType::car);
-    paths[FH03FH05]->release();
+    move_car(FH03FH05, FH05FH07);
   }
   // autobusova zastavka
   if (id == FH06) {
-    move_car(FH03FH06, FH06FH07, VehicleType::car);
-    paths[FH03FH06]->release();
+    move_car(FH03FH06, FH06FM06);
+    vehicles[paths[FH06FM06]->get_car_id()]->bus_stop();
+    magnets[FM06]->make_decision(FM06, paths[FH06FM06]);
   }
   if (id == FH07) {
-    move_car(FH05FH07, FH07FM07, VehicleType::car);
-    paths[FH05FH07]->release();
-    magnets[FM07]->make_decision(FM07);
+    if(paths[FH05FH07]->is_reserved()) {
+      paths[FH05FH07]->unreserve();
+      move_car(FM06FH07, FH07FM07);
+    } else {
+      move_car(FH05FH07, FH07FM07);
+    }
+    magnets[FM07]->make_decision(FM07, paths[FH07FM07]);
   }
   if (id == FH08) {
-    move_car(FM07FH08, FH08FM08, VehicleType::car);
-    paths[FM07FH08]->release();
-    magnets[FM08]->make_decision(FM08);
+    move_car(FM07FH08, FH08FM08);
+    magnets[FM08]->make_decision(FM08, paths[FH08FM08]);
   }
 
 
   // maly okruh
   if (id == FH13) {
-    move_car(FM02FH13, FH13FM13, VehicleType::car);
-    paths[FM02FH13]->release();
-    magnets[FM13]->make_decision(FM13);
+    move_car(FM02FH13, FH13FM13);
+    magnets[FM13]->make_decision(FM13, paths[FH13FM13]);
   }
 
 
   // opousteni oblasti
   if (id == FH09) {
-    if (
-      paths[FM08FH09]->get_state() == VPathStatus::occupied && 
-      paths[FM13FH09]->get_state() == VPathStatus::reserved
-    ) {
-      move_car(FM08FH09, FH09FM09, VehicleType::car);
-      paths[FM08FH09]->release();
+    Serial.println("0");
+    
+    if (paths[FM08FH09]->is_occupied() && paths[FM13FH09]->is_reserved()) {
+      move_car(FM08FH09, FH09FM09);
+      paths[FM13FH09]->unreserve();
+      Serial.println("A");
     }
-    if (
-      paths[FM08FH09]->get_state() == VPathStatus::reserved && 
-      paths[FM13FH09]->get_state() == VPathStatus::occupied
-    ) {
-      move_car(FM13FH09, FH09FM09, VehicleType::car);
-      paths[FM13FH09]->release();
+    else if (paths[FM08FH09]->is_reserved() && paths[FM13FH09]->is_occupied()) {
+      move_car(FM13FH09, FH09FM09);
+      paths[FM08FH09]->unreserve();
+      Serial.println("B");
+    } else {
+      Serial.println("C");
     }
 
-    magnets[FM09]->make_decision(FM09);
+    magnets[FM09]->make_decision(FM09, paths[FH09FM09]);
   }
   if (id == FH10) {
-    move_car(FM09FH10, FH10FM10, VehicleType::car);
-    paths[FM09FH10]->release();
-    magnets[FM10]->make_decision(FM10);
-  }
 
+    Serial.print("Typ auta: FH10 hlásí ");
+    Serial.println(paths[FM09FH10]->get_vehicle_type() == VehicleType::bus);
+
+    move_car(FM09FH10, FH10FM10);
+
+    Serial.print("Typ auta: FH10 hlásí ");
+    Serial.println(paths[FH10FM10]->get_vehicle_type() == VehicleType::bus);
+    
+    magnets[FM10]->make_decision(FM10, paths[FH10FM10]);
+  }
 }
 
 HallProbe::HallProbe(int id, int pin, const char* name)

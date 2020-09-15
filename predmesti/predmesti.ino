@@ -4,13 +4,22 @@
 #include "switch_junction.h"
 #include "path.h"
 #include "vehicle.h"
+#include "crossing.h"
 
 /* All hardware blocks connected to Arduino */
 
 
+/*
+novy hallovky na predmesti (vjezd od depa)
+A0  blize k mestu
+A1  autobus nebo ne
+A2  zacina usek
+
+*/
+
 Vehicle* vehicles[VEHICLE_COUNT];
 
-const int PROBE_COUNT = 15;
+const int PROBE_COUNT = 21;
 HallProbe* probes[PROBE_COUNT];
 
 int probe_pins[PROBE_COUNT] = {
@@ -29,6 +38,12 @@ int probe_pins[PROBE_COUNT] = {
   5,
   10,
   16,
+  A0,
+  A1,
+  A2,
+  19,
+  20,
+  21,
 //  8 FHaa, nepouzito
 };
 
@@ -48,11 +63,29 @@ const char* probe_names[PROBE_COUNT] = {
   "FH22",
   "FH23",
   "FH30",
+  "FHA0",
+  "FHA1",
+  "FHA2",
   // "FHaa" -- nepouzito
 };
 
+const int CROSSING_COUNT = 3;
+Crossing* crossings[CROSSING_COUNT];
+int crossing_pins[CROSSING_COUNT] = {
+  19,
+  20,
+  21,
+};;
+const char* crossing_names[CROSSING_COUNT] = {
+  "CRG1",
+  "CRG2",
+  "CRH1",
+};
+// CRG1 pin 19 -- přejezd G ve výstraze
+// CRG2 pin 20 -- přejezd G ve obsazen
+// CRH1 pin 21 -- přejezd H ve výstraze
 
-const int PATH_COUNT = 23;
+const int PATH_COUNT = 27;
 VPath* paths[PATH_COUNT];
 
 const char* path_names[PATH_COUNT] = {
@@ -62,6 +95,8 @@ const char* path_names[PATH_COUNT] = {
   "FH03FH06",
   "FH03FH05",
   "FH05FH07",
+  "FH06FM06",
+  "FM06FH07",
   "FH06FH07",
   "FH07FM07",
   "FM07FH08",
@@ -69,7 +104,7 @@ const char* path_names[PATH_COUNT] = {
   "FH08FM08",
   "FM08FH09",
   "FH09FM09",
-  "FM09FH01",
+  "FM09FH10",
   "FM09FH11",
   "FH10FM10",
   "FM10FH02",
@@ -78,13 +113,10 @@ const char* path_names[PATH_COUNT] = {
   "FH13FM13",
   "FM13FH09",
   "FH20FH21",
-  "FH21FH22"
+  "FH21FH22",
+  "FHA2FHA0",
+  "FHA0FH02"
 };
-
-
-// pin 19 -- přejezd G ve výstraze
-// pin 20 -- přejezd G ve obsazen
-// pin 21 -- přejezd H ve výstraze
 
 Junction* j_a;
 Junction* j_b;
@@ -137,6 +169,10 @@ void setup() {
     probes[i] = new HallProbe(i, probe_pins[i], probe_names[i]);
   }
 
+  for (int i=0; i < CROSSING_COUNT; i++) {
+    crossings[i] = new Crossing(i, crossing_pins[i], crossing_names[i]);
+  }
+
   for (int i=0; i < MAGNET_COUNT; i++) {
     magnets[i] = new CoilSemaphore(magnet_pins[i], magnet_names[i]);
   }
@@ -161,15 +197,35 @@ void loop() {
     probes[i]->updateState();
   }
 
-  for (int i=0; i < MAGNET_COUNT; i++) {
-    if (magnets[i]->getSignal() == SSignal::red) {
-      magnets[i]->make_decision(i);
-    }
+  for (int i=0; i < CROSSING_COUNT; i++) {
+    crossings[i]->updateState();
+  }
+
+  if (magnets[FM02]->getSignal() == SSignal::red) {
+    magnets[FM02]->make_decision(FM02, paths[FH02FM02]);
+  }
+  if (magnets[FM06]->getSignal() == SSignal::red) {
+    magnets[FM06]->make_decision(FM06, paths[FH06FM06]);
+  }
+  if (magnets[FM07]->getSignal() == SSignal::red) {
+    magnets[FM07]->make_decision(FM07, paths[FH07FM07]);
+  }
+  if (magnets[FM08]->getSignal() == SSignal::red) {
+    magnets[FM08]->make_decision(FM08, paths[FH08FM08]);
+  }
+  if (magnets[FM13]->getSignal() == SSignal::red) {
+    magnets[FM13]->make_decision(FM13, paths[FH13FM13]);
+  }
+  if (magnets[FM09]->getSignal() == SSignal::red) {
+    magnets[FM09]->make_decision(FM09, paths[FH09FM09]);
+  }
+  if (magnets[FM10]->getSignal() == SSignal::red) {
+    magnets[FM10]->make_decision(FM10, paths[FH10FM10]);
   }
 
   for (int i=0; i < PATH_COUNT; i++) {
     if (! paths[i]->is_clear()) {
-      paths[i]->occupation_timeout();
+      paths[i]->timeout();
     }
   }
 }

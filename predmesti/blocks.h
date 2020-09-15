@@ -17,6 +17,14 @@
 #define FH22 12
 #define FH23 13
 #define FH30 14
+#define FHA0 15
+#define FHA1 16
+#define FHA2 17
+
+// crossing
+#define CRG1 0
+#define CRG2 1
+#define CRH1 2
 
 // useky
 #define FH02FM02 0
@@ -25,23 +33,27 @@
 #define FH03FH06 3
 #define FH03FH05 4
 #define FH05FH07 5
-#define FH06FH07 6
-#define FH07FM07 7
-#define FM07FH08 8
-#define FM07FH30 9
-#define FH08FM08 10
-#define FM08FH09 11
-#define FH09FM09 12
-#define FM09FH10 13
-#define FM09FH11 14
-#define FH10FM10 15
-#define FM10FH02 16
-#define FH11FH22 17
-#define FH22FH23 18
-#define FH13FM13 19
-#define FM13FH09 20
-#define FH20FH21 21
-#define FH21FH22 22
+#define FH06FM06 6
+#define FM06FH07 7
+#define FH06FH07 8
+#define FH07FM07 9
+#define FM07FH08 10
+#define FM07FH30 11
+#define FH08FM08 12
+#define FM08FH09 13
+#define FH09FM09 14
+#define FM09FH10 15
+#define FM09FH11 16
+#define FH10FM10 17
+#define FM10FH02 18
+#define FH11FH22 19
+#define FH22FH23 20
+#define FH13FM13 21
+#define FM13FH09 22
+#define FH20FH21 23
+#define FH21FH22 24
+#define FHA2FHA0 25
+#define FHA0FH02 26
 
 // zastavovaci magnety
 #define FM02 0

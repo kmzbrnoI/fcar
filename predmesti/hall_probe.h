@@ -11,7 +11,7 @@
 
 
 /* Constant for DEBOUNCE delay */
-const int DEBOUNCE_DELAY = 30;
+const int DEBOUNCE_DELAY = 15;
 
 /* Direct communication with Hall's probe */
 class HallProbe
@@ -25,7 +25,7 @@ class HallProbe
     
     /* Update state from probe */
     void updateState();
-
+    
    private: 
     unsigned long _last_positive_time;  // timestamp of last positive state
     const int _id; 
