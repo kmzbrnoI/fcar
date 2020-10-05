@@ -76,40 +76,42 @@ void probe_event(int id, const char* name) {
   // maly okruh
   if (id == FH13) {
     move_car(FM02FH13, FH13FM13);
+    paths[FM11FH22]->unreserve();
     magnets[FM13]->make_decision(FM13, paths[FH13FM13]);
   }
 
 
   // opousteni oblasti
   if (id == FH09) {
-    Serial.println("0");
-    
     if (paths[FM08FH09]->is_occupied() && paths[FM13FH09]->is_reserved()) {
       move_car(FM08FH09, FH09FM09);
       paths[FM13FH09]->unreserve();
-      Serial.println("A");
     }
     else if (paths[FM08FH09]->is_reserved() && paths[FM13FH09]->is_occupied()) {
       move_car(FM13FH09, FH09FM09);
       paths[FM08FH09]->unreserve();
-      Serial.println("B");
-    } else {
-      Serial.println("C");
     }
-
     magnets[FM09]->make_decision(FM09, paths[FH09FM09]);
   }
   if (id == FH10) {
-
-    Serial.print("Typ auta: FH10 hlásí ");
-    Serial.println(paths[FM09FH10]->get_vehicle_type() == VehicleType::bus);
-
     move_car(FM09FH10, FH10FM10);
-
-    Serial.print("Typ auta: FH10 hlásí ");
-    Serial.println(paths[FH10FM10]->get_vehicle_type() == VehicleType::bus);
-    
+    paths[FM09FH11]->unreserve();    
     magnets[FM10]->make_decision(FM10, paths[FH10FM10]);
+  }
+
+  // opousteci trasa k Hradu
+  if (id == FH11) {
+    move_car(FM09FH11, FH11FM11);
+    paths[FM09FH10]->unreserve();
+    magnets[FM11]->make_decision(FM11, paths[FH11FM11]);
+  }
+  if (id == FH22) {
+    paths[FM02FH13]->unreserve();
+    move_car(FM11FH22, FH22FH23);
+  }
+  if (id == FH23) {
+    paths[FM10FH02]->unreserve();
+    vehicles[paths[FH22FH23]->vehicle_pull()]->deactivate();
   }
 }
 

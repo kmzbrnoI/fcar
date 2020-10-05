@@ -5,7 +5,8 @@ Vehicle::Vehicle(int id)
   :
   _id(id),
   _active(false),
-  _stop_time(0)
+  _stop_time(0),
+  _turn(0)
 {
   ;
 }
@@ -28,7 +29,8 @@ bool Vehicle::is_active()
 void Vehicle::activate(VehicleType vehicle_type)
 {
   _active = true;
-  _vehicle_type = vehicle_type;  
+  _vehicle_type = vehicle_type;
+  _turn = 0;
 }
 
 void Vehicle::deactivate()
@@ -54,6 +56,16 @@ bool Vehicle::is_bus_ready()
     return true;
   }
   return false;
+}
+
+void Vehicle::add_turn()
+{
+  _turn = _turn + 1;  
+}
+
+int Vehicle::get_turn()
+{
+  return _turn;
 }
 
 int get_new_car(VehicleType vehicle_type)

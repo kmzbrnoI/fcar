@@ -75,7 +75,7 @@ int crossing_pins[CROSSING_COUNT] = {
   19,
   20,
   21,
-};;
+};
 const char* crossing_names[CROSSING_COUNT] = {
   "CRG1",
   "CRG2",
@@ -85,7 +85,7 @@ const char* crossing_names[CROSSING_COUNT] = {
 // CRG2 pin 20 -- přejezd G ve obsazen
 // CRH1 pin 21 -- přejezd H ve výstraze
 
-const int PATH_COUNT = 27;
+const int PATH_COUNT = 29;
 VPath* paths[PATH_COUNT];
 
 const char* path_names[PATH_COUNT] = {
@@ -108,14 +108,16 @@ const char* path_names[PATH_COUNT] = {
   "FM09FH11",
   "FH10FM10",
   "FM10FH02",
-  "FH11FH22",
+  "FH11FM11",
   "FH22FH23",
   "FH13FM13",
   "FM13FH09",
   "FH20FH21",
   "FH21FH22",
   "FHA2FHA0",
-  "FHA0FH02"
+  "FHA0FH02",
+  "FM11FH22",
+  "FH22FH23",
 };
 
 Junction* j_a;

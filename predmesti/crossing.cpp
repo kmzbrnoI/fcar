@@ -8,18 +8,18 @@ void crossing_event(int id, const char* name) {
 
   if (id == CRG1) {
     crossings[id]->isRed() ? paths[FH02FM02]->red_crossing() : paths[FH02FM02]->green_crossing();
-    Serial.print("CRG1 isRed() = ");
-    Serial.println(crossings[id]->isRed());
+    //Serial.print("CRG1 isRed() = ");
+    //Serial.println(crossings[id]->isRed());
   }
   if (id == CRG2) {
     crossings[id]->isRed() ? paths[FH02FM02]->red_crossing() : paths[FH02FM02]->green_crossing();
-    Serial.print("CRG2 isRed() = ");
-    Serial.println(crossings[id]->isRed());
+    //Serial.print("CRG2 isRed() = ");
+    //Serial.println(crossings[id]->isRed());
   }
   if (id == CRH1) {
     crossings[id]->isRed() ? paths[FH08FM08]->red_crossing() : paths[FH08FM08]->green_crossing();
-    Serial.print("CRH1 isRed() = ");
-    Serial.println(crossings[id]->isRed());
+    //Serial.print("CRH1 isRed() = ");
+    //Serial.println(crossings[id]->isRed());
   }
 }
 

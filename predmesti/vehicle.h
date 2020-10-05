@@ -23,15 +23,16 @@ class Vehicle
     void bus_stop();
     bool is_bus_ready();
 
+    void add_turn();
+    int get_turn();
+
   private:
     const int _id;
     VehicleType _vehicle_type;
     bool _active;
 
     unsigned long _stop_time;
-
-    int recent_probe;
-    int previous_probe;
+    int _turn;
 };
 
 int get_new_car(VehicleType vehicle_type);
