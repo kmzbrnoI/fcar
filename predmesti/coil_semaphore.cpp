@@ -23,10 +23,6 @@ void CoilSemaphore::make_decision(VPath* path) {
   extern Junction *j_b;
   extern Junction *j_c;
 
-  if (path->is_blocked_by_crossing()) {
-    return;
-  }
-
   if (_id == FM02) {
     if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06)) {
       // na velky okruh

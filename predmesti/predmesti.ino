@@ -190,6 +190,6 @@ void loop() {
     magnets[FM10]->make_decision(paths[FH10FM10]);
 
   for (int i=0; i < PATH_COUNT; i++)
-    if (! paths[i]->is_clear())
+    if (!paths[i]->is_clear())
       paths[i]->timeout();
 }

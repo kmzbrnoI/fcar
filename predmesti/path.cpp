@@ -48,9 +48,8 @@ void VPath::unreserve() {
 }
 
 void VPath::timeout() {
-  if (is_blocked_by_crossing()) {
+  if (is_blocked_by_crossing())
     return;
-  }
 
   if (_state == VPathStatus::occupied_soon) {
     if ( millis() - _occupiedSoonTime > PATH_TIMEOUT) {
