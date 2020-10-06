@@ -12,6 +12,8 @@ const int PATH_CLEAR_SOON = 150;
 class VPath
 {
   public:
+    bool expecting_bus;
+
     VPath(int id, const String& name, int crossingId);
     const String& name() const;
 
@@ -27,9 +29,6 @@ class VPath
     int vehicle_pull();
     Vehicle& vehicle() const;
 
-    void expect_bus();
-    VehicleType is_expecting();
-
     bool is_blocked_by_crossing() const;
 
   private:
@@ -39,7 +38,6 @@ class VPath
 
     VPathStatus _state;
     int _vehicle;
-    bool _expecting_bus;
 
     unsigned long _reservationTime;
     unsigned long _occupiedSoonTime;

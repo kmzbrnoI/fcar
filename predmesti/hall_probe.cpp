@@ -1,27 +1,29 @@
 #include "hall_probe.h"
+#include "log.h"
 
 void HallProbe::changed() {
   extern VPath* paths[];
   extern Vehicle* vehicles[];
   extern CoilSemaphore* magnets[];
 
-  //Serial.print("-- Hall probe: ");
-  //Serial.println(name);
+  log("-- Hall probe: " + _name);
 
   if (_id == FHA2) {
     paths_reserve(true, FHA2FHA0, FHA0FH02, FH02FM02);
     paths[FM10FH02]->reserve(false);
-    move_car(FHA2FHA0, FHA2FHA0);
-    Serial.println("Neco prijelo od Depa...");
+    create_car(FHA2FHA0);
   }
   if (_id == FHA0) {
+    if (paths[FHA2FHA0]->expecting_bus) {
+      paths[FHA2FHA0]->vehicle().type = VehicleType::bus;
+      paths[FHA2FHA0]->expecting_bus = false;
+    }
     move_car(FHA2FHA0, FHA0FH02);
     paths[FHA2FHA0]->unreserve();
-    Serial.println("...a uz to vjizdi do Predmesti");
   }
   if (_id == FHA1) {
-    paths[FHA2FHA0]->expect_bus();
-    Serial.println("... a je to autobus... ");
+    paths[FHA2FHA0]->expecting_bus = true;
+    log("Detekovan autobus");
   }
 
   // prijezd od depa
@@ -38,7 +40,7 @@ void HallProbe::changed() {
 
   // velky okruh
   if (_id == FH03) {
-    if(paths[FM02FH03]->vehicle().type() == VehicleType::bus) {
+    if(paths[FM02FH03]->vehicle().type == VehicleType::bus) {
       move_car(FM02FH03, FH03FH06);
     } else {
       move_car(FM02FH03, FH03FH05);

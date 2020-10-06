@@ -5,6 +5,7 @@
 #include "path.h"
 #include "vehicle.h"
 #include "crossing.h"
+#include "log.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // Vehicles
@@ -157,6 +158,7 @@ void setup() {
 
   Serial.begin(9600);
   while (!Serial);
+  log("Initialized Predmesti!");
 }
 
 void loop() {

@@ -4,12 +4,12 @@
 #include "log.h"
 
 VPath::VPath(int id, const String& name, int crossingId)
-  : _id(id),
+  : expecting_bus(false),
+  _id(id),
   _name(name),
   _crossingId(crossingId),
   _state(VPathStatus::clear),
   _vehicle(-1),
-  _expecting_bus(false),
   _reservationTime(0),
   _occupiedSoonTime(0),
   _occupiedTime(0),
@@ -55,36 +55,25 @@ void VPath::timeout() {
   if (_state == VPathStatus::occupied_soon) {
     if ( millis() - _occupiedSoonTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
-      //Serial.print("State [occupied_soon] on ");
-      //Serial.print(_name);
-      //Serial.println(" released.");
+      log("State [occupied_soon] on " + _name + " released.");
     }
   }
 
   if (_state == VPathStatus::occupied) {
     if ( millis() - _occupiedTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
-      //Serial.print("State [occupied] on ");
-      //Serial.print(_name);
-      //Serial.println(" released.");
+      log("State [occupied] on " + _name + " released.");
     }
   }
 
-  if (_state == VPathStatus::clear_soon) {
-    if ( millis() - _cleanSoonTime > PATH_CLEAR_SOON) {
+  if (_state == VPathStatus::clear_soon)
+    if ( millis() - _cleanSoonTime > PATH_CLEAR_SOON)
       _state = VPathStatus::clear;
-      //Serial.print("State [clear_soon] on ");
-      //Serial.print(_name);
-      //Serial.println(" released.");
-    }
-  }
 
   if (_state == VPathStatus::reserved) {
     if ( millis() - _reservationTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
-      //Serial.print("State [reserved] on ");
-      //Serial.print(_name);
-      //Serial.println(" released.");
+      log("State [reserved] on " + _name + " released.");
     }
   }
 }
@@ -124,20 +113,6 @@ Vehicle& VPath::vehicle() const {
     log("ERROR: invalid vehicle, returning vehicles[0]!");
     // even this may segfault; you better restart device when this occurs
   return (_vehicle > -1) ? *vehicles[_vehicle] : *vehicles[0];
-}
-
-void VPath::expect_bus() {
-  _expecting_bus = true;
-}
-
-VehicleType VPath::is_expecting() {
-  VehicleType car_type = VehicleType::car;
-  if (_expecting_bus) {
-    car_type = VehicleType::bus;
-    _expecting_bus = false;
-  }
-
-  return car_type;
 }
 
 bool VPath::is_blocked_by_crossing() const {

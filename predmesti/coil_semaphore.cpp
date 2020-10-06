@@ -1,5 +1,6 @@
 #include "coil_semaphore.h"
 #include "vehicle.h"
+#include "log.h"
 
 CoilSemaphore::CoilSemaphore(int id, int pin, const String& name)
   :
@@ -25,7 +26,7 @@ void CoilSemaphore::make_decision() {
     if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06)) {
       // na velky okruh
 
-      if (paths[FH02FM02]->vehicle().type() == VehicleType::bus) {
+      if (paths[FH02FM02]->vehicle().type == VehicleType::bus) {
         j_a->to_plus();
         j_b->to_minus();
         paths_reserve(true, FM02FH03, FH03FH06, FH06FM06);
@@ -138,16 +139,12 @@ void CoilSemaphore::signal_green() {
   if (_state == SSignal::green) return;
   digitalWrite(_pin, LOW);
   _state = SSignal::green;
-
-  Serial.print("-- GREEN : ");
-  Serial.println(_name);
+  log("-- GREEN : " + _name);
 }
 
 void CoilSemaphore::signal_red() {
   if (_state == SSignal::red) return;
   digitalWrite(_pin, HIGH);
   _state = SSignal::red;
-
-  Serial.print("-- RED : ");
-  Serial.println(_name);
+  log("-- RED : " + _name);
 }
