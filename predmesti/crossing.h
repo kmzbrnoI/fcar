@@ -8,16 +8,17 @@ class Crossing
 {
   public:
      /* Constructor */
-    Crossing(int id, int pin, const char* name);
+    Crossing(int id, int pinClosed, int pinOccupied, const String& name);
 
     /* Update state from probe */
     void updateState();
-    bool isRed();  
+    bool isRed();
 
   private:
-    const int _id; 
-    const int _pin;
-    const char* _name;
+    const int _id;
+    const int _pinClosed;
+    const int _pinOccupied;
+    const String _name;
 
     bool _isRed;
 };

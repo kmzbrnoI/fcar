@@ -1,7 +1,7 @@
 #include "crossing.h"
 #include "path.h"
 
-void crossing_event(int id, const char* name) {
+void crossing_event(int id, const String& name) {
 
   extern VPath* paths[];
   extern Crossing* crossings[];
@@ -23,21 +23,19 @@ void crossing_event(int id, const char* name) {
   }
 }
 
-Crossing::Crossing(int id, int pin, const char* name)
+Crossing::Crossing(int id, int pinClosed, int pinOccupied, const String& name)
   :
   _id(id),
-  _pin(pin),
+  _pinClosed(pinClosed),
+  _pinOccupied(pinOccupied),
   _name(name),
-  _isRed(false)
-{}
+  _isRed(false) {}
 
-void Crossing::updateState()
-{
-  _isRed = (digitalRead(_pin) == HIGH) ? false : true;
+void Crossing::updateState() {
+  _isRed = (digitalRead(_pinClosed) == HIGH) ? false : true;
   crossing_event(_id, _name);
 }
 
-bool Crossing::isRed()
-{
-  return _isRed;  
+bool Crossing::isRed() {
+  return _isRed;
 }

@@ -19,15 +19,18 @@ A2  zacina usek
 
 Vehicle* vehicles[VEHICLE_COUNT];
 
+///////////////////////////////////////////////////////////////////////////////
+// Hall probes
+
 const int PROBE_COUNT = 21;
 HallProbe* probes[PROBE_COUNT];
 
 struct HallProbeDef {
-	String name;
-	int pin;
+  String name;
+  int pin;
 };
 
-HallProbeDef probe_defs[] = {
+HallProbeDef probe_defs[PROBE_COUNT] = {
   {"FH02", 4},
   {"FH03", 6},
   {"FH05", 11},
@@ -51,21 +54,24 @@ HallProbeDef probe_defs[] = {
   {"FHac", 21},
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Crossings
+
+struct CrossingDef {
+  String name;
+  int pinClosed;
+  int pinOccupied;
+};
+
 const int CROSSING_COUNT = 3;
 Crossing* crossings[CROSSING_COUNT];
-int crossing_pins[CROSSING_COUNT] = {
-  19,
-  20,
-  21,
+CrossingDef crossing_defs[CROSSING_COUNT] = {
+  {"CRG", 19, 20},
+  {"CRH", 21, 22}, // TODO: is 22 correct?
 };
-const char* crossing_names[CROSSING_COUNT] = {
-  "CRG1",
-  "CRG2",
-  "CRH1",
-};
-// CRG1 pin 19 -- přejezd G ve výstraze
-// CRG2 pin 20 -- přejezd G ve obsazen
-// CRH1 pin 21 -- přejezd H ve výstraze
+
+///////////////////////////////////////////////////////////////////////////////
+// Paths
 
 const int PATH_COUNT = 29;
 VPath* paths[PATH_COUNT];
@@ -148,7 +154,7 @@ void setup() {
     probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
 
   for (int i=0; i < CROSSING_COUNT; i++)
-    crossings[i] = new Crossing(i, crossing_pins[i], crossing_names[i]);
+    crossings[i] = new Crossing(i, crossing_defs[i].pinClosed, crossing_defs[i].pinOccupied, crossing_defs[i].name);
 
   for (int i=0; i < MAGNET_COUNT; i++)
     magnets[i] = new CoilSemaphore(magnet_pins[i], magnet_names[i]);
