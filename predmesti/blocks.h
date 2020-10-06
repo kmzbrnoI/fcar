@@ -22,9 +22,8 @@
 #define FHA2 17
 
 // crossing
-#define CRG1 0
-#define CRG2 1
-#define CRH1 2
+#define CRG 0
+#define CRH 1
 
 // useky
 #define FH02FM02 0
