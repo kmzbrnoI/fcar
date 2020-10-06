@@ -14,7 +14,7 @@ class Vehicle
   public:
     Vehicle(int id);
     int get_id() const;
-    VehicleType get_type() const;
+    VehicleType type() const;
 
     bool is_active() const;
     void activate(VehicleType vehicle_type);

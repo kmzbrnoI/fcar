@@ -127,13 +127,14 @@ int VPath::vehicle_pull() {
   return vehicle;
 }
 
-int VPath::get_car_id() {
-  return _vehicle;
-}
-
-VehicleType VPath::get_vehicle_type() {
+Vehicle& VPath::vehicle() const {
+  // Safe car returner: return fresh istance if no _vehicle
+  // so calls like path->car.something() are possible without SEGFAULT
   extern Vehicle* vehicles[];
-  return vehicles[_vehicle]->get_type();
+  if (_vehicle < 0)
+    Serial.println("ERROR: invalid vehicle, returning vehicles[0]!");
+    // even this may segfault; you better restart device when this occurs
+  return (_vehicle > -1) ? *vehicles[_vehicle] : *vehicles[0];
 }
 
 void VPath::expect_bus() {

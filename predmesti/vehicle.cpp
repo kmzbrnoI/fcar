@@ -13,7 +13,7 @@ int Vehicle::get_id() const {
   return _id;
 }
 
-VehicleType Vehicle::get_type() const {
+VehicleType Vehicle::type() const {
   return _vehicle_type;
 }
 
@@ -32,11 +32,12 @@ void Vehicle::deactivate() {
 }
 
 void Vehicle::bus_stop() {
-  _stop_time = millis();
+  if (_vehicle_type == VehicleType::bus)
+    _stop_time = millis();
 }
 
 bool Vehicle::is_bus_ready() const {
-  return (millis() - _stop_time > 10000);
+  return _vehicle_type == VehicleType::bus ? (millis() - _stop_time > 10000) : true;
 }
 
 void Vehicle::add_turn() {

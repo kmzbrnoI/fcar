@@ -26,19 +26,19 @@ void CoilSemaphore::make_decision() {
     if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06)) {
       // na velky okruh
 
-      if (paths[FH02FM02]->get_vehicle_type() == VehicleType::bus) {
+      if (paths[FH02FM02]->vehicle().type() == VehicleType::bus) {
         j_a->to_plus();
         j_b->to_minus();
         paths_reserve(true, FM02FH03, FH03FH06, FH06FM06);
         magnets[FM02]->signal_green();
-        vehicles[paths[FH02FM02]->get_car_id()]->add_turn();
+        paths[FH02FM02]->vehicle().add_turn();
         move_car(FH02FM02, FM02FH03);
       } else {
         j_a->to_plus();
         j_b->to_plus();
         paths_reserve(true, FM02FH03, FH03FH05, FH05FH07, FH07FM07);
         magnets[FM02]->signal_green();
-        vehicles[paths[FH02FM02]->get_car_id()]->add_turn();
+        paths[FH02FM02]->vehicle().add_turn();
         move_car(FH02FM02, FM02FH03);
       }
     } else if (paths_are_clear(FH13FM13, FM02FH13)) {
@@ -47,14 +47,14 @@ void CoilSemaphore::make_decision() {
       paths_reserve(true, FM02FH13, FH13FM13);
       paths[FM11FH22]->reserve(false);
       magnets[FM02]->signal_green();
-      vehicles[paths[FH02FM02]->get_car_id()]->add_turn();
+      paths[FH02FM02]->vehicle().add_turn();
       move_car(FH02FM02, FM02FH13);
     } else {
       magnets[FM02]->signal_red();
     }
 
   } else if (_id == FM06) {
-    if (paths_are_clear(FM06FH07, FH07FM07) && vehicles[paths[FH06FM06]->get_car_id()]->is_bus_ready()) {
+    if (paths_are_clear(FM06FH07, FH07FM07) && paths[FH06FM06]->vehicle().is_bus_ready()) {
       paths_reserve(true, FM06FH07, FH07FM07);
       paths[FH05FH07]->reserve(false);
       magnets[FM06]->signal_green();
@@ -83,7 +83,7 @@ void CoilSemaphore::make_decision() {
     }
 
   } else if (_id == FM09) {
-    if (vehicles[paths[FH09FM09]->get_car_id()]->get_turn() > 1) {
+    if (paths[FH09FM09]->vehicle().get_turn() > 1) {
       if (paths_are_clear(FM09FH11, FH11FM11)) {
         j_c->to_minus();
         paths_reserve(true, FM09FH11, FH11FM11);

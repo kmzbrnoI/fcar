@@ -40,7 +40,7 @@ void probe_event(int id, String& name) {
 
   // velky okruh
   if (id == FH03) {
-    if(paths[FM02FH03]->get_vehicle_type() == VehicleType::bus) {
+    if(paths[FM02FH03]->vehicle().type() == VehicleType::bus) {
       move_car(FM02FH03, FH03FH06);
     } else {
       move_car(FM02FH03, FH03FH05);
@@ -52,7 +52,7 @@ void probe_event(int id, String& name) {
   // autobusova zastavka
   if (id == FH06) {
     move_car(FH03FH06, FH06FM06);
-    vehicles[paths[FH06FM06]->get_car_id()]->bus_stop();
+    paths[FH06FM06]->vehicle().bus_stop();
     magnets[FM06]->make_decision();
   }
   if (id == FH07) {

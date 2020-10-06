@@ -25,8 +25,7 @@ class VPath
 
     void vehicle_push(int vehicle);
     int vehicle_pull();
-    int get_car_id();
-    VehicleType get_vehicle_type();
+    Vehicle& vehicle() const;
 
     void expect_bus();
     VehicleType is_expecting();
