@@ -180,3 +180,11 @@ bool paths_are_clear(int pathIda, int pathIdb, int pathIdc, int pathIdd, int pat
   if (result && pathIde > -1) result &= paths[pathIde]->is_clear();
   return result;
 }
+
+void paths_reserve(bool inDirection, int pathIda, int pathIdb, int pathIdc, int pathIdd) {
+  extern VPath* paths[];
+  paths[pathIda]->reserve(inDirection);
+  if (pathIdb > -1) paths[pathIdb]->reserve(inDirection);
+  if (pathIdc > -1) paths[pathIdc]->reserve(inDirection);
+  if (pathIdd > -1) paths[pathIdd]->reserve(inDirection);
+}
