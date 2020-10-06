@@ -48,7 +48,8 @@ class VPath
     unsigned long _cleanSoonTime;
 };
 
-bool paths_are_clear(int pathIda, int pathIdb = -1, int pathIdc = -1, int pathIdd = -1, int pathIde = -1);
+bool paths_are_clear(int pathIda, int pathIdb = -1, int pathIdc = -1, int pathIdd = -1,
+                     int pathIde = -1, int pathIdf = -1);
 void paths_reserve(bool inDirection, int pathIda, int pathIdb = -1, int pathIdc = -1, int pathIdd = -1);
 
 #endif /* PATH_H */

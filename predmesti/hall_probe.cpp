@@ -11,9 +11,7 @@ void probe_event(int id, String& name) {
   //Serial.println(name);
 
   if (id == FHA2) {
-    paths[FHA2FHA0]->reserve(true);
-    paths[FHA0FH02]->reserve(true);
-    paths[FH02FM02]->reserve(true);
+    paths_reserve(true, FHA2FHA0, FHA0FH02, FH02FM02);
     paths[FM10FH02]->reserve(false);
     move_car(FHA2FHA0, FHA2FHA0);
     Serial.println("Neco prijelo od Depa...");
@@ -23,7 +21,6 @@ void probe_event(int id, String& name) {
     paths[FHA2FHA0]->unreserve();
     Serial.println("...a uz to vjizdi do Predmesti");
   }
-
   if (id == FHA1) {
     paths[FHA2FHA0]->expect_bus();
     Serial.println("... a je to autobus... ");
@@ -72,14 +69,12 @@ void probe_event(int id, String& name) {
     magnets[FM08]->make_decision();
   }
 
-
   // maly okruh
   if (id == FH13) {
     move_car(FM02FH13, FH13FM13);
     paths[FM11FH22]->unreserve();
     magnets[FM13]->make_decision();
   }
-
 
   // opousteni oblasti
   if (id == FH09) {

@@ -157,7 +157,7 @@ bool VPath::is_blocked_by_crossing() {
   return crossings[_crossingId]->isRed();
 }
 
-bool paths_are_clear(int pathIda, int pathIdb, int pathIdc, int pathIdd, int pathIde) {
+bool paths_are_clear(int pathIda, int pathIdb, int pathIdc, int pathIdd, int pathIde, int pathIdf) {
   extern VPath* paths[];
   bool result;
   result = paths[pathIda]->is_clear();
@@ -165,6 +165,7 @@ bool paths_are_clear(int pathIda, int pathIdb, int pathIdc, int pathIdd, int pat
   if (result && pathIdc > -1) result &= paths[pathIdc]->is_clear();
   if (result && pathIdd > -1) result &= paths[pathIdd]->is_clear();
   if (result && pathIde > -1) result &= paths[pathIde]->is_clear();
+  if (result && pathIdf > -1) result &= paths[pathIdf]->is_clear();
   return result;
 }
 

@@ -23,7 +23,7 @@ void CoilSemaphore::make_decision() {
   extern Junction *j_c;
 
   if (_id == FM02) {
-    if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06)) {
+    if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06)) {
       // na velky okruh
 
       if (paths[FH02FM02]->get_vehicle_type() == VehicleType::bus) {
