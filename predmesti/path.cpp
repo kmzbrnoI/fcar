@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include "path.h"
 #include "crossing.h"
 
@@ -167,4 +168,15 @@ bool VPath::is_blocked_by_crossing() {
   if (_crossingId == CRUNDEF)
     return false;
   return crossings[_crossingId]->isRed();
+}
+
+bool paths_are_clear(int pathIda, int pathIdb, int pathIdc, int pathIdd, int pathIde) {
+  extern VPath* paths[];
+  bool result;
+  result = paths[pathIda]->is_clear();
+  if (result && pathIdb > -1) result &= paths[pathIdb]->is_clear();
+  if (result && pathIdc > -1) result &= paths[pathIdc]->is_clear();
+  if (result && pathIdd > -1) result &= paths[pathIdd]->is_clear();
+  if (result && pathIde > -1) result &= paths[pathIde]->is_clear();
+  return result;
 }
