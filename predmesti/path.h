@@ -30,7 +30,7 @@ class VPath
     void expect_bus();
     VehicleType is_expecting();
 
-    bool is_blocked_by_crossing();
+    bool is_blocked_by_crossing() const;
 
   private:
     const int _id;

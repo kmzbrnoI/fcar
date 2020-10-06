@@ -16,7 +16,6 @@ SSignal CoilSemaphore::getSignal() {
 
 void CoilSemaphore::make_decision() {
   extern VPath* paths[];
-  extern Vehicle* vehicles[];
   extern CoilSemaphore* magnets[];
   extern Junction *j_a;
   extern Junction *j_b;

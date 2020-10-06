@@ -7,12 +7,12 @@ VPath::VPath(int id, const String& name, int crossingId)
   _name(name),
   _crossingId(crossingId),
   _state(VPathStatus::clear),
+  _vehicle(-1),
+  _expecting_bus(false),
   _reservationTime(0),
   _occupiedSoonTime(0),
   _occupiedTime(0),
-  _cleanSoonTime(0),
-  _vehicle(-1),
-  _expecting_bus(false)
+  _cleanSoonTime(0)
 {}
 
 const String& VPath::name() const {
@@ -110,7 +110,7 @@ int VPath::vehicle_pull() {
   int vehicle = _vehicle;
 
   if (_state != VPathStatus::occupied) {
-    Serial.print("ERROR: Car didn't occupied its path on position [");
+    Serial.print("ERROR: Car didn't occupy its path on position [");
     Serial.print(_name);
     Serial.println("]!");
   }
@@ -151,7 +151,7 @@ VehicleType VPath::is_expecting() {
   return car_type;
 }
 
-bool VPath::is_blocked_by_crossing() {
+bool VPath::is_blocked_by_crossing() const {
   extern Crossing* crossings[];
   if (_crossingId == CRUNDEF)
     return false;
