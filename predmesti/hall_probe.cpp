@@ -72,7 +72,7 @@ void HallProbe::changed() {
   // maly okruh
   if (_id == FH13) {
     move_car(FM02FH13, FH13FM13);
-    paths[FM11FH22]->unreserve();
+    paths[FM11FH23]->unreserve();
     magnets[FM13]->make_decision();
   }
 
@@ -101,13 +101,11 @@ void HallProbe::changed() {
     paths[FM09FH10]->unreserve();
     magnets[FM11]->make_decision();
   }
-  if (_id == FH22) {
-    paths[FM02FH13]->unreserve();
-    move_car(FM11FH22, FH22FH23);
-  }
   if (_id == FH23) {
     paths[FM10FH02]->unreserve();
-    vehicles[paths[FH22FH23]->vehicle_pull()]->deactivate();
+    int vehicle = paths[FM11FH23]->vehicle_pull();
+    if (vehicle > -1)
+      vehicles[vehicle]->deactivate();
   }
 }
 

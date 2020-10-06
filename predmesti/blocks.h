@@ -54,8 +54,7 @@
 #define FH21FH22 24
 #define FHA2FHA0 25
 #define FHA0FH02 26
-#define FM11FH22 27
-// #define FH22FH23 28  TODO: redefined!
+#define FM11FH23 27
 
 // zastavovaci magnety
 #define FM02 0

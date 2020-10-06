@@ -45,7 +45,7 @@ void CoilSemaphore::make_decision() {
       // na maly okruh
       j_a->to_minus();
       paths_reserve(true, FM02FH13, FH13FM13);
-      paths[FM11FH22]->reserve(false);
+      paths[FM11FH23]->reserve(false);
       magnets[FM02]->signal_green();
       paths[FH02FM02]->vehicle().add_turn();
       move_car(FH02FM02, FM02FH13);
@@ -112,12 +112,12 @@ void CoilSemaphore::make_decision() {
     }
 
   } else if (_id == FM11) {
-    if (paths_are_clear(FM11FH22, FH22FH23, FM10FH02, FM02FH13)) {
+    if (paths_are_clear(FM11FH23, FM10FH02, FM02FH13)) {
       j_c->to_plus();
-      paths_reserve(true, FM11FH22, FH22FH23);
+      paths_reserve(true, FM11FH23);
       paths_reserve(false, FM02FH13, FM10FH02);
       magnets[FM11]->signal_green();
-      move_car(FH11FM11, FM11FH22);
+      move_car(FH11FM11, FM11FH23);
     } else {
       magnets[FM11]->signal_red();
     }

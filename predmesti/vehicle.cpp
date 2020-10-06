@@ -25,6 +25,7 @@ void Vehicle::activate(VehicleType vehicle_type) {
 
 void Vehicle::deactivate() {
   _active = false;
+  log("Car [" + String(_id) + "] deactivated");
 }
 
 void Vehicle::bus_stop() {

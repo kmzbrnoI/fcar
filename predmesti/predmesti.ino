@@ -102,8 +102,7 @@ VPathDef path_defs[PATH_COUNT] = {
   {"FH21FH22", CRUNDEF},
   {"FHA2FHA0", CRUNDEF},
   {"FHA0FH02", CRUNDEF},
-  {"FM11FH22", CRUNDEF},
-  {"FH22FH23", CRUNDEF},
+  {"FM11FH23", CRUNDEF},
 };
 
 ///////////////////////////////////////////////////////////////////////////////
