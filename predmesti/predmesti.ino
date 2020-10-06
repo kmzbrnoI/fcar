@@ -149,7 +149,7 @@ void setup() {
     crossings[i] = new Crossing(i, crossing_defs[i].pinClosed, crossing_defs[i].pinOccupied, crossing_defs[i].name);
 
   for (int i=0; i < MAGNET_COUNT; i++)
-    magnets[i] = new CoilSemaphore(magnet_defs[i].pin, magnet_defs[i].name);
+    magnets[i] = new CoilSemaphore(i, magnet_defs[i].pin, magnet_defs[i].name);
 
   for (int i=0; i < PATH_COUNT; i++)
     paths[i] = new VPath(i, path_names[i]);
@@ -170,19 +170,19 @@ void loop() {
     crossings[i]->updateState();
 
   if (magnets[FM02]->getSignal() == SSignal::red)
-    magnets[FM02]->make_decision(FM02, paths[FH02FM02]);
+    magnets[FM02]->make_decision(paths[FH02FM02]);
   if (magnets[FM06]->getSignal() == SSignal::red)
-    magnets[FM06]->make_decision(FM06, paths[FH06FM06]);
+    magnets[FM06]->make_decision(paths[FH06FM06]);
   if (magnets[FM07]->getSignal() == SSignal::red)
-    magnets[FM07]->make_decision(FM07, paths[FH07FM07]);
+    magnets[FM07]->make_decision(paths[FH07FM07]);
   if (magnets[FM08]->getSignal() == SSignal::red)
-    magnets[FM08]->make_decision(FM08, paths[FH08FM08]);
+    magnets[FM08]->make_decision(paths[FH08FM08]);
   if (magnets[FM13]->getSignal() == SSignal::red)
-    magnets[FM13]->make_decision(FM13, paths[FH13FM13]);
+    magnets[FM13]->make_decision(paths[FH13FM13]);
   if (magnets[FM09]->getSignal() == SSignal::red)
-    magnets[FM09]->make_decision(FM09, paths[FH09FM09]);
+    magnets[FM09]->make_decision(paths[FH09FM09]);
   if (magnets[FM10]->getSignal() == SSignal::red)
-    magnets[FM10]->make_decision(FM10, paths[FH10FM10]);
+    magnets[FM10]->make_decision(paths[FH10FM10]);
 
   for (int i=0; i < PATH_COUNT; i++)
     if (! paths[i]->is_clear())

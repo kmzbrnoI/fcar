@@ -1,8 +1,9 @@
 #include "coil_semaphore.h"
 #include "vehicle.h"
 
-CoilSemaphore::CoilSemaphore(int pin, const String& name)
+CoilSemaphore::CoilSemaphore(int id, int pin, const String& name)
   :
+  _id(id),
   _pin(pin),
   _name(name)
 {
@@ -15,7 +16,7 @@ SSignal CoilSemaphore::getSignal()
   return _state;
 }
 
-void CoilSemaphore::make_decision(int id, VPath* path) {
+void CoilSemaphore::make_decision(VPath* path) {
 
   extern VPath* paths[];
   extern Vehicle* vehicles[];
@@ -28,7 +29,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     return;
   }
 
-  if (id == FM02) {
+  if (_id == FM02) {
     if (paths[FM02FH03]->is_clear() && paths[FH03FH05]->is_clear() && paths[FH05FH07]->is_clear() && paths[FH07FM07]->is_clear() && paths[FH06FM06]->is_clear()) {
       // na velky okruh
       
@@ -70,7 +71,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     }
   }
 
-  if (id == FM06) {
+  if (_id == FM06) {
 
     if (paths[FM06FH07]->is_clear() && paths[FH07FM07]->is_clear() &&
         vehicles[paths[FH06FM06]->get_car_id()]->is_bus_ready())
@@ -87,7 +88,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     }
   }
 
-  if (id == FM07) {
+  if (_id == FM07) {
     if (paths[FM07FH08]->is_clear() && paths[FH08FM08]->is_clear()) {
       paths[FM07FH08]->reserve(true);
       paths[FH08FM08]->reserve(true);
@@ -100,7 +101,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     }
   }
 
-  if (id == FM08) {
+  if (_id == FM08) {
     if (paths[FM08FH09]->is_clear() && paths[FH09FM09]->is_clear() && paths[FM13FH09]->is_clear()) {
       paths[FM08FH09]->reserve(true);
       paths[FH09FM09]->reserve(true);
@@ -114,7 +115,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     }
   }
 
-  if (id == FM09) {
+  if (_id == FM09) {
     if (vehicles[paths[FH09FM09]->get_car_id()]->get_turn() > 1) {
       if (paths[FM09FH11]->is_clear() && paths[FH11FM11]->is_clear()) {
         j_c->to_minus();
@@ -144,7 +145,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     }
   }
 
-  if (id == FM10) {
+  if (_id == FM10) {
     if (paths[FM10FH02]->is_clear() &&
         paths[FH02FM02]->is_clear() &&
         paths[FH22FH23]->is_clear() &&
@@ -163,7 +164,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     }
   }
 
-  if (id == FM11) {
+  if (_id == FM11) {
     if (paths[FM11FH22]->is_clear() && paths[FH22FH23]->is_clear() && paths[FM10FH02]->is_clear() && paths[FM02FH13]->is_clear()) {
       j_c->to_plus();
       paths[FM11FH22]->reserve(true);
@@ -179,7 +180,7 @@ void CoilSemaphore::make_decision(int id, VPath* path) {
     }
   }
 
-  if (id == FM13) {
+  if (_id == FM13) {
     if (paths[FM13FH09]->is_clear() && paths[FH09FM09]->is_clear() && paths[FM08FH09]->is_clear()) {
       j_c->to_plus();
       paths[FM13FH09]->reserve(true);

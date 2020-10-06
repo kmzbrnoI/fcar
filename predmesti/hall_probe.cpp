@@ -38,7 +38,7 @@ void probe_event(int id, String& name) {
       move_car(FHA0FH02, FH02FM02);
       paths[FH22FH23]->unreserve();
     }
-    magnets[FM02]->make_decision(FM02, paths[FH02FM02]);
+    magnets[FM02]->make_decision(paths[FH02FM02]);
   }
 
   // velky okruh
@@ -56,7 +56,7 @@ void probe_event(int id, String& name) {
   if (id == FH06) {
     move_car(FH03FH06, FH06FM06);
     vehicles[paths[FH06FM06]->get_car_id()]->bus_stop();
-    magnets[FM06]->make_decision(FM06, paths[FH06FM06]);
+    magnets[FM06]->make_decision(paths[FH06FM06]);
   }
   if (id == FH07) {
     if(paths[FH05FH07]->is_reserved()) {
@@ -65,11 +65,11 @@ void probe_event(int id, String& name) {
     } else {
       move_car(FH05FH07, FH07FM07);
     }
-    magnets[FM07]->make_decision(FM07, paths[FH07FM07]);
+    magnets[FM07]->make_decision(paths[FH07FM07]);
   }
   if (id == FH08) {
     move_car(FM07FH08, FH08FM08);
-    magnets[FM08]->make_decision(FM08, paths[FH08FM08]);
+    magnets[FM08]->make_decision(paths[FH08FM08]);
   }
 
 
@@ -77,7 +77,7 @@ void probe_event(int id, String& name) {
   if (id == FH13) {
     move_car(FM02FH13, FH13FM13);
     paths[FM11FH22]->unreserve();
-    magnets[FM13]->make_decision(FM13, paths[FH13FM13]);
+    magnets[FM13]->make_decision(paths[FH13FM13]);
   }
 
 
@@ -91,19 +91,19 @@ void probe_event(int id, String& name) {
       move_car(FM13FH09, FH09FM09);
       paths[FM08FH09]->unreserve();
     }
-    magnets[FM09]->make_decision(FM09, paths[FH09FM09]);
+    magnets[FM09]->make_decision(paths[FH09FM09]);
   }
   if (id == FH10) {
     move_car(FM09FH10, FH10FM10);
     paths[FM09FH11]->unreserve();    
-    magnets[FM10]->make_decision(FM10, paths[FH10FM10]);
+    magnets[FM10]->make_decision(paths[FH10FM10]);
   }
 
   // opousteci trasa k Hradu
   if (id == FH11) {
     move_car(FM09FH11, FH11FM11);
     paths[FM09FH10]->unreserve();
-    magnets[FM11]->make_decision(FM11, paths[FH11FM11]);
+    magnets[FM11]->make_decision(paths[FH11FM11]);
   }
   if (id == FH22) {
     paths[FM02FH13]->unreserve();
