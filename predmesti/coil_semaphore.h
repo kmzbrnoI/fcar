@@ -21,13 +21,13 @@ class CoilSemaphore
 {
   public:
     /* Constructor */
-    CoilSemaphore(int pin, const char* name);
+    CoilSemaphore(int pin, const String& name);
 
     /* Returns SSignal according to current state */
     SSignal getSignal();
 
     void make_decision(int id, VPath* path);
-    
+
     /* Turn semaphore to green */
     void signal_green();
 
@@ -36,7 +36,7 @@ class CoilSemaphore
 
   private:
     const int _pin;
-    const char* _name;
+    const String _name;
     SSignal _state;
 
 };

@@ -1,7 +1,7 @@
 #include "coil_semaphore.h"
 #include "vehicle.h"
 
-CoilSemaphore::CoilSemaphore(int pin, const char* name)
+CoilSemaphore::CoilSemaphore(int pin, const String& name)
   :
   _pin(pin),
   _name(name)

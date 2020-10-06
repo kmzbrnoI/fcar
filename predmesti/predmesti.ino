@@ -25,12 +25,12 @@ Vehicle* vehicles[VEHICLE_COUNT];
 const int PROBE_COUNT = 21;
 HallProbe* probes[PROBE_COUNT];
 
-struct HallProbeDef {
+struct IODef {
   String name;
   int pin;
 };
 
-HallProbeDef probe_defs[PROBE_COUNT] = {
+IODef probe_defs[PROBE_COUNT] = {
   {"FH02", 4},
   {"FH03", 6},
   {"FH05", 11},
@@ -108,43 +108,35 @@ const char* path_names[PATH_COUNT] = {
   "FH22FH23",
 };
 
+///////////////////////////////////////////////////////////////////////////////
+// Junctions
+
 Junction* j_a;
 Junction* j_b;
 Junction* j_c;
 
+///////////////////////////////////////////////////////////////////////////////
+// Magnets
 
 const int MAGNET_COUNT = 12;
 CoilSemaphore* magnets[MAGNET_COUNT];
 
-int magnet_pins[MAGNET_COUNT] = {
-  29,
-  36,
-  37,
-  31,
-  33,
-  26,
-  30,
-  28,
-  38,
-  34,
-  32,
-  35,
+IODef magnet_defs[MAGNET_COUNT] = {
+  {"FM02", 29},
+  {"FM06", 36},
+  {"FM07", 37},
+  {"FM08", 31},
+  {"FM09", 33},
+  {"FM10", 26},
+  {"FM11", 30},
+  {"FM12", 28},
+  {"FM13", 38},
+  {"FM14", 34},
+  {"FM20", 32},
+  {"FM29", 35},
 };
 
-const char* magnet_names[MAGNET_COUNT] = {
-  "FM02",
-  "FM06",
-  "FM07",
-  "FM08",
-  "FM09",
-  "FM10",
-  "FM11",
-  "FM12",
-  "FM13",
-  "FM14",
-  "FM20",
-  "FM29",
-};
+///////////////////////////////////////////////////////////////////////////////
 
 void setup() {
   for (int i=0; i < VEHICLE_COUNT; i++)
@@ -157,7 +149,7 @@ void setup() {
     crossings[i] = new Crossing(i, crossing_defs[i].pinClosed, crossing_defs[i].pinOccupied, crossing_defs[i].name);
 
   for (int i=0; i < MAGNET_COUNT; i++)
-    magnets[i] = new CoilSemaphore(magnet_pins[i], magnet_names[i]);
+    magnets[i] = new CoilSemaphore(magnet_defs[i].pin, magnet_defs[i].name);
 
   for (int i=0; i < PATH_COUNT; i++)
     paths[i] = new VPath(i, path_names[i]);
@@ -171,40 +163,28 @@ void setup() {
 }
 
 void loop() {
-
-  for (int i=0; i < PROBE_COUNT; i++) {
+  for (int i=0; i < PROBE_COUNT; i++)
     probes[i]->updateState();
-  }
 
-  for (int i=0; i < CROSSING_COUNT; i++) {
+  for (int i=0; i < CROSSING_COUNT; i++)
     crossings[i]->updateState();
-  }
 
-  if (magnets[FM02]->getSignal() == SSignal::red) {
+  if (magnets[FM02]->getSignal() == SSignal::red)
     magnets[FM02]->make_decision(FM02, paths[FH02FM02]);
-  }
-  if (magnets[FM06]->getSignal() == SSignal::red) {
+  if (magnets[FM06]->getSignal() == SSignal::red)
     magnets[FM06]->make_decision(FM06, paths[FH06FM06]);
-  }
-  if (magnets[FM07]->getSignal() == SSignal::red) {
+  if (magnets[FM07]->getSignal() == SSignal::red)
     magnets[FM07]->make_decision(FM07, paths[FH07FM07]);
-  }
-  if (magnets[FM08]->getSignal() == SSignal::red) {
+  if (magnets[FM08]->getSignal() == SSignal::red)
     magnets[FM08]->make_decision(FM08, paths[FH08FM08]);
-  }
-  if (magnets[FM13]->getSignal() == SSignal::red) {
+  if (magnets[FM13]->getSignal() == SSignal::red)
     magnets[FM13]->make_decision(FM13, paths[FH13FM13]);
-  }
-  if (magnets[FM09]->getSignal() == SSignal::red) {
+  if (magnets[FM09]->getSignal() == SSignal::red)
     magnets[FM09]->make_decision(FM09, paths[FH09FM09]);
-  }
-  if (magnets[FM10]->getSignal() == SSignal::red) {
+  if (magnets[FM10]->getSignal() == SSignal::red)
     magnets[FM10]->make_decision(FM10, paths[FH10FM10]);
-  }
 
-  for (int i=0; i < PATH_COUNT; i++) {
-    if (! paths[i]->is_clear()) {
+  for (int i=0; i < PATH_COUNT; i++)
+    if (! paths[i]->is_clear())
       paths[i]->timeout();
-    }
-  }
 }
