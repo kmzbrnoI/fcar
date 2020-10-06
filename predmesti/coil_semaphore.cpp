@@ -83,26 +83,22 @@ void CoilSemaphore::make_decision() {
     }
 
   } else if (_id == FM09) {
-    if (paths[FH09FM09]->vehicle().get_turn() > 1) {
-      if (paths_are_clear(FM09FH11, FH11FM11)) {
-        j_c->to_minus();
-        paths_reserve(true, FM09FH11, FH11FM11);
-        paths[FM09FH10]->reserve(false);
-        magnets[FM09]->signal_green();
-        move_car(FH09FM09, FM09FH11);
-      } else {
-        magnets[FM09]->signal_red();
-      }
+    if (!paths[FH09FM09]->vehicle().is_bus_ready()) {
+      magnets[FM09]->signal_red();
+    } else if (paths[FH09FM09]->vehicle().get_turn() > 1 && paths_are_clear(FM09FH11, FH11FM11)) {
+      j_c->to_minus();
+      paths_reserve(true, FM09FH11, FH11FM11);
+      paths[FM09FH10]->reserve(false);
+      magnets[FM09]->signal_green();
+      move_car(FH09FM09, FM09FH11);
+    } else if (paths_are_clear(FM09FH10, FH10FM10)) {
+      j_c->to_plus();
+      paths_reserve(true, FM09FH10, FH10FM10);
+      paths[FM09FH11]->reserve(false);
+      magnets[FM09]->signal_green();
+      move_car(FH09FM09, FM09FH10);
     } else {
-      if (paths_are_clear(FM09FH10, FH10FM10)) {
-        j_c->to_plus();
-        paths_reserve(true, FM09FH10, FH10FM10);
-        paths[FM09FH11]->reserve(false);
-        magnets[FM09]->signal_green();
-        move_car(FH09FM09, FM09FH10);
-      } else {
-        magnets[FM09]->signal_red();
-      }
+      magnets[FM09]->signal_red();
     }
 
   } else  if (_id == FM10) {

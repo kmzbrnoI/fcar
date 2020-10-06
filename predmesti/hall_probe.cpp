@@ -86,6 +86,7 @@ void probe_event(int id, String& name) {
       move_car(FM13FH09, FH09FM09);
       paths[FM08FH09]->unreserve();
     }
+    paths[FH09FM09]->vehicle().bus_stop();
     magnets[FM09]->make_decision();
   }
   if (id == FH10) {
