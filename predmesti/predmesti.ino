@@ -22,51 +22,33 @@ Vehicle* vehicles[VEHICLE_COUNT];
 const int PROBE_COUNT = 21;
 HallProbe* probes[PROBE_COUNT];
 
-int probe_pins[PROBE_COUNT] = {
-  4,
-  6,
-  11,
-  9,
-  14,
-  15,
-  18,
-  17,
-  23,
-  22,
-  2,
-  7,
-  5,
-  10,
-  16,
-  A0,
-  A1,
-  A2,
-  19,
-  20,
-  21,
-//  8 FHaa, nepouzito
+struct HallProbeDef {
+	String name;
+	int pin;
 };
 
-const char* probe_names[PROBE_COUNT] = {
-  "FH02",
-  "FH03",
-  "FH05",
-  "FH06",
-  "FH07",
-  "FH08",
-  "FH09",
-  "FH10",
-  "FH11",
-  "FH13",
-  "FH20",
-  "FH21",
-  "FH22",
-  "FH23",
-  "FH30",
-  "FHA0",
-  "FHA1",
-  "FHA2",
-  // "FHaa" -- nepouzito
+HallProbeDef probe_defs[] = {
+  {"FH02", 4},
+  {"FH03", 6},
+  {"FH05", 11},
+  {"FH06", 9},
+  {"FH07", 14},
+  {"FH08", 15},
+  {"FH09", 18},
+  {"FH10", 17},
+  {"FH11", 23},
+  {"FH13", 22},
+  {"FH20", 2},
+  {"FH21", 7},
+  {"FH22", 5},
+  {"FH23", 10},
+  {"FH30", 16},
+  {"FHA0", A0},
+  {"FHA1", A1},
+  {"FHA2", A2},
+  {"FHaa", 19},
+  {"FHab", 20},
+  {"FHac", 21},
 };
 
 const int CROSSING_COUNT = 3;
@@ -159,38 +141,27 @@ const char* magnet_names[MAGNET_COUNT] = {
 };
 
 void setup() {
-
-  for (int i=0; i < VEHICLE_COUNT; i++) {
+  for (int i=0; i < VEHICLE_COUNT; i++)
     vehicles[i] = new Vehicle(i);
-  }
-  
-  for (int i=0; i < PROBE_COUNT; i++) {
-    // nefunguje FH22
-    // FHaa nepouzito
 
-    probes[i] = new HallProbe(i, probe_pins[i], probe_names[i]);
-  }
+  for (int i=0; i < PROBE_COUNT; i++)
+    probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
 
-  for (int i=0; i < CROSSING_COUNT; i++) {
+  for (int i=0; i < CROSSING_COUNT; i++)
     crossings[i] = new Crossing(i, crossing_pins[i], crossing_names[i]);
-  }
 
-  for (int i=0; i < MAGNET_COUNT; i++) {
+  for (int i=0; i < MAGNET_COUNT; i++)
     magnets[i] = new CoilSemaphore(magnet_pins[i], magnet_names[i]);
-  }
 
-  for (int i=0; i < PATH_COUNT; i++) {
+  for (int i=0; i < PATH_COUNT; i++)
     paths[i] = new VPath(i, path_names[i]);
-  }
 
   j_a = new Junction(40, 41);
   j_b = new Junction(42, 43);
   j_c = new Junction(27, 39);
 
   Serial.begin(9600);
-  while (!Serial) {
-    ;
-  }
+  while (!Serial);
 }
 
 void loop() {

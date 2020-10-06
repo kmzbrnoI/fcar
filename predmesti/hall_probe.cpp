@@ -1,6 +1,6 @@
 #include "hall_probe.h"
 
-void probe_event(int id, const char* name) {
+void probe_event(int id, String& name) {
 
   extern HallProbe* probes[];
   extern VPath* paths[];
@@ -115,7 +115,7 @@ void probe_event(int id, const char* name) {
   }
 }
 
-HallProbe::HallProbe(int id, int pin, const char* name)
+HallProbe::HallProbe(int id, int pin, const String& name)
   :
   _id(id),
   _pin(pin),

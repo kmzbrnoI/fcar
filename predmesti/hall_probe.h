@@ -21,7 +21,7 @@ class HallProbe
      * Constructor
      * int pin (IN) arduino pin number
      */
-    HallProbe(int id, int pin, const char* name);
+    HallProbe(int id, int pin, const String& name);
     
     /* Update state from probe */
     void updateState();
@@ -30,7 +30,7 @@ class HallProbe
     unsigned long _last_positive_time;  // timestamp of last positive state
     const int _id; 
     const int _pin;                     // arduino pin wehere probe is connected
-    const char* _name;
+    String _name;
 
     /*
      * The logic of Hall's sond is not straightforward, it cannot remember about
