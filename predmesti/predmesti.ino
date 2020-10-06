@@ -15,7 +15,7 @@ Vehicle* vehicles[VEHICLE_COUNT];
 ///////////////////////////////////////////////////////////////////////////////
 // Hall probes
 
-const int PROBE_COUNT = 21;
+const int PROBE_COUNT = 18;
 HallProbe* probes[PROBE_COUNT];
 
 struct IODef {
@@ -42,9 +42,6 @@ IODef probe_defs[PROBE_COUNT] = {
   {"FHA0", A0},  // blize predmesti
   {"FHA1", A1},  // detekce autobusu
   {"FHA2", A2},  // dale od predmesti
-  {"FHaa", 19},
-  {"FHab", 20},
-  {"FHac", 21},
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,7 +57,7 @@ const int CROSSING_COUNT = 3;
 Crossing* crossings[CROSSING_COUNT];
 CrossingDef crossing_defs[CROSSING_COUNT] = {
   {"CRG", 19, 20},
-  {"CRH", 21, 22}, // TODO: is 22 correct?
+  {"CRH", 21, 3},
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,11 +72,11 @@ const int PATH_COUNT = 29;
 VPath* paths[PATH_COUNT];
 
 VPathDef path_defs[PATH_COUNT] = {
-  {"FH02FM02", CRG},
+  {"FH02FM02", CRUNDEF},
   {"FM02FH03", CRUNDEF},
   {"FM02FH13", CRUNDEF},
-  {"FH03FH06", CRUNDEF},
-  {"FH03FH05", CRUNDEF},
+  {"FH03FH06", CRG},
+  {"FH03FH05", CRG},
   {"FH05FH07", CRUNDEF},
   {"FH06FM06", CRUNDEF},
   {"FM06FH07", CRUNDEF},
@@ -87,8 +84,8 @@ VPathDef path_defs[PATH_COUNT] = {
   {"FH07FM07", CRUNDEF},
   {"FM07FH08", CRUNDEF},
   {"FM07FH30", CRUNDEF},
-  {"FH08FM08", CRH},
-  {"FM08FH09", CRUNDEF},
+  {"FH08FM08", CRUNDEF},
+  {"FM08FH09", CRH},
   {"FH09FM09", CRUNDEF},
   {"FM09FH10", CRUNDEF},
   {"FM09FH11", CRUNDEF},
