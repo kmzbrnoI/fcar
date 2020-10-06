@@ -45,9 +45,9 @@ void probe_event(int id, String& name) {
   if (id == FH03) {
     if(paths[FM02FH03]->get_vehicle_type() == VehicleType::bus) {
       move_car(FM02FH03, FH03FH06);
-    } else {    
+    } else {
       move_car(FM02FH03, FH03FH05);
-    }    
+    }
   }
   if (id == FH05) {
     move_car(FH03FH05, FH05FH07);
@@ -95,7 +95,7 @@ void probe_event(int id, String& name) {
   }
   if (id == FH10) {
     move_car(FM09FH10, FH10FM10);
-    paths[FM09FH11]->unreserve();    
+    paths[FM09FH11]->unreserve();
     magnets[FM10]->make_decision(paths[FH10FM10]);
   }
 

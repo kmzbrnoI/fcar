@@ -32,7 +32,7 @@ void CoilSemaphore::make_decision(VPath* path) {
   if (_id == FM02) {
     if (paths[FM02FH03]->is_clear() && paths[FH03FH05]->is_clear() && paths[FH05FH07]->is_clear() && paths[FH07FM07]->is_clear() && paths[FH06FM06]->is_clear()) {
       // na velky okruh
-      
+
       if (paths[FH02FM02]->get_vehicle_type() == VehicleType::bus) {
         j_a->to_plus();
         j_b->to_minus();
@@ -55,7 +55,7 @@ void CoilSemaphore::make_decision(VPath* path) {
         move_car(FH02FM02, FM02FH03);
         return;
       }
-    } else if (paths[FH13FM13]->is_clear() && paths[FM02FH13]->is_clear()) {      
+    } else if (paths[FH13FM13]->is_clear() && paths[FM02FH13]->is_clear()) {
       // na maly okruh
       j_a->to_minus();
       paths[FM02FH13]->reserve(true);
@@ -141,7 +141,7 @@ void CoilSemaphore::make_decision(VPath* path) {
       } else {
         magnets[FM09]->signal_red();
         return;
-      }      
+      }
     }
   }
 
