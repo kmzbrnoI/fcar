@@ -1,5 +1,6 @@
 #include "vehicle.h"
 #include "path.h"
+#include "log.h"
 
 Vehicle::Vehicle(int id)
   :
@@ -54,14 +55,12 @@ int get_new_car(VehicleType vehicle_type) {
   for (int i=0; i < VEHICLE_COUNT; i++) {
     if ( ! vehicles[i]->is_active() ) {
       vehicles[i]->activate(vehicle_type);
-      Serial.print("INFO: Car [");
-      Serial.print(i);
-      Serial.println("] established.");
+      log("INFO: Car [" + String(i) + "] established.");
       return i;
     }
   }
 
-  Serial.println("ERROR: Out of empty cars!");
+  log("ERROR: Out of empty cars!");
   return -1;
 }
 
@@ -72,9 +71,7 @@ void move_car(int start, int target) {
   vehicle = paths[start]->vehicle_pull();
   if (vehicle == -1) {
     vehicle = get_new_car(paths[start]->is_expecting());
-    Serial.print("Path ");
-    Serial.print(paths[start]->name());
-    Serial.println(" creates new car.");
+    log("Path " + paths[start]->name() + " creates new car.");
   }
   paths[target]->vehicle_push(vehicle);
 }

@@ -6,16 +6,8 @@
 #include "vehicle.h"
 #include "crossing.h"
 
-/* All hardware blocks connected to Arduino */
-
-
-/*
-novy hallovky na predmesti (vjezd od depa)
-A0  blize k mestu
-A1  autobus nebo ne
-A2  zacina usek
-
-*/
+///////////////////////////////////////////////////////////////////////////////
+// Vehicles
 
 Vehicle* vehicles[VEHICLE_COUNT];
 
@@ -46,9 +38,9 @@ IODef probe_defs[PROBE_COUNT] = {
   {"FH22", 5},
   {"FH23", 10},
   {"FH30", 16},
-  {"FHA0", A0},
-  {"FHA1", A1},
-  {"FHA2", A2},
+  {"FHA0", A0},  // blize predmesti
+  {"FHA1", A1},  // detekce autobusu
+  {"FHA2", A2},  // dale od predmesti
   {"FHaa", 19},
   {"FHab", 20},
   {"FHac", 21},

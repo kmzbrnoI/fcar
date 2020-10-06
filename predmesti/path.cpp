@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include "path.h"
 #include "crossing.h"
+#include "log.h"
 
 VPath::VPath(int id, const String& name, int crossingId)
   : _id(id),
@@ -89,17 +90,11 @@ void VPath::timeout() {
 }
 
 void VPath::vehicle_push(int vehicle) {
-  if (_state != VPathStatus::occupied_soon) {
-    Serial.print("ERROR: Path is not ready for car [");
-    Serial.print(_name);
-    Serial.println("]!");
-  }
+  if (_state != VPathStatus::occupied_soon)
+    log("ERROR: Path is not ready for car [" + _name + "]!");
 
-  if (_vehicle != -1) {
-    Serial.print("ERROR: Two cars on one position [");
-    Serial.print(_name);
-    Serial.println("]!");
-  }
+  if (_vehicle != -1)
+    log("ERROR: Two cars on one position [" + _name + "]!");
 
   _state = VPathStatus::occupied;
   _occupiedTime = millis();
@@ -109,17 +104,11 @@ void VPath::vehicle_push(int vehicle) {
 int VPath::vehicle_pull() {
   int vehicle = _vehicle;
 
-  if (_state != VPathStatus::occupied) {
-    Serial.print("ERROR: Car didn't occupy its path on position [");
-    Serial.print(_name);
-    Serial.println("]!");
-  }
+  if (_state != VPathStatus::occupied)
+    log("ERROR: Car didn't occupy its path on position [" + _name + "]!");
 
-  if (vehicle == -1) {
-    Serial.print("ERROR: No car on position [");
-    Serial.print(_name);
-    Serial.println("]!");
-  }
+  if (vehicle == -1)
+    log("ERROR: No car on position [" + _name + "]!");
 
   _vehicle = -1;
   _state = VPathStatus::clear_soon;
@@ -132,7 +121,7 @@ Vehicle& VPath::vehicle() const {
   // so calls like path->car.something() are possible without SEGFAULT
   extern Vehicle* vehicles[];
   if (_vehicle < 0)
-    Serial.println("ERROR: invalid vehicle, returning vehicles[0]!");
+    log("ERROR: invalid vehicle, returning vehicles[0]!");
     // even this may segfault; you better restart device when this occurs
   return (_vehicle > -1) ? *vehicles[_vehicle] : *vehicles[0];
 }
