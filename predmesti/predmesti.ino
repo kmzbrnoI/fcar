@@ -174,10 +174,9 @@ void loop() {
   for (int i=0; i < CROSSING_COUNT; i++)
     crossings[i]->updateState();
 
-  static int toMakeDecisions[] = {FM02, FM06, FM07, FM08, FM13, FM09, FM10};
-  for (size_t i = 0; i < sizeof(toMakeDecisions)/sizeof(*toMakeDecisions); i++)
-    if (magnets[toMakeDecisions[i]]->getSignal() == SSignal::red)
-      magnets[toMakeDecisions[i]]->make_decision();
+  for (size_t i = 0; i < MAGNET_COUNT; i++)
+    if (magnets[i]->getSignal() == SSignal::red)
+      magnets[i]->make_decision();
 
   for (int i=0; i < PATH_COUNT; i++)
     if (!paths[i]->is_clear())
