@@ -19,30 +19,18 @@ const String& VPath::name() const {
   return _name;
 }
 
-bool VPath::is_clear() {
-  bool status = false;
-  if (_state == VPathStatus::clear) {
-    status = true;
-  }
-  return status;
+bool VPath::is_clear() const {
+  return (_state == VPathStatus::clear && !is_blocked_by_crossing());
 }
 
-bool VPath::is_occupied() {
-  bool status = false;
-  if (_state == VPathStatus::clear_soon ||
-      _state == VPathStatus::occupied ||
-      _state == VPathStatus::occupied_soon) {
-    status = true;
-  }
-  return status;
+bool VPath::is_occupied() const {
+  return (_state == VPathStatus::clear_soon ||
+          _state == VPathStatus::occupied ||
+          _state == VPathStatus::occupied_soon);
 }
 
-bool VPath::is_reserved() {
-  bool status = false;
-  if (_state == VPathStatus::reserved) {
-    status = true;
-  }
-  return status;
+bool VPath::is_reserved() const {
+  return (_state == VPathStatus::reserved);
 }
 
 void VPath::reserve(bool in_direction) {

@@ -15,9 +15,9 @@ class VPath
     VPath(int id, const String& name, int crossingId);
     const String& name() const;
 
-    bool is_clear();
-    bool is_occupied();
-    bool is_reserved();
+    bool is_clear() const;
+    bool is_occupied() const;
+    bool is_reserved() const;
 
     void reserve(bool in_direction);
     void unreserve();
