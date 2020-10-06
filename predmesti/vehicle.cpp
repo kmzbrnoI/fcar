@@ -7,69 +7,47 @@ Vehicle::Vehicle(int id)
   _active(false),
   _stop_time(0),
   _turn(0)
-{
-  ;
-}
+{}
 
-int Vehicle::get_id()
-{
+int Vehicle::get_id() const {
   return _id;
 }
 
-VehicleType Vehicle::get_type()
-{
+VehicleType Vehicle::get_type() const {
   return _vehicle_type;
 }
 
-bool Vehicle::is_active()
-{
+bool Vehicle::is_active() const {
   return _active;
 }
 
-void Vehicle::activate(VehicleType vehicle_type)
-{
+void Vehicle::activate(VehicleType vehicle_type) {
   _active = true;
   _vehicle_type = vehicle_type;
   _turn = 0;
 }
 
-void Vehicle::deactivate()
-{
+void Vehicle::deactivate() {
   _active = false;
 }
 
-void Vehicle::set_position(int probe)
-{
-    int recent_probe;
-    int previous_probe;
-
-}
-
-void Vehicle::bus_stop()
-{
+void Vehicle::bus_stop() {
   _stop_time = millis();
 }
 
-bool Vehicle::is_bus_ready()
-{
-  if (millis() - _stop_time > 10000) {
-    return true;
-  }
-  return false;
+bool Vehicle::is_bus_ready() const {
+  return (millis() - _stop_time > 10000);
 }
 
-void Vehicle::add_turn()
-{
+void Vehicle::add_turn() {
   _turn = _turn + 1;
 }
 
-int Vehicle::get_turn()
-{
+int Vehicle::get_turn() const {
   return _turn;
 }
 
-int get_new_car(VehicleType vehicle_type)
-{
+int get_new_car(VehicleType vehicle_type) {
   extern Vehicle* vehicles[];
 
   for (int i=0; i < VEHICLE_COUNT; i++) {
@@ -86,8 +64,7 @@ int get_new_car(VehicleType vehicle_type)
   return -1;
 }
 
-void move_car(int start, int target)
-{
+void move_car(int start, int target) {
   extern VPath* paths[];
   int vehicle = -1;
 

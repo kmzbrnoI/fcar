@@ -13,18 +13,18 @@ class Vehicle
 {
   public:
     Vehicle(int id);
-    int get_id();
-    VehicleType get_type();
-    bool is_active();
+    int get_id() const;
+    VehicleType get_type() const;
+
+    bool is_active() const;
     void activate(VehicleType vehicle_type);
     void deactivate();
-    void set_position(int probe);
 
     void bus_stop();
-    bool is_bus_ready();
+    bool is_bus_ready() const;
 
     void add_turn();
-    int get_turn();
+    int get_turn() const;
 
   private:
     const int _id;
