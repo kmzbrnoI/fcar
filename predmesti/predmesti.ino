@@ -174,20 +174,10 @@ void loop() {
   for (int i=0; i < CROSSING_COUNT; i++)
     crossings[i]->updateState();
 
-  if (magnets[FM02]->getSignal() == SSignal::red)
-    magnets[FM02]->make_decision(paths[FH02FM02]);
-  if (magnets[FM06]->getSignal() == SSignal::red)
-    magnets[FM06]->make_decision(paths[FH06FM06]);
-  if (magnets[FM07]->getSignal() == SSignal::red)
-    magnets[FM07]->make_decision(paths[FH07FM07]);
-  if (magnets[FM08]->getSignal() == SSignal::red)
-    magnets[FM08]->make_decision(paths[FH08FM08]);
-  if (magnets[FM13]->getSignal() == SSignal::red)
-    magnets[FM13]->make_decision(paths[FH13FM13]);
-  if (magnets[FM09]->getSignal() == SSignal::red)
-    magnets[FM09]->make_decision(paths[FH09FM09]);
-  if (magnets[FM10]->getSignal() == SSignal::red)
-    magnets[FM10]->make_decision(paths[FH10FM10]);
+  static int toMakeDecisions[] = {FM02, FM06, FM07, FM08, FM13, FM09, FM10};
+  for (size_t i = 0; i < sizeof(toMakeDecisions)/sizeof(*toMakeDecisions); i++)
+    if (magnets[toMakeDecisions[i]]->getSignal() == SSignal::red)
+      magnets[toMakeDecisions[i]]->make_decision();
 
   for (int i=0; i < PATH_COUNT; i++)
     if (!paths[i]->is_clear())

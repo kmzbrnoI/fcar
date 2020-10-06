@@ -14,8 +14,7 @@ SSignal CoilSemaphore::getSignal() {
   return _state;
 }
 
-void CoilSemaphore::make_decision(VPath* path) {
-
+void CoilSemaphore::make_decision() {
   extern VPath* paths[];
   extern Vehicle* vehicles[];
   extern CoilSemaphore* magnets[];
@@ -141,17 +140,19 @@ void CoilSemaphore::make_decision(VPath* path) {
 }
 
 void CoilSemaphore::signal_green() {
+  if (_state == SSignal::green) return;
   digitalWrite(_pin, LOW);
   _state = SSignal::green;
 
-  //Serial.print("-- GREEN : ");
-  //Serial.println(_name);
+  Serial.print("-- GREEN : ");
+  Serial.println(_name);
 }
 
 void CoilSemaphore::signal_red() {
+  if (_state == SSignal::red) return;
   digitalWrite(_pin, HIGH);
   _state = SSignal::red;
 
-  //Serial.print("-- RED : ");
-  //Serial.println(_name);
+  Serial.print("-- RED : ");
+  Serial.println(_name);
 }

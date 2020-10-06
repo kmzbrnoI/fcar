@@ -26,7 +26,7 @@ class CoilSemaphore
     /* Returns SSignal according to current state */
     SSignal getSignal();
 
-    void make_decision(VPath* path);
+    void make_decision();
 
     /* Turn semaphore to green */
     void signal_green();
