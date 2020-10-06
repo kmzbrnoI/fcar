@@ -33,7 +33,7 @@ void Vehicle::bus_stop() {
 }
 
 bool Vehicle::is_bus_ready() const {
-  return type == VehicleType::bus ? (millis() - _stop_time > 10000) : true;
+  return type == VehicleType::bus ? (millis() - _stop_time > 5000) : true;
 }
 
 void Vehicle::add_turn() {
