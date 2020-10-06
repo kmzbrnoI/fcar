@@ -8,13 +8,7 @@ Crossing::Crossing(int id, int pinClosed, int pinOccupied, const String& name)
 }
 
 void Crossing::changed() {
-  extern VPath* paths[];
-
-  if (_id == CRG) {
-    isRed() ? paths[FH02FM02]->red_crossing() : paths[FH02FM02]->green_crossing();
-  } else if (_id == CRH) {
-    isRed() ? paths[FH08FM08]->red_crossing() : paths[FH08FM08]->green_crossing();
-  }
+  // You can propagate event here if you want
 }
 
 void Crossing::updateState() {

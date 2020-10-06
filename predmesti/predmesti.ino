@@ -73,39 +73,44 @@ CrossingDef crossing_defs[CROSSING_COUNT] = {
 ///////////////////////////////////////////////////////////////////////////////
 // Paths
 
+struct VPathDef {
+  String name;
+  int crossingId;
+};
+
 const int PATH_COUNT = 29;
 VPath* paths[PATH_COUNT];
 
-const char* path_names[PATH_COUNT] = {
-  "FH02FM02",
-  "FM02FH03",
-  "FM02FH13",
-  "FH03FH06",
-  "FH03FH05",
-  "FH05FH07",
-  "FH06FM06",
-  "FM06FH07",
-  "FH06FH07",
-  "FH07FM07",
-  "FM07FH08",
-  "FM07FH30",
-  "FH08FM08",
-  "FM08FH09",
-  "FH09FM09",
-  "FM09FH10",
-  "FM09FH11",
-  "FH10FM10",
-  "FM10FH02",
-  "FH11FM11",
-  "FH22FH23",
-  "FH13FM13",
-  "FM13FH09",
-  "FH20FH21",
-  "FH21FH22",
-  "FHA2FHA0",
-  "FHA0FH02",
-  "FM11FH22",
-  "FH22FH23",
+VPathDef path_defs[PATH_COUNT] = {
+  {"FH02FM02", CRG},
+  {"FM02FH03", CRUNDEF},
+  {"FM02FH13", CRUNDEF},
+  {"FH03FH06", CRUNDEF},
+  {"FH03FH05", CRUNDEF},
+  {"FH05FH07", CRUNDEF},
+  {"FH06FM06", CRUNDEF},
+  {"FM06FH07", CRUNDEF},
+  {"FH06FH07", CRUNDEF},
+  {"FH07FM07", CRUNDEF},
+  {"FM07FH08", CRUNDEF},
+  {"FM07FH30", CRUNDEF},
+  {"FH08FM08", CRH},
+  {"FM08FH09", CRUNDEF},
+  {"FH09FM09", CRUNDEF},
+  {"FM09FH10", CRUNDEF},
+  {"FM09FH11", CRUNDEF},
+  {"FH10FM10", CRUNDEF},
+  {"FM10FH02", CRUNDEF},
+  {"FH11FM11", CRUNDEF},
+  {"FH22FH23", CRUNDEF},
+  {"FH13FM13", CRUNDEF},
+  {"FM13FH09", CRUNDEF},
+  {"FH20FH21", CRUNDEF},
+  {"FH21FH22", CRUNDEF},
+  {"FHA2FHA0", CRUNDEF},
+  {"FHA0FH02", CRUNDEF},
+  {"FM11FH22", CRUNDEF},
+  {"FH22FH23", CRUNDEF},
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -152,7 +157,7 @@ void setup() {
     magnets[i] = new CoilSemaphore(i, magnet_defs[i].pin, magnet_defs[i].name);
 
   for (int i=0; i < PATH_COUNT; i++)
-    paths[i] = new VPath(i, path_names[i]);
+    paths[i] = new VPath(i, path_defs[i].name, path_defs[i].crossingId);
 
   j_a = new Junction(40, 41);
   j_b = new Junction(42, 43);

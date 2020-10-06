@@ -19,7 +19,7 @@ class Vehicle
     void activate(VehicleType vehicle_type);
     void deactivate();
     void set_position(int probe);
-    
+
     void bus_stop();
     bool is_bus_ready();
 

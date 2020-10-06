@@ -22,6 +22,7 @@
 #define FHA2 17
 
 // crossing
+#define CRUNDEF -1
 #define CRG 0
 #define CRH 1
 

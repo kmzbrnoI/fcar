@@ -13,17 +13,17 @@ Vehicle::Vehicle(int id)
 
 int Vehicle::get_id()
 {
-  return _id;  
+  return _id;
 }
 
 VehicleType Vehicle::get_type()
 {
-  return _vehicle_type;  
+  return _vehicle_type;
 }
 
 bool Vehicle::is_active()
 {
-  return _active;  
+  return _active;
 }
 
 void Vehicle::activate(VehicleType vehicle_type)
@@ -35,14 +35,14 @@ void Vehicle::activate(VehicleType vehicle_type)
 
 void Vehicle::deactivate()
 {
-  _active = false;  
+  _active = false;
 }
 
 void Vehicle::set_position(int probe)
 {
     int recent_probe;
     int previous_probe;
-  
+
 }
 
 void Vehicle::bus_stop()
@@ -60,7 +60,7 @@ bool Vehicle::is_bus_ready()
 
 void Vehicle::add_turn()
 {
-  _turn = _turn + 1;  
+  _turn = _turn + 1;
 }
 
 int Vehicle::get_turn()
@@ -88,14 +88,14 @@ int get_new_car(VehicleType vehicle_type)
 
 void move_car(int start, int target)
 {
-  extern VPath* paths[]; 
-  int vehicle = -1; 
+  extern VPath* paths[];
+  int vehicle = -1;
 
   vehicle = paths[start]->vehicle_pull();
   if (vehicle == -1) {
     vehicle = get_new_car(paths[start]->is_expecting());
     Serial.print("Path ");
-    Serial.print(paths[start]->get_name());
+    Serial.print(paths[start]->name());
     Serial.println(" creates new car.");
   }
   paths[target]->vehicle_push(vehicle);

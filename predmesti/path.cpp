@@ -1,23 +1,21 @@
 #include "path.h"
+#include "crossing.h"
 
-VPath::VPath(int id, const char* name)
-  : _name(name),
-  _id(id),
+VPath::VPath(int id, const String& name, int crossingId)
+  : _id(id),
+  _name(name),
+  _crossingId(crossingId),
   _state(VPathStatus::clear),
   _reservationTime(0),
   _occupiedSoonTime(0),
   _occupiedTime(0),
   _cleanSoonTime(0),
   _vehicle(-1),
-  _expecting_bus(false),
-  _blocked_by_crossing(false)
-{
-  ;
-}
+  _expecting_bus(false)
+{}
 
-const char* VPath::get_name()
-{
-  return _name;  
+const String& VPath::name() const {
+  return _name;
 }
 
 bool VPath::is_clear() {
@@ -37,12 +35,13 @@ bool VPath::is_occupied() {
   }
   return status;
 }
+
 bool VPath::is_reserved() {
   bool status = false;
   if (_state == VPathStatus::reserved) {
     status = true;
   }
-  return status;  
+  return status;
 }
 
 void VPath::reserve(bool in_direction) {
@@ -60,8 +59,7 @@ void VPath::unreserve() {
 }
 
 void VPath::timeout() {
-
-  if (_blocked_by_crossing) {
+  if (is_blocked_by_crossing()) {
     return;
   }
 
@@ -102,14 +100,13 @@ void VPath::timeout() {
   }
 }
 
-void VPath::vehicle_push(int vehicle)
-{
+void VPath::vehicle_push(int vehicle) {
   if (_state != VPathStatus::occupied_soon) {
     Serial.print("ERROR: Path is not ready for car [");
     Serial.print(_name);
-    Serial.println("]!");        
+    Serial.println("]!");
   }
-  
+
   if (_vehicle != -1) {
     Serial.print("ERROR: Two cars on one position [");
     Serial.print(_name);
@@ -121,46 +118,41 @@ void VPath::vehicle_push(int vehicle)
   _vehicle = vehicle;
 }
 
-int VPath::vehicle_pull()
-{
+int VPath::vehicle_pull() {
   int vehicle = _vehicle;
 
   if (_state != VPathStatus::occupied) {
     Serial.print("ERROR: Car didn't occupied its path on position [");
     Serial.print(_name);
-    Serial.println("]!");        
+    Serial.println("]!");
   }
 
   if (vehicle == -1) {
     Serial.print("ERROR: No car on position [");
     Serial.print(_name);
-    Serial.println("]!");    
+    Serial.println("]!");
   }
-  
+
   _vehicle = -1;
   _state = VPathStatus::clear_soon;
   _cleanSoonTime = millis();
   return vehicle;
 }
 
-int VPath::get_car_id()
-{
+int VPath::get_car_id() {
   return _vehicle;
 }
 
-VehicleType VPath::get_vehicle_type()
-{
+VehicleType VPath::get_vehicle_type() {
   extern Vehicle* vehicles[];
   return vehicles[_vehicle]->get_type();
 }
 
-void VPath::expect_bus()
-{
+void VPath::expect_bus() {
   _expecting_bus = true;
 }
 
-VehicleType VPath::is_expecting()
-{
+VehicleType VPath::is_expecting() {
   VehicleType car_type = VehicleType::car;
   if (_expecting_bus) {
     car_type = VehicleType::bus;
@@ -170,17 +162,9 @@ VehicleType VPath::is_expecting()
   return car_type;
 }
 
-void VPath::red_crossing()
-{
-  _blocked_by_crossing = true;
-}
-
-void VPath::green_crossing()
-{
-  _blocked_by_crossing = false;
-}
-
-bool VPath::is_blocked_by_crossing()
-{
-  return _blocked_by_crossing;
+bool VPath::is_blocked_by_crossing() {
+  extern Crossing* crossings[];
+  if (_crossingId == CRUNDEF)
+    return false;
+  return crossings[_crossingId]->isRed();
 }
