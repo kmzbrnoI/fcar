@@ -11,15 +11,16 @@
 #define FH09 6
 #define FH10 7
 #define FH11 8
-#define FH13 9
-#define FH20 10
-#define FH21 11
-#define FH22 12
-#define FH23 13
-#define FH30 14
-#define FHA0 15
-#define FHA1 16
-#define FHA2 17
+#define FH12 9
+#define FH13 10
+#define FH20 11
+#define FH21 12
+#define FH22 13
+#define FH23 14
+#define FH30 15
+#define FHA0 16
+#define FHA1 17
+#define FHA2 18
 
 // crossing
 #define CRUNDEF -1
@@ -48,8 +49,8 @@
 #define FM10FH02 18
 #define FH11FM11 19
 #define FH22FH23 20
-#define FH13FM13 21
-#define FM13FH09 22
+#define FH13FM14 21
+#define FM14FH09 22
 #define FH20FH21 23
 #define FH21FH22 24
 #define FHA2FHA0 25

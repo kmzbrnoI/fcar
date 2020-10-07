@@ -71,19 +71,19 @@ void HallProbe::changed() {
 
   // maly okruh
   if (_id == FH13) {
-    move_vehicle(FM02FH13, FH13FM13);
+    move_vehicle(FM02FH13, FH13FM14);
     paths[FM11FH23]->unreserve();
-    magnets[FM13]->make_decision();
+    magnets[FM14]->make_decision();
   }
 
   // opousteni oblasti
   if (_id == FH09) {
-    if (paths[FM08FH09]->is_occupied() && paths[FM13FH09]->is_reserved()) {
+    if (paths[FM08FH09]->is_occupied() && paths[FM14FH09]->is_reserved()) {
       move_vehicle(FM08FH09, FH09FM09);
-      paths[FM13FH09]->unreserve();
+      paths[FM14FH09]->unreserve();
     }
-    else if (paths[FM08FH09]->is_reserved() && paths[FM13FH09]->is_occupied()) {
-      move_vehicle(FM13FH09, FH09FM09);
+    else if (paths[FM08FH09]->is_reserved() && paths[FM14FH09]->is_occupied()) {
+      move_vehicle(FM14FH09, FH09FM09);
       paths[FM08FH09]->unreserve();
     } else {
       create_vehicle(FH09FM09);

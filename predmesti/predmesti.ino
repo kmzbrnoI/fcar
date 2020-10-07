@@ -15,7 +15,7 @@ Vehicle* vehicles[VEHICLE_COUNT];
 ///////////////////////////////////////////////////////////////////////////////
 // Hall probes
 
-const int PROBE_COUNT = 18;
+const int PROBE_COUNT = 19;
 HallProbe* probes[PROBE_COUNT];
 
 struct IODef {
@@ -33,6 +33,7 @@ IODef probe_defs[PROBE_COUNT] = {
   {"FH09", 18},
   {"FH10", 17},
   {"FH11", 25},
+  {"FH12", 8},
   {"FH13", 24},
   {"FH20", 2},
   {"FH21", 7},
@@ -84,7 +85,7 @@ VPathDef path_defs[PATH_COUNT] = {
   {"FH07FM07", CRUNDEF},
   {"FM07FH08", CRUNDEF},
   {"FM07FH30", CRUNDEF},
-  {"FH08FM08", CRUNDEF},
+  {"FH08FM08", CRH},
   {"FM08FH09", CRH},
   {"FH09FM09", CRUNDEF},
   {"FM09FH10", CRUNDEF},
@@ -93,8 +94,8 @@ VPathDef path_defs[PATH_COUNT] = {
   {"FM10FH02", CRUNDEF},
   {"FH11FM11", CRUNDEF},
   {"FH22FH23", CRUNDEF},
-  {"FH13FM13", CRUNDEF},
-  {"FM13FH09", CRUNDEF},
+  {"FH13FM14", CRUNDEF},
+  {"FM14FH09", CRUNDEF},
   {"FH20FH21", CRUNDEF},
   {"FH21FH22", CRUNDEF},
   {"FHA2FHA0", CRUNDEF},

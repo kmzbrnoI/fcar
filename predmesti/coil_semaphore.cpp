@@ -40,11 +40,11 @@ void CoilSemaphore::make_decision() {
         magnets[FM02]->signal_green();
         move_vehicle(FH02FM02, FM02FH03);
       }
-    } else if (paths_are_clear(FH13FM13, FM02FH13) &&
+    } else if (paths_are_clear(FH13FM14, FM02FH13, FM11FH23) &&
         (paths[FH02FM02]->vehicle()->is_bus_ready() || paths[FHA2FHA0]->is_occupied())) {
       // na maly okruh
       j_a->to_minus();
-      paths_reserve(true, FM02FH13, FH13FM13);
+      paths_reserve(true, FM02FH13, FH13FM14);
       paths[FM11FH23]->reserve(false);
       magnets[FM02]->signal_green();
       move_vehicle(FH02FM02, FM02FH13);
@@ -72,9 +72,9 @@ void CoilSemaphore::make_decision() {
     }
 
   } else if (_id == FM08) {
-    if (paths_are_clear(FM08FH09, FH09FM09, FM13FH09)) {
+    if (paths_are_clear(FM08FH09, FH09FM09, FM14FH09)) {
       paths_reserve(true, FM08FH09, FH09FM09);
-      paths[FM13FH09]->reserve(false);
+      paths[FM14FH09]->reserve(false);
       magnets[FM08]->signal_green();
       move_vehicle(FH08FM08, FM08FH09);
     } else {
@@ -112,7 +112,6 @@ void CoilSemaphore::make_decision() {
 
   } else if (_id == FM11) {
     if (paths_are_clear(FM11FH23, FM10FH02, FM02FH13)) {
-      j_c->to_plus();
       paths_reserve(true, FM11FH23);
       paths_reserve(false, FM02FH13, FM10FH02);
       magnets[FM11]->signal_green();
@@ -121,15 +120,14 @@ void CoilSemaphore::make_decision() {
       magnets[FM11]->signal_red();
     }
 
-  } else if (_id == FM13) {
-    if (paths_are_clear(FM13FH09, FH09FM09, FM08FH09)) {
-      j_c->to_plus();
-      paths_reserve(true, FM13FH09, FH09FM09);
+  } else if (_id == FM14) {
+    if (paths_are_clear(FM14FH09, FH09FM09, FM08FH09)) {
+      paths_reserve(true, FM14FH09, FH09FM09);
       paths[FM08FH09]->reserve(false);
-      magnets[FM13]->signal_green();
-      move_vehicle(FH13FM13, FM13FH09);
+      magnets[FM14]->signal_green();
+      move_vehicle(FH13FM14, FM14FH09);
     } else {
-      magnets[FM13]->signal_red();
+      magnets[FM14]->signal_red();
     }
   }
 }
