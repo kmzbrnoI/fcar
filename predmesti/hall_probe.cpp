@@ -30,13 +30,12 @@ void HallProbe::changed() {
 
   // prijezd od depa
   if (_id == FH02) {
-    if (paths[FM10FH02]->is_occupied()) {
+    if (paths[FM10FH02]->is_occupied())
       move_vehicle(FM10FH02, FH02FM02);
-      paths[FH22FH23]->unreserve();
-    } else {
+    else
       move_vehicle(FHA0FH02, FH02FM02);
-      paths[FH22FH23]->unreserve();
-    }
+    paths[FM10FH02]->unreserve();
+    paths[FM11FH23]->unreserve();
     magnets[FM02]->make_decision();
   }
 
@@ -105,6 +104,7 @@ void HallProbe::changed() {
   }
   if (_id == FH23) {
     paths[FM10FH02]->unreserve();
+    paths[FM02FH13]->unreserve();
     Vehicle* vehicle = paths[FM11FH23]->vehicle_pull();
     if (vehicle != nullptr)
       delete_vehicle(*vehicle);

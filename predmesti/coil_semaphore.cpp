@@ -101,9 +101,9 @@ void CoilSemaphore::make_decision() {
     }
 
   } else  if (_id == FM10) {
-    if (paths_are_clear(FM10FH02, FH02FM02, FH22FH23, FHA0FH02, FHA2FHA0)) {
+    if (paths_are_clear(FM10FH02, FH02FM02, FM11FH23, FHA0FH02, FHA2FHA0)) {
       paths_reserve(true, FM10FH02, FH02FM02);
-      paths[FH22FH23]->reserve(false);
+      paths[FM11FH23]->reserve(false);
       magnets[FM10]->signal_green();
       move_vehicle(FH10FM10, FM10FH02);
     } else {

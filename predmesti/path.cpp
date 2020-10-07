@@ -2,12 +2,14 @@
 #include "path.h"
 #include "crossing.h"
 #include "log.h"
+#include "coil_semaphore.h"
 
-VPath::VPath(int id, const String& name, int crossingId)
+VPath::VPath(int id, const String& name, int crossingId, int magnetId)
   : expecting_bus(false),
   _id(id),
   _name(name),
   _crossingId(crossingId),
+  _magnetId(magnetId),
   _state(VPathStatus::clear),
   _vehicle(-1),
   _reservationTime(0),
@@ -45,10 +47,13 @@ void VPath::reserve(bool in_direction) {
 }
 
 void VPath::unreserve() {
-  _state = VPathStatus::clear;
+  if (_state == VPathStatus::reserved )
+    _state = VPathStatus::clear;
 }
 
 void VPath::timeout() {
+  extern CoilSemaphore* magnets[];
+
   if (is_blocked_by_crossing())
     _occupiedTime = millis();
 
@@ -60,6 +65,9 @@ void VPath::timeout() {
   }
 
   if (_state == VPathStatus::occupied) {
+    if (_magnetId > -1)
+      if (magnets[_magnetId]->getSignal() == SSignal::red)
+        _occupiedTime = millis(); // do not timoeut if coil enabled
     if ( millis() - _occupiedTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
       if (_vehicle > -1)

@@ -48,7 +48,6 @@
 #define FH10FM10 17
 #define FM10FH02 18
 #define FH11FM11 19
-#define FH22FH23 20
 #define FH13FM14 21
 #define FM14FH09 22
 #define FH20FH21 23
@@ -58,6 +57,7 @@
 #define FM11FH23 27
 
 // zastavovaci magnety
+#define FMUNDEF -1
 #define FM02 0
 #define FM06 1
 #define FM07 2

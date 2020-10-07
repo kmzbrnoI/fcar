@@ -14,7 +14,7 @@ class VPath
   public:
     bool expecting_bus;
 
-    VPath(int id, const String& name, int crossingId);
+    VPath(int id, const String& name, int crossingId, int magnetId);
     const String& name() const;
 
     bool is_clear() const;
@@ -35,6 +35,7 @@ class VPath
     const int _id;
     const String& _name;
     int _crossingId;
+    int _magnetId;
 
     VPathStatus _state;
     int _vehicle;
