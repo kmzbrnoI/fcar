@@ -62,6 +62,8 @@ void VPath::timeout() {
   if (_state == VPathStatus::occupied) {
     if ( millis() - _occupiedTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
+      if (_vehicle > -1)
+        delete_vehicle(*vehicle());
       log("State [occupied] on " + _name + " released.");
     }
   }
