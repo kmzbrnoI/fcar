@@ -4,7 +4,6 @@
 
 Vehicle::Vehicle(int id, VehicleType type) : id(id), type(type) {
   log("INFO: Vehicle [" + String(id) + "] established.");
-  _turn = 0;
 }
 
 Vehicle::~Vehicle() {
@@ -22,14 +21,6 @@ void Vehicle::bus_stop() {
 
 bool Vehicle::is_bus_ready() const {
   return type == VehicleType::bus ? (millis() - _stop_time > 5000) : true;
-}
-
-void Vehicle::add_turn() {
-  _turn = _turn + 1;
-}
-
-int Vehicle::get_turn() const {
-  return _turn;
 }
 
 Vehicle& new_vehicle(VehicleType vehicle_type) {
@@ -53,7 +44,7 @@ void delete_vehicle(Vehicle& vehicle) {
   vehicles[id] = nullptr;
 }
 
-void move_car(int start, int target) {
+void move_vehicle(int start, int target) {
   extern VPath* paths[];
   Vehicle* vehicle;
 
@@ -71,6 +62,6 @@ void move_car(int start, int target) {
   paths[target]->vehicle_push(*vehicle);
 }
 
-void create_car(int target) {
-  move_car(-1, target);
+void create_vehicle(int target) {
+  move_vehicle(-1, target);
 }

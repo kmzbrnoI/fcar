@@ -27,7 +27,7 @@ class VPath
 
     void vehicle_push(Vehicle& vehicle);
     Vehicle* vehicle_pull();
-    Vehicle& vehicle() const;
+    Vehicle* vehicle() const;
 
     bool is_blocked_by_crossing() const;
 

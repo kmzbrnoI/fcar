@@ -106,14 +106,11 @@ Vehicle* VPath::vehicle_pull() {
   return vehicle > -1 ? vehicles[vehicle] : nullptr;
 }
 
-Vehicle& VPath::vehicle() const {
-  // Safe car returner: return fresh istance if no _vehicle
-  // so calls like path->car.something() are possible without SEGFAULT
+Vehicle* VPath::vehicle() const {
   extern Vehicle* vehicles[];
   if (_vehicle < 0)
-    log("ERROR: invalid vehicle, returning vehicles[0]!");
-    // even this may segfault; you better restart device when this occurs
-  return (_vehicle > -1) ? *vehicles[_vehicle] : *vehicles[0];
+    log("ERROR: invalid vehicle, returning nullptr!");
+  return (_vehicle > -1) ? vehicles[_vehicle] : nullptr;
 }
 
 bool VPath::is_blocked_by_crossing() const {

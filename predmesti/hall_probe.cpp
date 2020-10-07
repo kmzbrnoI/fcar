@@ -3,7 +3,6 @@
 
 void HallProbe::changed() {
   extern VPath* paths[];
-  extern Vehicle* vehicles[];
   extern CoilSemaphore* magnets[];
 
   log("-- Hall probe: " + _name);
@@ -11,14 +10,17 @@ void HallProbe::changed() {
   if (_id == FHA2) {
     paths_reserve(true, FHA2FHA0, FHA0FH02, FH02FM02);
     paths[FM10FH02]->reserve(false);
-    create_car(FHA2FHA0);
+    create_vehicle(FHA2FHA0);
   }
   if (_id == FHA0) {
-    if (paths[FHA2FHA0]->expecting_bus) {
-      paths[FHA2FHA0]->vehicle().type = VehicleType::bus;
-      paths[FHA2FHA0]->expecting_bus = false;
+    if (paths[FHA2FHA0]->vehicle() != nullptr) {
+      if (paths[FHA2FHA0]->expecting_bus) {
+        paths[FHA2FHA0]->vehicle()->type = VehicleType::bus;
+        paths[FHA2FHA0]->expecting_bus = false;
+      }
+      paths[FHA2FHA0]->vehicle()->should_leave = false; // valid incoming vehicle -> do not leave yet
     }
-    move_car(FHA2FHA0, FHA0FH02);
+    move_vehicle(FHA2FHA0, FHA0FH02);
     paths[FHA2FHA0]->unreserve();
   }
   if (_id == FHA1) {
@@ -29,10 +31,10 @@ void HallProbe::changed() {
   // prijezd od depa
   if (_id == FH02) {
     if (paths[FM10FH02]->is_occupied()) {
-      move_car(FM10FH02, FH02FM02);
+      move_vehicle(FM10FH02, FH02FM02);
       paths[FH22FH23]->unreserve();
     } else {
-      move_car(FHA0FH02, FH02FM02);
+      move_vehicle(FHA0FH02, FH02FM02);
       paths[FH22FH23]->unreserve();
     }
     magnets[FM02]->make_decision();
@@ -40,38 +42,37 @@ void HallProbe::changed() {
 
   // velky okruh
   if (_id == FH03) {
-    if(paths[FM02FH03]->vehicle().type == VehicleType::bus) {
-      move_car(FM02FH03, FH03FH06);
-    } else {
-      move_car(FM02FH03, FH03FH05);
-    }
+    if (paths[FM02FH03]->vehicle() != nullptr && paths[FM02FH03]->vehicle()->type == VehicleType::bus)
+      move_vehicle(FM02FH03, FH03FH06);
+    else
+      move_vehicle(FM02FH03, FH03FH05);
   }
   if (_id == FH05) {
-    move_car(FH03FH05, FH05FH07);
+    move_vehicle(FH03FH05, FH05FH07);
   }
   // autobusova zastavka
   if (_id == FH06) {
-    move_car(FH03FH06, FH06FM06);
-    paths[FH06FM06]->vehicle().bus_stop();
+    move_vehicle(FH03FH06, FH06FM06);
+    paths[FH06FM06]->vehicle()->bus_stop();
     magnets[FM06]->make_decision();
   }
   if (_id == FH07) {
     if(paths[FH05FH07]->is_reserved()) {
       paths[FH05FH07]->unreserve();
-      move_car(FM06FH07, FH07FM07);
+      move_vehicle(FM06FH07, FH07FM07);
     } else {
-      move_car(FH05FH07, FH07FM07);
+      move_vehicle(FH05FH07, FH07FM07);
     }
     magnets[FM07]->make_decision();
   }
   if (_id == FH08) {
-    move_car(FM07FH08, FH08FM08);
+    move_vehicle(FM07FH08, FH08FM08);
     magnets[FM08]->make_decision();
   }
 
   // maly okruh
   if (_id == FH13) {
-    move_car(FM02FH13, FH13FM13);
+    move_vehicle(FM02FH13, FH13FM13);
     paths[FM11FH23]->unreserve();
     magnets[FM13]->make_decision();
   }
@@ -79,25 +80,28 @@ void HallProbe::changed() {
   // opousteni oblasti
   if (_id == FH09) {
     if (paths[FM08FH09]->is_occupied() && paths[FM13FH09]->is_reserved()) {
-      move_car(FM08FH09, FH09FM09);
+      move_vehicle(FM08FH09, FH09FM09);
       paths[FM13FH09]->unreserve();
     }
     else if (paths[FM08FH09]->is_reserved() && paths[FM13FH09]->is_occupied()) {
-      move_car(FM13FH09, FH09FM09);
+      move_vehicle(FM13FH09, FH09FM09);
       paths[FM08FH09]->unreserve();
+    } else {
+      create_vehicle(FH09FM09);
     }
-    paths[FH09FM09]->vehicle().bus_stop();
+    paths[FH09FM09]->vehicle()->bus_stop();
     magnets[FM09]->make_decision();
   }
   if (_id == FH10) {
-    move_car(FM09FH10, FH10FM10);
+    move_vehicle(FM09FH10, FH10FM10);
+    paths[FH10FM10]->vehicle()->should_leave = true;
     paths[FM09FH11]->unreserve();
     magnets[FM10]->make_decision();
   }
 
   // opousteci trasa k Hradu
   if (_id == FH11) {
-    move_car(FM09FH11, FH11FM11);
+    move_vehicle(FM09FH11, FH11FM11);
     paths[FM09FH10]->unreserve();
     magnets[FM11]->make_decision();
   }

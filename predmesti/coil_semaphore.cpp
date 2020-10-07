@@ -26,20 +26,18 @@ void CoilSemaphore::make_decision() {
     if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06)) {
       // na velky okruh
 
-      if (paths[FH02FM02]->vehicle().type == VehicleType::bus) {
+      if (paths[FH02FM02]->vehicle()->type == VehicleType::bus) {
         j_a->to_plus();
         j_b->to_minus();
         paths_reserve(true, FM02FH03, FH03FH06, FH06FM06);
         magnets[FM02]->signal_green();
-        paths[FH02FM02]->vehicle().add_turn();
-        move_car(FH02FM02, FM02FH03);
+        move_vehicle(FH02FM02, FM02FH03);
       } else {
         j_a->to_plus();
         j_b->to_plus();
         paths_reserve(true, FM02FH03, FH03FH05, FH05FH07, FH07FM07);
         magnets[FM02]->signal_green();
-        paths[FH02FM02]->vehicle().add_turn();
-        move_car(FH02FM02, FM02FH03);
+        move_vehicle(FH02FM02, FM02FH03);
       }
     } else if (paths_are_clear(FH13FM13, FM02FH13)) {
       // na maly okruh
@@ -47,18 +45,17 @@ void CoilSemaphore::make_decision() {
       paths_reserve(true, FM02FH13, FH13FM13);
       paths[FM11FH23]->reserve(false);
       magnets[FM02]->signal_green();
-      paths[FH02FM02]->vehicle().add_turn();
-      move_car(FH02FM02, FM02FH13);
+      move_vehicle(FH02FM02, FM02FH13);
     } else {
       magnets[FM02]->signal_red();
     }
 
   } else if (_id == FM06) {
-    if (paths_are_clear(FM06FH07, FH07FM07) && paths[FH06FM06]->vehicle().is_bus_ready()) {
+    if (paths_are_clear(FM06FH07, FH07FM07) && paths[FH06FM06]->vehicle()->is_bus_ready()) {
       paths_reserve(true, FM06FH07, FH07FM07);
       paths[FH05FH07]->reserve(false);
       magnets[FM06]->signal_green();
-      move_car(FH06FM06, FM06FH07);
+      move_vehicle(FH06FM06, FM06FH07);
     } else {
       magnets[FM06]->signal_red();
     }
@@ -67,7 +64,7 @@ void CoilSemaphore::make_decision() {
     if (paths_are_clear(FM07FH08, FH08FM08)) {
       paths_reserve(true, FM07FH08, FH08FM08);
       magnets[FM07]->signal_green();
-      move_car(FH07FM07, FM07FH08);
+      move_vehicle(FH07FM07, FM07FH08);
     } else {
       magnets[FM07]->signal_red();
     }
@@ -77,26 +74,26 @@ void CoilSemaphore::make_decision() {
       paths_reserve(true, FM08FH09, FH09FM09);
       paths[FM13FH09]->reserve(false);
       magnets[FM08]->signal_green();
-      move_car(FH08FM08, FM08FH09);
+      move_vehicle(FH08FM08, FM08FH09);
     } else {
       magnets[FM08]->signal_red();
     }
 
   } else if (_id == FM09) {
-    if (!paths[FH09FM09]->vehicle().is_bus_ready()) {
+    if (!paths[FH09FM09]->vehicle()->is_bus_ready()) {
       magnets[FM09]->signal_red();
-    } else if (paths[FH09FM09]->vehicle().get_turn() > 1 && paths_are_clear(FM09FH11, FH11FM11)) {
+    } else if (paths[FH09FM09]->vehicle()->should_leave && paths_are_clear(FM09FH11, FH11FM11)) {
       j_c->to_minus();
       paths_reserve(true, FM09FH11, FH11FM11);
       paths[FM09FH10]->reserve(false);
       magnets[FM09]->signal_green();
-      move_car(FH09FM09, FM09FH11);
+      move_vehicle(FH09FM09, FM09FH11);
     } else if (paths_are_clear(FM09FH10, FH10FM10)) {
       j_c->to_plus();
       paths_reserve(true, FM09FH10, FH10FM10);
       paths[FM09FH11]->reserve(false);
       magnets[FM09]->signal_green();
-      move_car(FH09FM09, FM09FH10);
+      move_vehicle(FH09FM09, FM09FH10);
     } else {
       magnets[FM09]->signal_red();
     }
@@ -106,7 +103,7 @@ void CoilSemaphore::make_decision() {
       paths_reserve(true, FM10FH02, FH02FM02);
       paths[FH22FH23]->reserve(false);
       magnets[FM10]->signal_green();
-      move_car(FH10FM10, FM10FH02);
+      move_vehicle(FH10FM10, FM10FH02);
     } else {
       magnets[FM10]->signal_red();
     }
@@ -117,7 +114,7 @@ void CoilSemaphore::make_decision() {
       paths_reserve(true, FM11FH23);
       paths_reserve(false, FM02FH13, FM10FH02);
       magnets[FM11]->signal_green();
-      move_car(FH11FM11, FM11FH23);
+      move_vehicle(FH11FM11, FM11FH23);
     } else {
       magnets[FM11]->signal_red();
     }
@@ -128,7 +125,7 @@ void CoilSemaphore::make_decision() {
       paths_reserve(true, FM13FH09, FH09FM09);
       paths[FM08FH09]->reserve(false);
       magnets[FM13]->signal_green();
-      move_car(FH13FM13, FM13FH09);
+      move_vehicle(FH13FM13, FM13FH09);
     } else {
       magnets[FM13]->signal_red();
     }
