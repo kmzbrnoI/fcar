@@ -134,7 +134,7 @@ IODef magnet_defs[MAGNET_COUNT] = {
 
 void setup() {
   for (int i=0; i < VEHICLE_COUNT; i++)
-    vehicles[i] = new Vehicle(i);
+    vehicles[i] = nullptr;
 
   for (int i=0; i < PROBE_COUNT; i++)
     probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);

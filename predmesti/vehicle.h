@@ -9,17 +9,14 @@ const int VEHICLE_COUNT = 10;
 
 enum class VehicleType { car, bus };
 
-class Vehicle
-{
+class Vehicle {
   public:
+    const int id;
     VehicleType type = VehicleType::car;
 
-    Vehicle(int id);
+    Vehicle(int id, VehicleType type);
+    ~Vehicle();
     int get_id() const;
-
-    bool is_active() const;
-    void activate(VehicleType vehicle_type);
-    void deactivate();
 
     void bus_stop();
     bool is_bus_ready() const;
@@ -29,15 +26,12 @@ class Vehicle
     String type_str() const;
 
   private:
-    const int _id;
-
-    bool _active = false;
-
     unsigned long _stop_time = 0;
     int _turn = 0;
 };
 
-int get_new_car(VehicleType vehicle_type);
+Vehicle& new_vehicle(VehicleType vehicle_type);
+void delete_vehicle(Vehicle& vehicle);
 void move_car(int start, int target);
 void create_car(int target);
 

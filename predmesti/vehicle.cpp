@@ -2,30 +2,17 @@
 #include "path.h"
 #include "log.h"
 
-Vehicle::Vehicle(int id) : _id(id) {}
+Vehicle::Vehicle(int id, VehicleType type) : id(id), type(type) {
+  log("INFO: Vehicle [" + String(id) + "] established.");
+  _turn = 0;
+}
 
-int Vehicle::get_id() const {
-  return _id;
+Vehicle::~Vehicle() {
+  log("Vehicle [" + String(id) + "] deactivated.");
 }
 
 String Vehicle::type_str() const {
   return (type == VehicleType::bus) ? "bus" : "car";
-}
-
-bool Vehicle::is_active() const {
-  return _active;
-}
-
-void Vehicle::activate(VehicleType vehicle_type) {
-  _active = true;
-  type = vehicle_type;
-  _turn = 0;
-  log("INFO: Car [" + String(_id) + "] established as " + type_str());
-}
-
-void Vehicle::deactivate() {
-  _active = false;
-  log("Car [" + String(_id) + "] deactivated");
 }
 
 void Vehicle::bus_stop() {
@@ -45,37 +32,43 @@ int Vehicle::get_turn() const {
   return _turn;
 }
 
-int get_new_car(VehicleType vehicle_type) {
+Vehicle& new_vehicle(VehicleType vehicle_type) {
   extern Vehicle* vehicles[];
 
   for (int i=0; i < VEHICLE_COUNT; i++) {
-    if ( ! vehicles[i]->is_active() ) {
-      vehicles[i]->activate(vehicle_type);
-      return i;
+    if ( vehicles[i] == nullptr ) {
+      vehicles[i] = new Vehicle(i, vehicle_type);
+      return *vehicles[i];
     }
   }
 
   log("ERROR: Out of empty cars!");
-  return -1;
+  return *vehicles[0];
+}
+
+void delete_vehicle(Vehicle& vehicle) {
+  extern Vehicle* vehicles[];
+  int id = vehicle.id;
+  delete vehicles[id];
+  vehicles[id] = nullptr;
 }
 
 void move_car(int start, int target) {
-  extern Vehicle* vehicles[];
   extern VPath* paths[];
-  int vehicle = -1;
+  Vehicle* vehicle;
 
   if (start > -1) {
     vehicle = paths[start]->vehicle_pull();
-    if (vehicle == -1) {
-      vehicle = get_new_car(VehicleType::car);
+    if (vehicle == nullptr) {
+      vehicle = &new_vehicle(VehicleType::car);
       log("Path " + paths[target]->name() + " creates new car.");
     }
-    log("Moving " + vehicles[vehicle]->type_str() + " " + String(vehicle) + " from "
+    log("Moving " + vehicle->type_str() + " " + String(vehicle->id) + " from "
         + paths[start]->name() + " to " + paths[target]->name());
   } else {
-    vehicle = get_new_car(VehicleType::car);
+    vehicle = &new_vehicle(VehicleType::car);
   }
-  paths[target]->vehicle_push(vehicle);
+  paths[target]->vehicle_push(*vehicle);
 }
 
 void create_car(int target) {

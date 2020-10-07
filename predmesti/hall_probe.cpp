@@ -103,9 +103,9 @@ void HallProbe::changed() {
   }
   if (_id == FH23) {
     paths[FM10FH02]->unreserve();
-    int vehicle = paths[FM11FH23]->vehicle_pull();
-    if (vehicle > -1)
-      vehicles[vehicle]->deactivate();
+    Vehicle* vehicle = paths[FM11FH23]->vehicle_pull();
+    if (vehicle != nullptr)
+      delete_vehicle(*vehicle);
   }
 }
 

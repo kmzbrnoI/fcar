@@ -78,7 +78,7 @@ void VPath::timeout() {
   }
 }
 
-void VPath::vehicle_push(int vehicle) {
+void VPath::vehicle_push(Vehicle& vehicle) {
   if (_state != VPathStatus::occupied_soon)
     log("ERROR: Path is not ready for car [" + _name + "]!");
 
@@ -87,10 +87,11 @@ void VPath::vehicle_push(int vehicle) {
 
   _state = VPathStatus::occupied;
   _occupiedTime = millis();
-  _vehicle = vehicle;
+  _vehicle = vehicle.id;
 }
 
-int VPath::vehicle_pull() {
+Vehicle* VPath::vehicle_pull() {
+  extern Vehicle* vehicles[];
   int vehicle = _vehicle;
 
   if (_state != VPathStatus::occupied)
@@ -102,7 +103,7 @@ int VPath::vehicle_pull() {
   _vehicle = -1;
   _state = VPathStatus::clear_soon;
   _cleanSoonTime = millis();
-  return vehicle;
+  return vehicle > -1 ? vehicles[vehicle] : nullptr;
 }
 
 Vehicle& VPath::vehicle() const {
