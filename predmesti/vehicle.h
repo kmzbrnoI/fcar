@@ -4,8 +4,8 @@
 #include <Arduino.h>
 #include "blocks.h"
 
-
 const int VEHICLE_COUNT = 10;
+const int BUS_STOP_TIME_MS = 5000;
 
 enum class VehicleType { car, bus };
 
@@ -18,7 +18,7 @@ struct Vehicle {
   Vehicle(int id, VehicleType type);
   ~Vehicle();
 
-  void bus_stop();
+  void record_stop_time();
   bool is_bus_ready() const;
 
   String type_str() const;

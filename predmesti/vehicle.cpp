@@ -14,13 +14,13 @@ String Vehicle::type_str() const {
   return (type == VehicleType::bus) ? "bus" : "car";
 }
 
-void Vehicle::bus_stop() {
+void Vehicle::record_stop_time() {
   if (type == VehicleType::bus)
     _stop_time = millis();
 }
 
 bool Vehicle::is_bus_ready() const {
-  return type == VehicleType::bus ? (millis() - _stop_time > 5000) : true;
+  return type == VehicleType::bus ? (millis() - _stop_time > BUS_STOP_TIME_MS) : true;
 }
 
 Vehicle& new_vehicle(VehicleType vehicle_type) {
@@ -59,6 +59,7 @@ void move_vehicle(int start, int target) {
   } else {
     vehicle = &new_vehicle(VehicleType::car);
   }
+  vehicle->record_stop_time(); // record on each moving event
   paths[target]->vehicle_push(*vehicle);
 }
 

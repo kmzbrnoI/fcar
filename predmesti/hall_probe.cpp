@@ -53,7 +53,6 @@ void HallProbe::changed() {
   // autobusova zastavka
   if (_id == FH06) {
     move_vehicle(FH03FH06, FH06FM06);
-    paths[FH06FM06]->vehicle()->bus_stop();
     magnets[FM06]->make_decision();
   }
   if (_id == FH07) {
@@ -89,7 +88,6 @@ void HallProbe::changed() {
     } else {
       create_vehicle(FH09FM09);
     }
-    paths[FH09FM09]->vehicle()->bus_stop();
     magnets[FM09]->make_decision();
   }
   if (_id == FH10) {

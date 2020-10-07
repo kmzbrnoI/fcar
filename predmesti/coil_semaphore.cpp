@@ -23,7 +23,8 @@ void CoilSemaphore::make_decision() {
   extern Junction *j_c;
 
   if (_id == FM02) {
-    if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06)) {
+    if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06) &&
+        (paths[FH02FM02]->vehicle()->is_bus_ready() || paths[FHA2FHA0]->is_occupied())) {
       // na velky okruh
 
       if (paths[FH02FM02]->vehicle()->type == VehicleType::bus) {
@@ -39,7 +40,8 @@ void CoilSemaphore::make_decision() {
         magnets[FM02]->signal_green();
         move_vehicle(FH02FM02, FM02FH03);
       }
-    } else if (paths_are_clear(FH13FM13, FM02FH13)) {
+    } else if (paths_are_clear(FH13FM13, FM02FH13) &&
+        (paths[FH02FM02]->vehicle()->is_bus_ready() || paths[FHA2FHA0]->is_occupied())) {
       // na maly okruh
       j_a->to_minus();
       paths_reserve(true, FM02FH13, FH13FM13);
