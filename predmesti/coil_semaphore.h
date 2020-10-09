@@ -14,31 +14,19 @@
 
 
 /* Constant for signals */
-enum class SSignal { green, red };
+enum class SSignal { stop = 0, go = 1 };
 
 /* Semaphore logic */
-class CoilSemaphore
-{
-  public:
-    /* Constructor */
-    CoilSemaphore(int id, int pin, const String& name);
+struct CoilSemaphore {
+  const int id;
+  const String name;
+  const int _pin;
+  SSignal state = SSignal::stop;
 
-    /* Returns SSignal according to current state */
-    SSignal getSignal();
+  CoilSemaphore(int id, const String& name, int pin);
 
-    void make_decision();
-
-    /* Turn semaphore to green */
-    void signal_green();
-
-    /* Turn semaphore to red */
-    void signal_red();
-
-  private:
-    const int _id;
-    const int _pin;
-    const String _name;
-    SSignal _state;
-
+  void make_decision();
+  void go();
+  void stop();
 };
 #endif /* COIL_SEMAPHORE_H */

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "vehicle.h"
 
-enum class VPathStatus { clear, clear_soon, occupied, occupied_soon, reserved };
+enum class VPathStatus { clear = 0, clear_soon = 1, occupied = 2, occupied_soon = 3, reserved = 4 };
 
 const int PATH_TIMEOUT = 20000;
 const int PATH_CLEAR_SOON = 150;

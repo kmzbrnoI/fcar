@@ -55,7 +55,7 @@ void VPath::timeout() {
 
   if (_state == VPathStatus::occupied) {
     if (_magnetId > -1)
-      if (magnets[_magnetId]->getSignal() == SSignal::red)
+      if (magnets[_magnetId]->state == SSignal::stop)
         _occupiedTime = millis(); // do not timoeut if coil enabled
     if ( millis() - _occupiedTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
@@ -124,7 +124,7 @@ bool VPath::is_blocked_by_crossing() const {
 }
 
 void VPath::dump() const {
-  log("Path " + String(id) + ": " + String(int(_state)) + ", " + String(_vehicle));
+  log("Path " + name + ": " + String(int(_state)) + ", " + String(_vehicle));
 }
 
 bool paths_are_clear(int pathIda, int pathIdb, int pathIdc, int pathIdd, int pathIde, int pathIdf) {

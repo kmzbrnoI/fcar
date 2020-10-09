@@ -142,7 +142,7 @@ void setup() {
     crossings[i] = new Crossing(i, crossing_defs[i].pinClosed, crossing_defs[i].pinOccupied, crossing_defs[i].name);
 
   for (int i=0; i < MAGNET_COUNT; i++)
-    magnets[i] = new CoilSemaphore(i, magnet_defs[i].pin, magnet_defs[i].name);
+    magnets[i] = new CoilSemaphore(i, magnet_defs[i].name, magnet_defs[i].pin);
 
   for (int i=0; i < PATH_COUNT; i++)
     paths[i] = new VPath(i, path_defs[i].name, path_defs[i].crossingId, path_defs[i].magnetId);
@@ -165,7 +165,7 @@ void loop() {
     crossings[i]->updateState();
 
   for (size_t i = 0; i < MAGNET_COUNT; i++)
-    if (magnets[i]->getSignal() == SSignal::red)
+    if (magnets[i]->state == SSignal::stop)
       magnets[i]->make_decision();
 
   for (int i=0; i < PATH_COUNT; i++)
