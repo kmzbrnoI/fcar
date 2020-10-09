@@ -37,12 +37,12 @@ IODef probe_defs[PROBE_COUNT] = {
   {"FH13", 24},
   {"FH20", 2},
   {"FH21", 7},
-  {"FH22", 5},
+  {"FH22", 5},   // not used, sometimes not working
   {"FH23", 10},
   {"FH30", 16},
-  {"FHA0", A0},  // blize predmesti
-  {"FHA1", A1},  // detekce autobusu
-  {"FHA2", A2},  // dale od predmesti
+  {"FHA0", A0},
+  {"FHA1", A1},
+  {"FHA2", A2},
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ IODef magnet_defs[MAGNET_COUNT] = {
   {"FM10", 26},
   {"FM11", 30},
   {"FM12", 28},
-  {"FM13", 38},
+  {"FM13", 38}, // not hall probe before this magnet; not used
   {"FM14", 34},
   {"FM20", 32},
   {"FM29", 35},
@@ -161,7 +161,7 @@ void setup() {
 
 void loop() {
   for (int i=0; i < PROBE_COUNT; i++)
-    probes[i]->updateState();
+    probes[i]->update();
 
   for (int i=0; i < CROSSING_COUNT; i++)
     crossings[i]->updateState();

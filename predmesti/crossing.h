@@ -1,8 +1,8 @@
 #ifndef CROSSING_H
 #define CROSSING_H
 
-#include "Arduino.h"
 #include <Bounce2.h>
+#include "Arduino.h"
 
 class Crossing
 {
