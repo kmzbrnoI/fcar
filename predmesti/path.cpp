@@ -4,6 +4,8 @@
 #include "log.h"
 #include "coil_semaphore.h"
 
+unsigned long lastLeaveTime = 0;
+
 VPath::VPath(int id, const String& name, int crossingId, int magnetId)
   : id(id), name(name), _crossingId(crossingId), _magnetId(magnetId) {}
 

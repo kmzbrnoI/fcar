@@ -114,6 +114,7 @@ void HallProbe::changed() {
     magnets[FM11]->make_decision();
   }
   if (id == FH23) {
+    lastLeaveTime = millis();
     paths[FM10FH02]->unreserve();
     paths[FM02FH13]->unreserve();
     Vehicle* vehicle = paths[FM11FH23]->vehicle_pull();

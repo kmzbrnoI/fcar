@@ -76,7 +76,8 @@ void CoilSemaphore::make_decision() {
   } else if (id == FM09) {
     if (!paths[FH09FM09]->vehicle()->is_bus_ready()) {
       magnets[FM09]->stop();
-    } else if (paths[FH09FM09]->vehicle()->should_leave && paths_are_clear(FM09FH11, FH11FM11)) {
+    } else if (paths[FH09FM09]->vehicle()->should_leave && paths_are_clear(FM09FH11, FH11FM11) &&
+               millis() > lastLeaveTime + LEAVE_MIN_TIME) {
       j_c->to_minus();
       paths_reserve(true, FM09FH11, FH11FM11);
       paths[FM09FH10]->reserve(false);

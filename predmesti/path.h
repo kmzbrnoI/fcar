@@ -8,6 +8,8 @@ enum class VPathStatus { clear = 0, clear_soon = 1, occupied = 2, occupied_soon 
 
 const int PATH_TIMEOUT = 20000;
 const int PATH_CLEAR_SOON = 150;
+const int LEAVE_MIN_TIME = 10000;
+extern unsigned long lastLeaveTime;
 
 struct VPath {
   const int id;
