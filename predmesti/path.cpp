@@ -66,9 +66,12 @@ void VPath::timeout() {
     }
   }
 
-  if (_state == VPathStatus::clear_soon)
-    if ( millis() - _cleanSoonTime > PATH_CLEAR_SOON)
+  if (_state == VPathStatus::clear_soon) {
+    if ( millis() - _cleanSoonTime > PATH_CLEAR_SOON) {
       _state = VPathStatus::clear;
+      dump();
+    }
+  }
 
   if (_state == VPathStatus::reserved) {
     if ( millis() - _reservationTime > PATH_TIMEOUT) {

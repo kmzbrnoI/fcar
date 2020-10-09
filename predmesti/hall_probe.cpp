@@ -49,12 +49,18 @@ void HallProbe::changed() {
       move_vehicle(FM02FH03, FH03FH05);
   }
   if (id == FH05) {
-    move_vehicle(FH03FH05, FH05FH07);
+    if (paths[FH03FH05]->is_occupied())
+      move_vehicle(FH03FH05, FH05FH07);
+    else
+      move_vehicle(FH03FH06, FH05FH07);  // in case vehicle goes wrong
   }
   // autobusova zastavka
   if (id == FH06) {
-    move_vehicle(FH03FH06, FH06FM06);
-    magnets[FM06]->make_decision();
+    if (paths[FH03FH06]->is_occupied()) {
+      move_vehicle(FH03FH06, FH06FM06);
+      magnets[FM06]->make_decision();
+    } else
+      move_vehicle(FH03FH05, FH05FH07); // in case vehicle goes wrong
   }
   if (id == FH07) {
     if(paths[FH05FH07]->is_reserved()) {

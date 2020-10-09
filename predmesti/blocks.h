@@ -30,7 +30,7 @@
 #define CRH 1
 
 // useky
-#define PATH_COUNT 28
+#define PATH_COUNT 26
 #define FH02FM02 0
 #define FM02FH03 1
 #define FM02FH13 2
@@ -39,25 +39,24 @@
 #define FH05FH07 5
 #define FH06FM06 6
 #define FM06FH07 7
-#define FH06FH07 8
-#define FH07FM07 9
-#define FM07FH08 10
-#define FM07FH30 11
-#define FH08FM08 12
-#define FM08FH09 13
-#define FH09FM09 14
-#define FM09FH10 15
-#define FM09FH11 16
-#define FH10FM10 17
-#define FM10FH02 18
-#define FH11FM11 19
-#define FH13FM14 21
-#define FM14FH09 22
-#define FH20FH21 23
-#define FH21FH22 24
-#define FHA2FHA0 25
-#define FHA0FH02 26
-#define FM11FH23 27
+#define FH07FM07 8
+#define FM07FH08 9
+#define FM07FH30 10
+#define FH08FM08 11
+#define FM08FH09 12
+#define FH09FM09 13
+#define FM09FH10 14
+#define FM09FH11 15
+#define FH10FM10 16
+#define FM10FH02 17
+#define FH11FM11 18
+#define FH13FM14 19
+#define FM14FH09 20
+#define FH20FH21 21
+#define FH21FH22 22
+#define FHA2FHA0 23
+#define FHA0FH02 24
+#define FM11FH23 25
 
 // zastavovaci magnety
 #define MAGNET_COUNT 12
