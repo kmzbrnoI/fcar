@@ -23,26 +23,25 @@ void CoilSemaphore::make_decision() {
   extern Junction *j_c;
 
   if (_id == FM02) {
-    if (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06) &&
-        (paths[FH02FM02]->vehicle()->is_bus_ready() || paths[FHA2FHA0]->is_occupied())) {
-      // na velky okruh
+    bool can_big_circuit = (paths_are_clear(FM02FH03, FH03FH05, FH05FH07, FH07FM07, FH06FM06, FH03FH06) &&
+                           (paths[FH02FM02]->vehicle()->is_bus_ready() || paths[FHA2FHA0]->is_occupied()));
+    bool can_small_circuit = (paths_are_clear(FH13FM14, FM02FH13, FM11FH23) &&
+                             (paths[FH02FM02]->vehicle()->is_bus_ready() || paths[FHA2FHA0]->is_occupied()));
+    bool was_big_circuit = paths[FH02FM02]->vehicle()->was_big_circuit;
+    if (can_big_circuit && (!was_big_circuit || !can_small_circuit)) {
+      j_a->to_plus();
 
       if (paths[FH02FM02]->vehicle()->type == VehicleType::bus) {
-        j_a->to_plus();
         j_b->to_minus();
         paths_reserve(true, FM02FH03, FH03FH06, FH06FM06);
-        magnets[FM02]->signal_green();
-        move_vehicle(FH02FM02, FM02FH03);
       } else {
-        j_a->to_plus();
         j_b->to_plus();
         paths_reserve(true, FM02FH03, FH03FH05, FH05FH07, FH07FM07);
-        magnets[FM02]->signal_green();
-        move_vehicle(FH02FM02, FM02FH03);
       }
-    } else if (paths_are_clear(FH13FM14, FM02FH13, FM11FH23) &&
-        (paths[FH02FM02]->vehicle()->is_bus_ready() || paths[FHA2FHA0]->is_occupied())) {
-      // na maly okruh
+
+      magnets[FM02]->signal_green();
+      move_vehicle(FH02FM02, FM02FH03);
+    } else if (can_small_circuit) {
       j_a->to_minus();
       paths_reserve(true, FM02FH13, FH13FM14);
       paths[FM11FH23]->reserve(false);

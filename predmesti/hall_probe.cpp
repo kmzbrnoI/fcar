@@ -67,6 +67,7 @@ void HallProbe::changed() {
   }
   if (id == FH08) {
     move_vehicle(FM07FH08, FH08FM08);
+    paths[FH08FM08]->vehicle()->was_big_circuit = true;
     magnets[FM08]->make_decision();
   }
 

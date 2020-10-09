@@ -13,6 +13,7 @@ struct Vehicle {
   const int id;
   VehicleType type = VehicleType::car;
   bool should_leave = true;
+  bool was_big_circuit = false;
   unsigned long _stop_time = 0;
 
   Vehicle(int id, VehicleType type);
