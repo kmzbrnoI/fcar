@@ -28,5 +28,6 @@ struct CoilSemaphore {
   void make_decision();
   void go();
   void stop();
+  void dump() const;
 };
 #endif /* COIL_SEMAPHORE_H */

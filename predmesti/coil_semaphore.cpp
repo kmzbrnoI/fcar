@@ -129,6 +129,7 @@ void CoilSemaphore::go() {
   digitalWrite(_pin, LOW);
   state = SSignal::go;
   log("-- GREEN : " + name);
+  dump();
 }
 
 void CoilSemaphore::stop() {
@@ -136,4 +137,9 @@ void CoilSemaphore::stop() {
   digitalWrite(_pin, HIGH);
   state = SSignal::stop;
   log("-- RED : " + name);
+  dump();
+}
+
+void CoilSemaphore::dump() const {
+  log("Magnet " + name + ": " + String(int(state)));
 }

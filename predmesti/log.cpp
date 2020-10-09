@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "log.h"
 #include "path.h"
+#include "coil_semaphore.h"
 
 void log(const String& message) {
   Serial.print(String(millis()) + ": ");
@@ -20,6 +21,9 @@ void dump_probes() {
 }
 
 void dump_magnets() {
+  extern CoilSemaphore* magnets[];
+  for (size_t i = 0; i < MAGNET_COUNT; i++)
+    magnets[i]->dump();
 }
 
 void dump_vehicles() {
