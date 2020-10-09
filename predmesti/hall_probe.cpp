@@ -125,7 +125,7 @@ void HallProbe::update() {
   if (_pin.fell() && _changeTime == 0)
     _changeTime = millis() + changeDelayMs;
 
-  if (_changeTime > 0 && millis() > _changeTime) {
+  if (_changeTime > 0 && millis() >= _changeTime) {
     _changeTime = 0;
     changed();
   }
