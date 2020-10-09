@@ -30,7 +30,7 @@
 #define CRH 1
 
 // useky
-#define PATH_COUNT 29
+#define PATH_COUNT 28
 #define FH02FM02 0
 #define FM02FH03 1
 #define FM02FH13 2
