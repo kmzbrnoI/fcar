@@ -140,6 +140,7 @@ void setup() {
 
   for (int i=0; i < PROBE_COUNT; i++)
     probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
+  probes[FH23]->changeDelayMs = 2000;
 
   for (int i=0; i < CROSSING_COUNT; i++)
     crossings[i] = new Crossing(i, crossing_defs[i].pinClosed, crossing_defs[i].pinOccupied, crossing_defs[i].name);

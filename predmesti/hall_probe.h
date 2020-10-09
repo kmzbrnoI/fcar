@@ -12,8 +12,10 @@ struct HallProbe {
   const int id;
   String name;
   Bounce _pin;
+  int changeDelayMs;
+  unsigned long _changeTime = 0;
 
-  HallProbe(int id, int pin, const String& name);
+  HallProbe(int id, int pin, const String& name, int changeDelayMs = 0);
 
   void update();
   void changed();
