@@ -52,10 +52,10 @@ void move_vehicle(int start, int target) {
     vehicle = paths[start]->vehicle_pull();
     if (vehicle == nullptr) {
       vehicle = &new_vehicle(VehicleType::car);
-      log("Path " + paths[target]->name() + " creates new car.");
+      log("Path " + paths[target]->name + " creates new car.");
     }
     log("Moving " + vehicle->type_str() + " " + String(vehicle->id) + " from "
-        + paths[start]->name() + " to " + paths[target]->name());
+        + paths[start]->name + " to " + paths[target]->name);
   } else {
     vehicle = &new_vehicle(VehicleType::car);
   }

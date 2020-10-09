@@ -9,41 +9,36 @@ enum class VPathStatus { clear, clear_soon, occupied, occupied_soon, reserved };
 const int PATH_TIMEOUT = 20000;
 const int PATH_CLEAR_SOON = 150;
 
-class VPath
-{
-  public:
-    bool expecting_bus;
+struct VPath {
+  const int id;
+  const String& name;
+  bool expecting_bus = false;
+  int _crossingId;
+  int _magnetId;
+  VPathStatus _state = VPathStatus::clear;
+  int _vehicle = -1;
 
-    VPath(int id, const String& name, int crossingId, int magnetId);
-    const String& name() const;
+  unsigned long _reservationTime = 0;
+  unsigned long _occupiedSoonTime = 0;
+  unsigned long _occupiedTime = 0;
+  unsigned long _cleanSoonTime = 0;
 
-    bool is_clear() const;
-    bool is_occupied() const;
-    bool is_reserved() const;
+  VPath(int id, const String& name, int crossingId, int magnetId);
 
-    void reserve(bool in_direction);
-    void unreserve();
-    void timeout();
+  bool is_clear() const;
+  bool is_occupied() const;
+  bool is_reserved() const;
 
-    void vehicle_push(Vehicle& vehicle);
-    Vehicle* vehicle_pull();
-    Vehicle* vehicle() const;
+  void reserve(bool in_direction);
+  void unreserve();
+  void timeout();
 
-    bool is_blocked_by_crossing() const;
+  void vehicle_push(Vehicle& vehicle);
+  Vehicle* vehicle_pull();
+  Vehicle* vehicle() const;
 
-  private:
-    const int _id;
-    const String& _name;
-    int _crossingId;
-    int _magnetId;
-
-    VPathStatus _state;
-    int _vehicle;
-
-    unsigned long _reservationTime;
-    unsigned long _occupiedSoonTime;
-    unsigned long _occupiedTime;
-    unsigned long _cleanSoonTime;
+  bool is_blocked_by_crossing() const;
+  void dump() const;
 };
 
 bool paths_are_clear(int pathIda, int pathIdb = -1, int pathIdc = -1, int pathIdd = -1,

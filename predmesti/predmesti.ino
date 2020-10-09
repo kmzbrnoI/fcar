@@ -15,7 +15,6 @@ Vehicle* vehicles[VEHICLE_COUNT];
 ///////////////////////////////////////////////////////////////////////////////
 // Hall probes
 
-const int PROBE_COUNT = 19;
 HallProbe* probes[PROBE_COUNT];
 
 struct IODef {
@@ -54,7 +53,6 @@ struct CrossingDef {
   int pinOccupied;
 };
 
-const int CROSSING_COUNT = 3;
 Crossing* crossings[CROSSING_COUNT];
 CrossingDef crossing_defs[CROSSING_COUNT] = {
   {"CRG", 19, 20},
@@ -70,7 +68,6 @@ struct VPathDef {
   int magnetId;
 };
 
-const int PATH_COUNT = 29;
 VPath* paths[PATH_COUNT];
 
 VPathDef path_defs[PATH_COUNT] = {
@@ -114,7 +111,6 @@ Junction* j_c;
 ///////////////////////////////////////////////////////////////////////////////
 // Magnets
 
-const int MAGNET_COUNT = 12;
 CoilSemaphore* magnets[MAGNET_COUNT];
 
 IODef magnet_defs[MAGNET_COUNT] = {
@@ -158,6 +154,7 @@ void setup() {
   Serial.begin(9600);
   while (!Serial);
   log("Initialized Predmesti!");
+  dump_all();
 }
 
 void loop() {

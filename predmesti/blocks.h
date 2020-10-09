@@ -2,6 +2,7 @@
 #define BLOCKS_H
 
 // hallovy sondy
+#define PROBE_COUNT 19
 #define FH02 0
 #define FH03 1
 #define FH05 2
@@ -23,11 +24,13 @@
 #define FHA2 18
 
 // crossing
+#define CROSSING_COUNT 3
 #define CRUNDEF -1
 #define CRG 0
 #define CRH 1
 
 // useky
+#define PATH_COUNT 29
 #define FH02FM02 0
 #define FM02FH03 1
 #define FM02FH13 2
@@ -57,6 +60,7 @@
 #define FM11FH23 27
 
 // zastavovaci magnety
+#define MAGNET_COUNT 12
 #define FMUNDEF -1
 #define FM02 0
 #define FM06 1

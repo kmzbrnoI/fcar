@@ -5,22 +5,7 @@
 #include "coil_semaphore.h"
 
 VPath::VPath(int id, const String& name, int crossingId, int magnetId)
-  : expecting_bus(false),
-  _id(id),
-  _name(name),
-  _crossingId(crossingId),
-  _magnetId(magnetId),
-  _state(VPathStatus::clear),
-  _vehicle(-1),
-  _reservationTime(0),
-  _occupiedSoonTime(0),
-  _occupiedTime(0),
-  _cleanSoonTime(0)
-{}
-
-const String& VPath::name() const {
-  return _name;
-}
+  : id(id), name(name), _crossingId(crossingId), _magnetId(magnetId) {}
 
 bool VPath::is_clear() const {
   return (_state == VPathStatus::clear && !is_blocked_by_crossing());
@@ -44,11 +29,14 @@ void VPath::reserve(bool in_direction) {
     _state = VPathStatus::reserved;
     _reservationTime = millis();
   }
+  dump();
 }
 
 void VPath::unreserve() {
-  if (_state == VPathStatus::reserved )
+  if (_state == VPathStatus::reserved) {
     _state = VPathStatus::clear;
+    dump();
+  }
 }
 
 void VPath::timeout() {
@@ -60,7 +48,8 @@ void VPath::timeout() {
   if (_state == VPathStatus::occupied_soon) {
     if ( millis() - _occupiedSoonTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
-      log("State [occupied_soon] on " + _name + " released.");
+      log("State [occupied_soon] on " + name + " released.");
+      dump();
     }
   }
 
@@ -72,7 +61,8 @@ void VPath::timeout() {
       _state = VPathStatus::clear;
       if (_vehicle > -1)
         delete_vehicle(*vehicle());
-      log("State [occupied] on " + _name + " released.");
+      log("State [occupied] on " + name + " released.");
+      dump();
     }
   }
 
@@ -83,21 +73,23 @@ void VPath::timeout() {
   if (_state == VPathStatus::reserved) {
     if ( millis() - _reservationTime > PATH_TIMEOUT) {
       _state = VPathStatus::clear;
-      log("State [reserved] on " + _name + " released.");
+      log("State [reserved] on " + name + " released.");
+      dump();
     }
   }
 }
 
 void VPath::vehicle_push(Vehicle& vehicle) {
   if (_state != VPathStatus::occupied_soon)
-    log("ERROR: Path is not ready for car [" + _name + "]!");
+    log("ERROR: Path is not ready for car [" + name + "]!");
 
   if (_vehicle != -1)
-    log("ERROR: Two cars on one position [" + _name + "]!");
+    log("ERROR: Two cars on one position [" + name + "]!");
 
   _state = VPathStatus::occupied;
   _occupiedTime = millis();
   _vehicle = vehicle.id;
+  dump();
 }
 
 Vehicle* VPath::vehicle_pull() {
@@ -105,14 +97,15 @@ Vehicle* VPath::vehicle_pull() {
   int vehicle = _vehicle;
 
   if (_state != VPathStatus::occupied)
-    log("ERROR: Car didn't occupy its path on position [" + _name + "]!");
+    log("ERROR: Car didn't occupy its path on position [" + name + "]!");
 
   if (vehicle == -1)
-    log("ERROR: No car on position [" + _name + "]!");
+    log("ERROR: No car on position [" + name + "]!");
 
   _vehicle = -1;
   _state = VPathStatus::clear_soon;
   _cleanSoonTime = millis();
+  dump();
   return vehicle > -1 ? vehicles[vehicle] : nullptr;
 }
 
@@ -128,6 +121,10 @@ bool VPath::is_blocked_by_crossing() const {
   if (_crossingId == CRUNDEF)
     return false;
   return crossings[_crossingId]->isRed();
+}
+
+void VPath::dump() const {
+  log("Path " + String(id) + ": " + String(int(_state)) + ", " + String(_vehicle));
 }
 
 bool paths_are_clear(int pathIda, int pathIdb, int pathIdc, int pathIdd, int pathIde, int pathIdf) {
