@@ -9,6 +9,6 @@ clean:
 	rm -r build
 
 flash:
-	arduino-cli upload --fqbn arduino:avr:mega -v predmesti.ino -p /dev/ttyUSB0
+	arduino-cli upload --fqbn arduino:avr:mega -v predmesti.ino -p /dev/ttyACM0
 
 .PHONY: all clean flash
