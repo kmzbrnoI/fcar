@@ -27,7 +27,9 @@ if __name__ == '__main__':
             magnet = re.search(r'^\d*: Magnet (.*?): (\d*)$', line)
 
             if path:
-                pid, pstate, pvehicle = path.groups()
+                pid, pstate, pvehicle = [
+                    path.group(1), int(path.group(2)), int(path.group(3))
+                ]
                 item = root.find(f'{SVG_ROOT}path[@id="{pid}"]')
                 if item is not None:
                     COLORS = {
@@ -37,7 +39,7 @@ if __name__ == '__main__':
                         3: '#00ffff',
                         4: '#ffff00',
                     }
-                    item.set('style', f'fill:{COLORS[pstate]};')
+                    item.set('style', f'fill:none;stroke:{COLORS[pstate]};')
                     tree.write(open('test.svg', 'wb'))
                 else:
                     print(f'ERROR: unknown path: {pid}!')
