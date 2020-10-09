@@ -6,6 +6,7 @@
 void HallProbe::changed() {
   extern VPath* paths[];
   extern CoilSemaphore* magnets[];
+  extern Junction *j_a;
 
   log("-- Hall probe: " + name);
 
@@ -43,6 +44,7 @@ void HallProbe::changed() {
 
   // velky okruh
   if (id == FH03) {
+    j_a->to_minus();
     if (paths[FM02FH03]->vehicle() != nullptr && paths[FM02FH03]->vehicle()->type == VehicleType::bus)
       move_vehicle(FM02FH03, FH03FH06);
     else

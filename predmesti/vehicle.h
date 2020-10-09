@@ -5,7 +5,7 @@
 #include "blocks.h"
 
 const int VEHICLE_COUNT = 10;
-const int BUS_STOP_TIME_MS = 5000;
+const int BUS_STOP_TIME_MS = 10000;
 
 enum class VehicleType { car, bus };
 
