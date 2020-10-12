@@ -124,7 +124,7 @@ void HallProbe::changed() {
 }
 
 HallProbe::HallProbe(int id, int pin, const String& name, int changeDelayMs)
-  : id(id), name(name), _pin(pin, DEBOUNCE_DELAY), changeDelayMs(changeDelayMs) {
+  : id(id), name(name), _pin(pin, DEBOUNCE_DELAY_MS), changeDelayMs(changeDelayMs) {
   pinMode(pin, INPUT_PULLUP);
 }
 
