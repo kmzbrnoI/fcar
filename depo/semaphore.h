@@ -21,7 +21,7 @@ class Semaphore
      * int green_angle (IN) servo angle for green signal, DEFAULT after start up
      * int red_angle (IN) servo angle for red signal
      */
-    Semaphore(int pin, int green_angle, int red_angle);
+    Semaphore(const String& name, int pin, int green_angle, int red_angle);
 
     /* Returns SSignal according to current state */
     SSignal getSignal();
@@ -33,6 +33,7 @@ class Semaphore
     void signal_red();
 
   private:
+    String _name;                    // name
     ServoHandler* _servo_handler;   // ServoHandler, see servo_handler.h
     const int _green_angle;         // servo angle for green signal
     const int _red_angle;           // servo angle for red signal

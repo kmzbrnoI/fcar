@@ -21,7 +21,7 @@ class Junction
      * int plus_angle (IN) servo angle for plus direction, DEFAULT after start up
      * int minus_angle (IN) servo angle for minus direction
      */
-    Junction(int pin, int plus_angle, int minus_angle);
+    Junction(const String& name, int pin, int plus_angle, int minus_angle);
 
     /* Returns JunctionDirection according to current state */
     JDirection getDirection();
@@ -33,6 +33,7 @@ class Junction
     void to_minus();
 
   private:
+    String _name;                   // name
     ServoHandler* _servo_handler;   // ServoHandler, see servo_handler.h
     const int _plus_angle;          // servo angle for plus direction
     const int _minus_angle;         // servo angle for minus direction
