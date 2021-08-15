@@ -29,7 +29,7 @@ IODef probe_defs[PROBE_COUNT] = {
 
 // S31 je v 10
 IODef stop_defs[SEMAPHORE_COUNT] = {
-  {"SV1", 25},
+  {"SV1", 12},
   {"S11", 3},
   {"S12", 4},
   {"S21", 8},
