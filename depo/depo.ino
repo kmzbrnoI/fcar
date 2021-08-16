@@ -54,6 +54,10 @@ void setup() {
     probes[i] = new HallProbe(probe_defs[i].pin, probe_defs[i].name);
     //probes[i] = new HallProbe(i, String(i));
   }
+  
+  for (int i=0; i < PROBE_COUNT; i++) {
+    probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);  
+  }
 
   for (int i=0; i < SEMAPHORE_COUNT; i++) {
     semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 100, 10);
@@ -73,11 +77,12 @@ void setup() {
 // LOOP()
 
 void loop() {
+ 
   for (int i=0; i < PROBE_COUNT; i++) {
     probes[i]->updateState();
     unsigned long switch_delta = millis() - probes[i]->getLastPositive();
     if (switch_delta < DEBOUNCE_DELAY_MS) {
-      log("-- Hall Probe : " + probes[i]->name);
+      log(probes[i]->name + " event");
       
       for (int j=0; j < SEMAPHORE_COUNT; j++) {
         if (i % 2) {
@@ -97,4 +102,5 @@ void loop() {
 
     }
   }
+
 }

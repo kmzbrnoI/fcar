@@ -1,42 +1,24 @@
 #ifndef PROBE_H
 #define PROBE_H
 
+#include <Bounce2.h>
 #include "Arduino.h"
 
 /* Constant for DEBOUNCE delay */
-const int DEBOUNCE_DELAY = 15;
+const int DEBOUNCE_DELAY_MS = 5;
 
 /* Direct communication with Hall's probe */
-class HallProbe
-{
-  public:
-    /*
-     * Constructor
-     * int pin (IN) arduino pin number
-     */
-    HallProbe(int pin, const String& probe_name);
-    
-    /* Update state from probe */
-    void updateState();
-    
-    /* Returns the last timestamp (milliseconds) when the state was positive */
-    unsigned long getLastPositive();
-    
-    String name;                        // name
-    
-  private: 
-    unsigned long _last_positive_time;  // timestamp of last positive state
-    const int _pin;                     // arduino pin wehere probe is connected
-    
-    /*
-     * The logic of Hall's sond is not straightforward, it cannot remember about
-     * it's states in past. Those variables help us to implement it.
-     * See updateState() function in hall_probe.cpp for implementation details
-     */
-    int _reading;                       // helping variable
-    int _lastState;                     // helping variable
-    int _state;                         // helping variable
-    unsigned long _lastDebounceTime;    // helping variable
+struct HallProbe {
+  const int id;
+  String name;
+  Bounce _pin;
+  int changeDelayMs;
+  unsigned long _changeTime = 0;
+
+  HallProbe(int id, int pin, const String& name, int changeDelayMs = 0);
+
+  void update();
+  void changed();
 };
 
 #endif /* PROBE_H */

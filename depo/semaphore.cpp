@@ -20,12 +20,12 @@ void Semaphore::signal_green()
 {
   _servo_handler->move_to(_green_angle);
   _state = SSignal::green;
-  log(this->_name + ": green");
+  log(this->_name + " green");
 }
 
 void Semaphore::signal_red()
 {
   _servo_handler->move_to(_red_angle);
   _state = SSignal::red;
-  log(this->_name + ": red");
+  log(this->_name + " red");
 }
