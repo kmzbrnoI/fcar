@@ -1,8 +1,7 @@
 #include "semaphore.h"
 #include "log.h"
 
-Semaphore::Semaphore(const String &name, int pin, int green_angle,
-                     int red_angle)
+Semaphore::Semaphore(const String &name, int pin, int green_angle, int red_angle)
     : _name(name)
     , _green_angle(green_angle)
     , _red_angle(red_angle)
