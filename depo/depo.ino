@@ -90,46 +90,43 @@ void loop()
     }
 }
 
-
 void hallProbeOnOccupied(int id)
 {
+    switch (id) {
     /* VÝJEZD */
-    if (id == HSSV1) {
+    case HSSV1:
         path_circuit->clear();
-    }
-
+        break;
     /* VJEZDY NA STANOVIŠTĚ */
-    if (id == HS11) {
+    case HS11:
         path_circuit->clear();
         path_stand11->occupy();
-    }
-    if (id == HS21) {
+        break;
+    case HS21:
         path_circuit->clear();
         path_stand21->occupy();
-    }
-    if (id == HS31) {
+        break;
+    case HS31:
         path_circuit->clear();
         path_stand31->occupy();
-    }
-
+        break;
     /* VÝJEZDY ZE STANOVIŠŤ */
-    if (id == HS12) {
+    case HS12:
         path_stand12->clear();
         path_circuit->occupy();
-    }
-    if (id == HS22) {
+        break;
+    case HS22:
         path_stand22->clear();
         path_circuit->occupy();
-    }
-    if (id == HS32) {
+        break;
+    case HS32:
         path_stand32->clear();
         path_circuit->occupy();
-    }
-
+        break;
     /* VJEZD */
-    if (id == HSSVJ) {
-
+    case HSSVJ:
         incomingCar();
+        break;
     }
 }
 
