@@ -8,7 +8,7 @@ enum class VPathStatus { clear = 0, occupied = 1, unknown = 2 };
 const int PATH_TIMEOUT = 20000;
 
 struct VPath {
-    const String &name;
+    const String name;
     VPathStatus _state;
     bool _timeoutable;
 
