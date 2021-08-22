@@ -42,7 +42,7 @@ IODef junction_defs[JUNCTION_COUNT] = {
 /* -------------------------------------------------------------------------- */
 // Function prototypes
 
-void hallProbeOnOccupied(HallProbe*);
+void hallProbeOnOccupied(HallProbe *);
 void outgoingCar();
 void incomingCar();
 void incomingCarGo(int stand);
@@ -86,7 +86,7 @@ void loop()
     }
 }
 
-void hallProbeOnOccupied(HallProbe* hp)
+void hallProbeOnOccupied(HallProbe *hp)
 {
     log("Occupied: " + hp->name);
 
