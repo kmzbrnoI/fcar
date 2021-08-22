@@ -44,11 +44,19 @@ int freeStand();
 
 void setup()
 {
-
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
         probes[i]->onOccupied = hallProbeOnOccupied;
     }
+
+    paths[P_ENTRANCE] = new VPath("entrance", VPathStatus::clear);
+    paths[P_CIRCUIT] = new VPath("circuit", VPathStatus::clear, 0, true);
+    paths[P_STAND11] = new VPath("stand11", VPathStatus::unknown, 48);
+    paths[P_STAND12] = new VPath("stand12", VPathStatus::unknown, 42);
+    paths[P_STAND21] = new VPath("stand21", VPathStatus::unknown, 43);
+    paths[P_STAND22] = new VPath("stand22", VPathStatus::unknown, 44);
+    paths[P_STAND31] = new VPath("stand31", VPathStatus::unknown, 47);
+    paths[P_STAND32] = new VPath("stand32", VPathStatus::unknown, 46);
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
         semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 10, 90);
@@ -60,24 +68,28 @@ void setup()
         delay(100); // to avoid large current due to a lot of servos moving
     }
 
-    paths[P_ENTRANCE] = new VPath("entrance", VPathStatus::clear);
-    paths[P_CIRCUIT] = new VPath("circuit", VPathStatus::clear, true);
-    paths[P_STAND11] = new VPath("stand11", VPathStatus::unknown);
-    paths[P_STAND12] = new VPath("stand12", VPathStatus::unknown);
-    paths[P_STAND21] = new VPath("stand21", VPathStatus::unknown);
-    paths[P_STAND22] = new VPath("stand22", VPathStatus::unknown);
-    paths[P_STAND31] = new VPath("stand31", VPathStatus::unknown);
-    paths[P_STAND32] = new VPath("stand32", VPathStatus::unknown);
-
     Serial.begin(9600);
     log("Initialized Faller Depo!");
 }
 
 void loop()
 {
+    static int ledCounter = 0;
+    constexpr int LED_PERIOD = 200;
+
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i]->update();
     }
+
+    ledCounter++;
+    if (ledCounter == LED_PERIOD) {
+        ledCounter = 0;
+        for (int i = 0; i < PATHS_COUNT; i++) {
+            paths[i]->ledUpdate();
+        }
+    }
+
+    delay(1);
 }
 
 void hallProbeOnOccupied(HallProbe *hp)

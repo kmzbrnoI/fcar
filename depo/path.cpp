@@ -1,11 +1,16 @@
 #include "path.h"
 #include "log.h"
 
-VPath::VPath(const String &name, VPathStatus state, bool timeoutable)
+VPath::VPath(const String &name, VPathStatus state, int pinLed, bool timeoutable)
     : name(name)
     , _state(state)
+    , _pinLed(pinLed)
     , _timeoutable(timeoutable)
 {
+    if (pinLed > 0) {
+        pinMode(pinLed, OUTPUT);
+        digitalWrite(pinLed, LOW);
+    }
 }
 
 bool VPath::is_clear() const { return (_state == VPathStatus::clear); }
@@ -15,12 +20,14 @@ bool VPath::is_occupied() const { return (_state == VPathStatus::occupied); }
 void VPath::occupy()
 {
     _state = VPathStatus::occupied;
+    digitalWrite(_pinLed, HIGH);
     dump();
 }
 
 void VPath::clear()
 {
     _state = VPathStatus::clear;
+    digitalWrite(_pinLed, LOW);
     dump();
 }
 
@@ -37,3 +44,10 @@ void VPath::timeout()
 }
 
 void VPath::dump() const { log("Path " + name + ": " + String(int(_state))); }
+
+void VPath::ledUpdate() {
+    if ((_state == VPathStatus::unknown) && (_pinLed > 0)) {
+        _ledState = !_ledState;
+        digitalWrite(_pinLed, _ledState);
+    }
+}
