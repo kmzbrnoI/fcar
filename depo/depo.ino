@@ -50,13 +50,13 @@ void setup()
     }
 
     paths[P_ENTRANCE] = new VPath("entrance", VPathStatus::clear);
-    paths[P_CIRCUIT] = new VPath("circuit", VPathStatus::clear, 0, true);
-    paths[P_STAND11] = new VPath("stand11", VPathStatus::unknown, 48);
-    paths[P_STAND12] = new VPath("stand12", VPathStatus::unknown, 42);
-    paths[P_STAND21] = new VPath("stand21", VPathStatus::unknown, 43);
-    paths[P_STAND22] = new VPath("stand22", VPathStatus::unknown, 44);
-    paths[P_STAND31] = new VPath("stand31", VPathStatus::unknown, 47);
-    paths[P_STAND32] = new VPath("stand32", VPathStatus::unknown, 46);
+    paths[P_CIRCUIT] = new VPath("circuit", VPathStatus::clear, 0, 0, true);
+    paths[P_STAND11] = new VPath("stand11", VPathStatus::unknown, 48, 40);
+    paths[P_STAND12] = new VPath("stand12", VPathStatus::unknown, 42, 2);
+    paths[P_STAND21] = new VPath("stand21", VPathStatus::unknown, 43, 38);
+    paths[P_STAND22] = new VPath("stand22", VPathStatus::unknown, 44, 32);
+    paths[P_STAND31] = new VPath("stand31", VPathStatus::unknown, 47, 34);
+    paths[P_STAND32] = new VPath("stand32", VPathStatus::unknown, 46, 30);
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
         semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 10, 90);
@@ -79,6 +79,10 @@ void loop()
 
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i]->update();
+    }
+
+    for (int i = 0; i < PATHS_COUNT; i++) {
+        paths[i]->btnUpdate();
     }
 
     ledCounter++;

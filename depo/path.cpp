@@ -1,7 +1,7 @@
 #include "path.h"
 #include "log.h"
 
-VPath::VPath(const String &name, VPathStatus state, int pinLed, bool timeoutable)
+VPath::VPath(const String &name, VPathStatus state, int pinLed, int pinBtn, bool timeoutable)
     : name(name)
     , _state(state)
     , _pinLed(pinLed)
@@ -10,6 +10,10 @@ VPath::VPath(const String &name, VPathStatus state, int pinLed, bool timeoutable
     if (pinLed > 0) {
         pinMode(pinLed, OUTPUT);
         digitalWrite(pinLed, LOW);
+    }
+    if (pinBtn > 0) {
+        pinMode(pinBtn, INPUT_PULLUP);
+        _button = new Bounce(pinBtn, BTN_DEBOUNCE_DELAY_MS);
     }
 }
 
@@ -49,5 +53,19 @@ void VPath::ledUpdate() {
     if ((_state == VPathStatus::unknown) && (_pinLed > 0)) {
         _ledState = !_ledState;
         digitalWrite(_pinLed, _ledState);
+    }
+}
+
+void VPath::btnUpdate() {
+    if (_button == nullptr)
+        return;
+
+    _button->update();
+
+    if (_button->fell()) {
+        if ((_state == VPathStatus::occupied) || (_state == VPathStatus::unknown))
+            this->clear();
+        else
+            this->occupy();
     }
 }
