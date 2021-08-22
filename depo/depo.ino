@@ -99,6 +99,9 @@ void loop()
         }
     }
 
+    if (!paths[P_CIRCUIT]->is_clear()) {
+        paths[P_CIRCUIT]->timeout();
+    }
     delay(1);
 }
 

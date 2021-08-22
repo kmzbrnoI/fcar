@@ -34,13 +34,17 @@ void VPath::setState(VPathStatus state)
     dump();
 }
 
-void VPath::occupy() { setState(VPathStatus::occupied); }
+void VPath::occupy()
+{
+    _occupiedTime = millis();
+    setState(VPathStatus::occupied);
+}
 
 void VPath::clear() { setState(VPathStatus::clear); }
 
 void VPath::timeout()
 {
-    if (_state == VPathStatus::occupied) {
+    if (_state == VPathStatus::occupied && _timeoutable) {
         if (millis() - _occupiedTime > PATH_TIMEOUT) {
             this->clear();
         }
