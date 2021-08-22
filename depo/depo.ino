@@ -17,7 +17,7 @@ struct IODef {
 };
 
 IODef probe_defs[PROBE_COUNT] = {
-    { "HSSV1", 25 }, { "HS11", 27 }, { "HS12", 0 },  { "HS21", 29 },
+    { "HSSV1", 25 }, { "HS11", 27 }, { "HS12", 26 },  { "HS21", 29 },
     { "HS22", 22 },  { "HS31", 31 }, { "HS32", 24 }, { "HSSVJ", 33 },
 };
 
