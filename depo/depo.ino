@@ -1,3 +1,4 @@
+#include <Bounce2.h>
 #include "blocks.h"
 #include "hall_probe.h"
 #include "junction.h"
@@ -41,11 +42,21 @@ void incomingCarGo(int stand);
 int freeStand();
 void pathBtnChanged(VPath *);
 void onCarFromStop(int stop);
+void randomCarGo();
+int standToPath(int stand);
+
+/* -------------------------------------------------------------------------- */
+// Variables
+
+Bounce *runButton;
 
 /* -------------------------------------------------------------------------- */
 
 void setup()
 {
+    pinMode(28, INPUT_PULLUP);
+    runButton = new Bounce(28, 5);
+
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
         probes[i]->onOccupied = hallProbeOnOccupied;
@@ -65,7 +76,7 @@ void setup()
     }
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
-        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 10, 90);
+        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 20, 80);
         delay(100); // to avoid large current due to a lot of servos moving
     }
 
@@ -102,7 +113,12 @@ void loop()
     if (!paths[P_CIRCUIT]->is_clear()) {
         paths[P_CIRCUIT]->timeout();
     }
-    delay(1);
+    runButton->update();
+    if (runButton->fell()) {
+        randomCarGo();
+    }
+
+    elay(1);
 }
 
 void hallProbeOnOccupied(HallProbe *hp)
@@ -244,7 +260,7 @@ void pathBtnChanged(VPath *path)
         }
     }
 
-    if (path->is_clear()) {
+    if (path->is_occupied()) {
         switch (path->id) {
         case P_STAND11:
             semaphores[S11]->signal_red();
@@ -305,6 +321,44 @@ void onCarFromStop(int stop)
             semaphores[S31]->signal_green();
             semaphores[S32]->signal_red();
         }
+        break;
+    }
+}
+
+int standToPath(int stand) {
+    switch (stand) {
+    case 1: return P_STAND12;
+    case 2: return P_STAND22;
+    case 3: return P_STAND32;
+    default: return 0;
+    }
+}
+
+void randomCarGo()
+{
+    if ((paths[P_STAND12]->is_clear()) && (paths[P_STAND22]->is_clear()) &&
+        (paths[P_STAND32]->is_clear()))
+        return;
+
+    // Pick a stand
+    static int lastStand = 0;
+    do {
+        lastStand++;
+        if (lastStand == 4)
+            lastStand = 1;
+    } while (paths[standToPath(lastStand)]->is_clear());
+
+    log("Going out with car " + String(lastStand));
+
+    switch (lastStand) {
+    case 1:
+        semaphores[S12]->signal_green();
+        break;
+    case 2:
+        semaphores[S22]->signal_green();
+        break;
+    case 3:
+        semaphores[S32]->signal_green();
         break;
     }
 }
