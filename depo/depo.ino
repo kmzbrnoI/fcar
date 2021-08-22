@@ -43,7 +43,10 @@ IODef junction_defs[JUNCTION_COUNT] = {
 // Function prototypes
 
 void hallProbeOnOccupied(int id);
+void outgoingCar();
 void incomingCar();
+void incomingCarGo(int stand);
+int freeStand();
 
 /* -------------------------------------------------------------------------- */
 
@@ -95,7 +98,7 @@ void hallProbeOnOccupied(int id)
     switch (id) {
     /* VÝJEZD */
     case HSSV1:
-        path_circuit->clear();
+        outgoingCar();
         break;
     /* VJEZDY NA STANOVIŠTĚ */
     case HS11:
@@ -132,6 +135,55 @@ void hallProbeOnOccupied(int id)
 
 void incomingCar()
 {
-    path_entrance->occupy();
-    // TODO
+    // TODO: make car go if stand in manully freed (by button)
+    int stand = freeStand();
+    if ((path_circuit->is_clear()) && (stand > 0)) {
+        incomingCarGo(stand);
+    } else {
+        path_entrance->occupy();
+        semaphores[SVJ]->signal_red();
+    }
+}
+
+void outgoingCar()
+{
+    path_circuit->clear();
+
+    int stand = freeStand();
+    if ((path_entrance->is_occupied()) && (stand > 0)) {
+        incomingCarGo(stand);
+    }
+}
+
+void incomingCarGo(int stand)
+{
+    // assert stand > 0
+    path_circuit->occupy();
+    semaphores[SVJ]->signal_green();
+
+    switch (stand) {
+    case 1:
+        junctions[VH1]->to_minus();
+        break;
+    case 2:
+        junctions[VH1]->to_plus();
+        junctions[VH2]->to_minus();
+        break;
+    case 3:
+        junctions[VH1]->to_plus();
+        junctions[VH2]->to_plus();
+        junctions[VH3]->to_minus();
+        break;
+    }
+}
+
+int freeStand()
+{
+    if (path_stand31->is_clear())
+        return 3;
+    if (path_stand21->is_clear())
+        return 2;
+    if (path_stand11->is_clear())
+        return 1;
+    return 0;
 }
