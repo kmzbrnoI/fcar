@@ -39,7 +39,7 @@ void outgoingCar();
 void incomingCar();
 void incomingCarGo(int stand);
 int freeStand();
-void pathBtnChanged(VPath*);
+void pathBtnChanged(VPath *);
 void onCarFromStop(int stop);
 
 /* -------------------------------------------------------------------------- */
@@ -231,10 +231,10 @@ int freeStand()
     return 0;
 }
 
-void pathBtnChanged(VPath* path)
+void pathBtnChanged(VPath *path)
 {
-    if ((path->is_clear()) &&
-        ((path->id == P_STAND11) || (path->id == P_STAND21) || (path->id == P_STAND31))) {
+    if ((path->is_clear())
+        && ((path->id == P_STAND11) || (path->id == P_STAND21) || (path->id == P_STAND31))) {
         int stand = freeStand();
         if ((paths[P_CIRCUIT]->is_clear()) && (stand > 0)) {
             incomingCarGo(stand);

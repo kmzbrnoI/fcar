@@ -1,8 +1,8 @@
 #include "path.h"
 #include "log.h"
 
-VPath::VPath(int id, const String &name, VPathStatus state, int pinLed,
-             int pinBtn, bool timeoutable)
+VPath::VPath(int id, const String &name, VPathStatus state, int pinLed, int pinBtn,
+             bool timeoutable)
     : id(id)
     , name(name)
     , _state(state)
@@ -25,7 +25,8 @@ bool VPath::is_clear() const { return (_state == VPathStatus::clear); }
 
 bool VPath::is_occupied() const { return (_state == VPathStatus::occupied); }
 
-void VPath::setState(VPathStatus state) {
+void VPath::setState(VPathStatus state)
+{
     if (state == _state)
         return;
     _state = state;
@@ -33,15 +34,9 @@ void VPath::setState(VPathStatus state) {
     dump();
 }
 
-void VPath::occupy()
-{
-    setState(VPathStatus::occupied);
-}
+void VPath::occupy() { setState(VPathStatus::occupied); }
 
-void VPath::clear()
-{
-    setState(VPathStatus::clear);
-}
+void VPath::clear() { setState(VPathStatus::clear); }
 
 void VPath::timeout()
 {
@@ -54,14 +49,16 @@ void VPath::timeout()
 
 void VPath::dump() const { log("Path " + name + ": " + String(int(_state))); }
 
-void VPath::ledUpdate() {
+void VPath::ledUpdate()
+{
     if ((_state == VPathStatus::unknown) && (_pinLed > 0)) {
         _ledState = !_ledState;
         digitalWrite(_pinLed, _ledState);
     }
 }
 
-void VPath::btnUpdate() {
+void VPath::btnUpdate()
+{
     if (_button == nullptr)
         return;
 

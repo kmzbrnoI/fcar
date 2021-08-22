@@ -17,7 +17,7 @@ struct VPath {
     bool _timeoutable;
     int _ledState = 0;
     Bounce *_button = nullptr;
-    void (*onBtnChanged)(VPath*);
+    void (*onBtnChanged)(VPath *);
 
     // unsigned long _reservationTime = 0;
     unsigned long _occupiedTime = 0;
