@@ -1,8 +1,10 @@
 #include "path.h"
 #include "log.h"
 
-VPath::VPath(const String &name, VPathStatus state, int pinLed, int pinBtn, bool timeoutable)
-    : name(name)
+VPath::VPath(int id, const String &name, VPathStatus state, int pinLed,
+             int pinBtn, bool timeoutable)
+    : id(id)
+    , name(name)
     , _state(state)
     , _pinLed(pinLed)
     , _timeoutable(timeoutable)
@@ -67,5 +69,8 @@ void VPath::btnUpdate() {
             this->clear();
         else
             this->occupy();
+
+        if (onBtnChanged != nullptr)
+            onBtnChanged(this);
     }
 }

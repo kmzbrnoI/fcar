@@ -39,6 +39,7 @@ void outgoingCar();
 void incomingCar();
 void incomingCarGo(int stand);
 int freeStand();
+void pathBtnChanged(VPath*);
 
 /* -------------------------------------------------------------------------- */
 
@@ -49,14 +50,18 @@ void setup()
         probes[i]->onOccupied = hallProbeOnOccupied;
     }
 
-    paths[P_ENTRANCE] = new VPath("entrance", VPathStatus::clear);
-    paths[P_CIRCUIT] = new VPath("circuit", VPathStatus::clear, 0, 0, true);
-    paths[P_STAND11] = new VPath("stand11", VPathStatus::unknown, 48, 40);
-    paths[P_STAND12] = new VPath("stand12", VPathStatus::unknown, 42, 2);
-    paths[P_STAND21] = new VPath("stand21", VPathStatus::unknown, 43, 38);
-    paths[P_STAND22] = new VPath("stand22", VPathStatus::unknown, 44, 32);
-    paths[P_STAND31] = new VPath("stand31", VPathStatus::unknown, 47, 34);
-    paths[P_STAND32] = new VPath("stand32", VPathStatus::unknown, 46, 30);
+    paths[P_ENTRANCE] = new VPath(P_ENTRANCE, "entrance", VPathStatus::clear);
+    paths[P_CIRCUIT] = new VPath(P_CIRCUIT, "circuit", VPathStatus::clear, 0, 0, true);
+    paths[P_STAND11] = new VPath(P_STAND11, "stand11", VPathStatus::unknown, 48, 40);
+    paths[P_STAND12] = new VPath(P_STAND12, "stand12", VPathStatus::unknown, 42, 2);
+    paths[P_STAND21] = new VPath(P_STAND21, "stand21", VPathStatus::unknown, 43, 38);
+    paths[P_STAND22] = new VPath(P_STAND22, "stand22", VPathStatus::unknown, 44, 32);
+    paths[P_STAND31] = new VPath(P_STAND31, "stand31", VPathStatus::unknown, 47, 34);
+    paths[P_STAND32] = new VPath(P_STAND32, "stand32", VPathStatus::unknown, 46, 30);
+
+    for (int i = 0; i < PATHS_COUNT; i++) {
+        paths[i]->onBtnChanged = pathBtnChanged;
+    }
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
         semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 10, 90);
@@ -105,32 +110,63 @@ void hallProbeOnOccupied(HallProbe *hp)
     case HSSV1:
         outgoingCar();
         break;
+
     /* VJEZDY NA STANOVIŠTĚ */
     case HS11:
         paths[P_CIRCUIT]->clear();
-        paths[P_STAND11]->occupy();
+
+        if (paths[P_STAND12]->is_clear()) {
+            paths[P_STAND12]->occupy();
+            semaphores[S11]->signal_green();
+            semaphores[S12]->signal_red();
+        } else {
+            paths[P_STAND11]->occupy();
+            semaphores[S11]->signal_red();
+        }
         break;
+
     case HS21:
         paths[P_CIRCUIT]->clear();
-        paths[P_STAND21]->occupy();
+
+        if (paths[P_STAND22]->is_clear()) {
+            paths[P_STAND22]->occupy();
+            semaphores[S21]->signal_green();
+            semaphores[S22]->signal_red();
+        } else {
+            paths[P_STAND21]->occupy();
+            semaphores[S21]->signal_red();
+        }
         break;
+
     case HS31:
         paths[P_CIRCUIT]->clear();
-        paths[P_STAND31]->occupy();
+
+        if (paths[P_STAND32]->is_clear()) {
+            paths[P_STAND32]->occupy();
+            semaphores[S31]->signal_green();
+            semaphores[S32]->signal_red();
+        } else {
+            paths[P_STAND31]->occupy();
+            semaphores[S31]->signal_red();
+        }
         break;
+
     /* VÝJEZDY ZE STANOVIŠŤ */
     case HS12:
         paths[P_STAND12]->clear();
         paths[P_CIRCUIT]->occupy();
         break;
+
     case HS22:
         paths[P_STAND22]->clear();
         paths[P_CIRCUIT]->occupy();
         break;
+
     case HS32:
         paths[P_STAND32]->clear();
         paths[P_CIRCUIT]->occupy();
         break;
+
     /* VJEZD */
     case HSSVJ:
         incomingCar();
@@ -192,4 +228,15 @@ int freeStand()
     if (paths[P_STAND11]->is_clear())
         return 1;
     return 0;
+}
+
+void pathBtnChanged(VPath* path)
+{
+    if ((path->is_clear()) &&
+        ((path->id == P_STAND11) || (path->id == P_STAND21) || (path->id == P_STAND31))) {
+        int stand = freeStand();
+        if ((paths[P_CIRCUIT]->is_clear()) && (stand > 0)) {
+            incomingCarGo(stand);
+        }
+    }
 }
