@@ -59,7 +59,7 @@ void setup()
     }
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
-        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 100, 10);
+        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 10, 90);
     }
 
     for (int i = 0; i < JUNCTION_COUNT; i++) {
