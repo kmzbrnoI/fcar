@@ -6,6 +6,7 @@
 
 /* Constant for DEBOUNCE delay */
 const int DEBOUNCE_DELAY_MS = 5;
+const int MIN_EVENT_DELAY = 3000;
 
 /* Direct communication with Hall's probe */
 struct HallProbe {
@@ -13,6 +14,7 @@ struct HallProbe {
     String name;
     Bounce _pin;
     int changeDelayMs;
+    int _lastEventMs = 0;
     unsigned long _changeTime = 0;
     void (*onOccupied)(HallProbe *) = nullptr;
 

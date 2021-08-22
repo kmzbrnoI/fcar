@@ -30,7 +30,9 @@ void HallProbe::update()
 
     if (_changeTime > 0 && millis() >= _changeTime) {
         _changeTime = 0;
-        if (this->onOccupied != nullptr) {
+        int period = millis() - _lastEventMs;
+        if ((this->onOccupied != nullptr) && (period >= MIN_EVENT_DELAY)) {
+            _lastEventMs = millis();
             onOccupied(this);
         }
     }
