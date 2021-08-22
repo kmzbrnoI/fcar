@@ -76,8 +76,6 @@ void setup()
     path_stand32 = new VPath("stand32", VPathStatus::unknown);
 
     Serial.begin(9600);
-    while (!Serial)
-        ;
     log("Initialized Faller Depo!");
 }
 
