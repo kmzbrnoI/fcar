@@ -60,10 +60,12 @@ void setup()
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
         semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 10, 90);
+        delay(100); // to avoid large current due to a lot of servos moving
     }
 
     for (int i = 0; i < JUNCTION_COUNT; i++) {
         junctions[i] = new Junction(junction_defs[i].name, junction_defs[i].pin, 0, 30);
+        delay(100); // to avoid large current due to a lot of servos moving
     }
 
     path_entrance = new VPath("entrance", VPathStatus::clear);
