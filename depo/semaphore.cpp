@@ -6,8 +6,8 @@ Semaphore::Semaphore(const String &name, int pin, int green_angle, int red_angle
     , _green_angle(green_angle)
     , _red_angle(red_angle)
 {
-    _servo_handler = new ServoHandler(pin, _green_angle);
-    _state = SSignal::green;
+    _servo_handler = new ServoHandler(pin, _red_angle);
+    _state = SSignal::red;
 }
 
 SSignal Semaphore::getSignal() { return _state; }
