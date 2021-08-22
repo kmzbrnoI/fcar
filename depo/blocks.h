@@ -28,4 +28,15 @@
 #define VH2 1
 #define VH3 2
 
+// cesty
+#define PATHS_COUNT 8
+#define P_ENTRANCE 0
+#define P_CIRCUIT 1
+#define P_STAND11 2
+#define P_STAND12 3
+#define P_STAND21 4
+#define P_STAND22 5
+#define P_STAND31 6
+#define P_STAND32 7
+
 #endif /* BLOCKS_H */
