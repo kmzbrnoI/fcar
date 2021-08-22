@@ -2,18 +2,19 @@
 #define BLOCKS_H
 
 // hallovy sondy
-#define PROBE_COUNT 7
-#define HSSV1 0
+#define PROBE_COUNT 8
+#define HSSV1 0 /* vyjezd */
 #define HS11 1
 #define HS12 2
 #define HS21 3
 #define HS22 4
 #define HS31 5
 #define HS32 6
+#define HSSVJ 7 /* vjezd */
 
 // zastavovaci SERVA
 #define SEMAPHORE_COUNT 7
-#define SV1 0
+#define SVJ 0 /* vjezd */
 #define S11 1
 #define S12 2
 #define S21 3
