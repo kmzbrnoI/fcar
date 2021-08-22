@@ -42,7 +42,7 @@ IODef junction_defs[JUNCTION_COUNT] = {
 /* -------------------------------------------------------------------------- */
 // Function prototypes
 
-void hallProbeOnOccupied(int id);
+void hallProbeOnOccupied(HallProbe*);
 void outgoingCar();
 void incomingCar();
 void incomingCarGo(int stand);
@@ -86,9 +86,11 @@ void loop()
     }
 }
 
-void hallProbeOnOccupied(int id)
+void hallProbeOnOccupied(HallProbe* hp)
 {
-    switch (id) {
+    log("Occupied: " + hp->name);
+
+    switch (hp->id) {
     /* VÝJEZD */
     case HSSV1:
         outgoingCar();
@@ -151,6 +153,7 @@ void outgoingCar()
 void incomingCarGo(int stand)
 {
     // assert stand > 0
+    log("Incoming car going to " + String(stand));
     path_circuit->occupy();
     semaphores[SVJ]->signal_green();
 

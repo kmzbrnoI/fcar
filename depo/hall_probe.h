@@ -14,11 +14,11 @@ struct HallProbe {
     Bounce _pin;
     int changeDelayMs;
     unsigned long _changeTime = 0;
+    void (*onOccupied)(HallProbe*) = nullptr;
 
     HallProbe(int id, int pin, const String &name, int changeDelayMs = 0);
 
     void update();
-    void (*onOccupied)(int id) = nullptr;
 };
 
 #endif /* PROBE_H */

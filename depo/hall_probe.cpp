@@ -30,7 +30,8 @@ void HallProbe::update()
 
     if (_changeTime > 0 && millis() >= _changeTime) {
         _changeTime = 0;
-        if (onOccupied != nullptr)
-            onOccupied(this->id);
+        if (this->onOccupied != nullptr) {
+            onOccupied(this);
+        }
     }
 }
