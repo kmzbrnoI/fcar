@@ -58,10 +58,6 @@ void setup()
         probes[i]->onOccupied = hallProbeOnOccupied;
     }
 
-    for (int i = 0; i < PROBE_COUNT; i++) {
-        probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
-    }
-
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
         semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 100, 10);
     }
