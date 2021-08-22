@@ -7,7 +7,3 @@ void log(const String &message)
     Serial.print(message);
     Serial.print('\n');
 }
-
-void dump_all() { dump_probes(); }
-
-void dump_probes() {}

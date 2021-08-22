@@ -83,7 +83,6 @@ void setup()
     while (!Serial)
         ;
     log("Initialized Faller Depo!");
-    dump_all();
 }
 
 void loop()
