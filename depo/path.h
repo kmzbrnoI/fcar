@@ -32,6 +32,8 @@ struct VPath {
     void occupy();
     void clear();
     void timeout();
+    void setState(VPathStatus);
+    VPathStatus state() const;
 
     void dump() const;
     void ledUpdate();

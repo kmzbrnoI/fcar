@@ -19,32 +19,35 @@ VPath::VPath(int id, const String &name, VPathStatus state, int pinLed,
     }
 }
 
+VPathStatus VPath::state() const { return _state; }
+
 bool VPath::is_clear() const { return (_state == VPathStatus::clear); }
 
 bool VPath::is_occupied() const { return (_state == VPathStatus::occupied); }
 
+void VPath::setState(VPathStatus state) {
+    if (state == _state)
+        return;
+    _state = state;
+    digitalWrite(_pinLed, (state == VPathStatus::occupied));
+    dump();
+}
+
 void VPath::occupy()
 {
-    _state = VPathStatus::occupied;
-    digitalWrite(_pinLed, HIGH);
-    dump();
+    setState(VPathStatus::occupied);
 }
 
 void VPath::clear()
 {
-    _state = VPathStatus::clear;
-    digitalWrite(_pinLed, LOW);
-    dump();
+    setState(VPathStatus::clear);
 }
 
 void VPath::timeout()
 {
     if (_state == VPathStatus::occupied) {
-
         if (millis() - _occupiedTime > PATH_TIMEOUT) {
-            _state = VPathStatus::clear;
-            log("State [occupied] on " + name + " released.");
-            dump();
+            this->clear();
         }
     }
 }

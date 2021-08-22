@@ -40,6 +40,7 @@ void incomingCar();
 void incomingCarGo(int stand);
 int freeStand();
 void pathBtnChanged(VPath*);
+void onCarFromStop(int stop);
 
 /* -------------------------------------------------------------------------- */
 
@@ -154,17 +155,17 @@ void hallProbeOnOccupied(HallProbe *hp)
     /* VÝJEZDY ZE STANOVIŠŤ */
     case HS12:
         paths[P_STAND12]->clear();
-        paths[P_CIRCUIT]->occupy();
+        onCarFromStop(1);
         break;
 
     case HS22:
         paths[P_STAND22]->clear();
-        paths[P_CIRCUIT]->occupy();
+        onCarFromStop(2);
         break;
 
     case HS32:
         paths[P_STAND32]->clear();
-        paths[P_CIRCUIT]->occupy();
+        onCarFromStop(3);
         break;
 
     /* VJEZD */
@@ -238,5 +239,69 @@ void pathBtnChanged(VPath* path)
         if ((paths[P_CIRCUIT]->is_clear()) && (stand > 0)) {
             incomingCarGo(stand);
         }
+    }
+
+    if (path->is_clear()) {
+        switch (path->id) {
+        case P_STAND11:
+            semaphores[S11]->signal_red();
+            break;
+        case P_STAND12:
+            semaphores[S12]->signal_red();
+            break;
+        case P_STAND21:
+            semaphores[S21]->signal_red();
+            break;
+        case P_STAND22:
+            semaphores[S22]->signal_red();
+            break;
+        case P_STAND31:
+            semaphores[S31]->signal_red();
+            break;
+        case P_STAND32:
+            semaphores[S32]->signal_red();
+            break;
+        }
+    }
+}
+
+void onCarFromStop(int stop)
+{
+    // assert paths[P_CIRCUIT]->is_clear()
+    paths[P_CIRCUIT]->occupy();
+
+    switch (stop) {
+    case 1:
+        if (paths[P_STAND11]->is_clear()) {
+            semaphores[S11]->signal_red();
+        } else {
+            paths[P_STAND12]->setState(paths[P_STAND11]->state());
+            paths[P_STAND11]->clear();
+            semaphores[S11]->signal_green();
+            semaphores[S12]->signal_red();
+        }
+        break;
+
+    case 2:
+        if (paths[P_STAND21]->is_clear()) {
+            semaphores[S21]->signal_red();
+        } else {
+            paths[P_STAND22]->setState(paths[P_STAND21]->state());
+            paths[P_STAND21]->clear();
+            semaphores[S21]->signal_green();
+            semaphores[S22]->signal_red();
+        }
+        break;
+
+    case 3:
+        if (paths[P_STAND31]->is_clear()) {
+            semaphores[S31]->signal_red();
+        } else {
+            paths[P_STAND32]->setState(paths[P_STAND31]->state());
+            paths[P_STAND31]->clear();
+            semaphores[S31]->signal_green();
+            semaphores[S32]->signal_red();
+        }
+        break;
     }
 }
