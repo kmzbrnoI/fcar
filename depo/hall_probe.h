@@ -18,7 +18,7 @@ struct HallProbe {
     HallProbe(int id, int pin, const String &name, int changeDelayMs = 0);
 
     void update();
-    void _changed();
+    void (*onOccupied)(int id) = nullptr;
 };
 
 #endif /* PROBE_H */

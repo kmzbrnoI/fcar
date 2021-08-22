@@ -39,11 +39,20 @@ IODef junction_defs[JUNCTION_COUNT] = {
     { "V3", 5 },
 };
 
+/* -------------------------------------------------------------------------- */
+// Function prototypes
+
+void hallProbeOnOccupied(int id);
+void incomingCar();
+
+/* -------------------------------------------------------------------------- */
+
 void setup()
 {
 
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
+        probes[i]->onOccupied = hallProbeOnOccupied;
     }
 
     for (int i = 0; i < PROBE_COUNT; i++) {
@@ -79,4 +88,53 @@ void loop()
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i]->update();
     }
+}
+
+
+void hallProbeOnOccupied(int id)
+{
+    /* VÝJEZD */
+    if (id == HSSV1) {
+        path_circuit->clear();
+    }
+
+    /* VJEZDY NA STANOVIŠTĚ */
+    if (id == HS11) {
+        path_circuit->clear();
+        path_stand11->occupy();
+    }
+    if (id == HS21) {
+        path_circuit->clear();
+        path_stand21->occupy();
+    }
+    if (id == HS31) {
+        path_circuit->clear();
+        path_stand31->occupy();
+    }
+
+    /* VÝJEZDY ZE STANOVIŠŤ */
+    if (id == HS12) {
+        path_stand12->clear();
+        path_circuit->occupy();
+    }
+    if (id == HS22) {
+        path_stand22->clear();
+        path_circuit->occupy();
+    }
+    if (id == HS32) {
+        path_stand32->clear();
+        path_circuit->occupy();
+    }
+
+    /* VJEZD */
+    if (id == HSSVJ) {
+
+        incomingCar();
+    }
+}
+
+void incomingCar()
+{
+    path_entrance->occupy();
+    // TODO
 }
