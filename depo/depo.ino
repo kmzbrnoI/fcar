@@ -16,14 +16,27 @@ struct IODef {
     int pin;
 };
 
-IODef probe_defs[PROBE_COUNT] = {
-    { "HSSV1", 25 }, { "HS11", 27 }, { "HS12", 26 },  { "HS21", 29 },
-    { "HS22", 22 },  { "HS31", 31 }, { "HS32", 24 }, { "HSSVJ", 33 },
+struct ServoDef {
+    String name;
+    int pin;
+    int anglePlus;
+    int angleMinus;
 };
 
-IODef stop_defs[SEMAPHORE_COUNT] = {
-    { "SVJ", 12 }, { "S11", 3 },  { "S12", 4 },  { "S21", 8 },
-    { "S22", 9 },  { "S31", 10 }, { "S32", 11 },
+struct HPDef {
+    String name;
+    int pin;
+    int delay;
+};
+
+HPDef probe_defs[PROBE_COUNT] = {
+    { "HSSV1", 25, 0 }, { "HS11", 27, 0 }, { "HS12", 26, 500 },  { "HS21", 29, 0 },
+    { "HS22", 22, 500 },  { "HS31", 31, 0 }, { "HS32", 24, 500 }, { "HSSVJ", 33, 0 },
+};
+
+ServoDef stop_defs[SEMAPHORE_COUNT] = {
+    { "SVJ", 12, 10, 90 }, { "S11", 3, 10, 90 },  { "S12", 4, 10, 90 },  { "S21", 8, 10, 90 },
+    { "S22", 9, 20, 80 },  { "S31", 10, 10, 90 }, { "S32", 11, 10, 90 },
 };
 
 IODef junction_defs[JUNCTION_COUNT] = {
@@ -58,7 +71,7 @@ void setup()
     runButton = new Bounce(28, 5);
 
     for (int i = 0; i < PROBE_COUNT; i++) {
-        probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name);
+        probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name, probe_defs[i].delay);
         probes[i]->onOccupied = hallProbeOnOccupied;
     }
 
@@ -76,7 +89,8 @@ void setup()
     }
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
-        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, 20, 80);
+        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin,
+                                      stop_defs[i].anglePlus, stop_defs[i].angleMinus);
         delay(100); // to avoid large current due to a lot of servos moving
     }
 
@@ -118,7 +132,7 @@ void loop()
         randomCarGo();
     }
 
-    elay(1);
+    delay(1);
 }
 
 void hallProbeOnOccupied(HallProbe *hp)
@@ -252,7 +266,7 @@ int freeStand()
 
 void pathBtnChanged(VPath *path)
 {
-    if ((path->is_clear())
+    if ((path->is_clear()) && (paths[P_ENTRANCE]->is_occupied())
         && ((path->id == P_STAND11) || (path->id == P_STAND21) || (path->id == P_STAND31))) {
         int stand = freeStand();
         if ((paths[P_CIRCUIT]->is_clear()) && (stand > 0)) {
