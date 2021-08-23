@@ -62,11 +62,17 @@ VPath* standToPath(int stand);
 Semaphore* standToSemaphore(int stand, int pos);
 void moveCarsToPos2();
 void moveCarToPos2(int stand);
+size_t noFreePositions();
+void circuitFree();
 
 /* -------------------------------------------------------------------------- */
 // Variables
 
+constexpr unsigned long CAR_LEAVE_HALL_TIMEOUT = 2000;
+
 Bounce *runButton;
+int carLeftStand = -1;
+unsigned long carLeftHallTimeout;
 
 /* -------------------------------------------------------------------------- */
 
@@ -107,6 +113,7 @@ void setup()
 
     Serial.begin(9600);
     log("Initialized Faller Depo!");
+    randomCarGo();
 }
 
 void loop()
@@ -138,6 +145,14 @@ void loop()
         randomCarGo();
     }
 
+    if ((carLeftStand > -1) && (millis() >= carLeftHallTimeout)) {
+        log("Car did not actually left!");
+        standToPath(carLeftStand, 2)->clear();
+        moveCarToPos2(carLeftStand);
+        carLeftStand = -1;
+        circuitFree();
+    }
+
     delay(1);
 }
 
@@ -163,6 +178,8 @@ void hallProbeOnOccupied(HallProbe *hp)
             paths[P_STAND11]->occupy();
             semaphores[S11]->signal_red();
         }
+
+        circuitFree();
         break;
 
     case HS21:
@@ -176,6 +193,8 @@ void hallProbeOnOccupied(HallProbe *hp)
             paths[P_STAND21]->occupy();
             semaphores[S21]->signal_red();
         }
+
+        circuitFree();
         break;
 
     case HS31:
@@ -189,6 +208,8 @@ void hallProbeOnOccupied(HallProbe *hp)
             paths[P_STAND31]->occupy();
             semaphores[S31]->signal_red();
         }
+
+        circuitFree();
         break;
 
     /* VÝJEZDY ZE STANOVIŠŤ */
@@ -237,7 +258,7 @@ void incomingCarCheck()
 void outgoingCar()
 {
     paths[P_CIRCUIT]->clear();
-    incomingCarCheck();
+    circuitFree();
 }
 
 void incomingCarGo(int stand)
@@ -356,11 +377,13 @@ void randomCarGo()
 
     log("Going out with car " + String(lastStand));
     standToSemaphore(lastStand, 2)->signal_green();
+    carLeftStand = lastStand;
+    carLeftHallTimeout = millis() + CAR_LEAVE_HALL_TIMEOUT;
 }
 
 bool canCarGoOut()
 {
-    return paths[P_CIRCUIT]->is_clear();
+    return (paths[P_CIRCUIT]->is_clear()) && (carLeftStand == -1);
 }
 
 void moveCarsToPos2()
@@ -383,4 +406,22 @@ void moveCarToPos2(int stand)
         }
     }
     incomingCarCheck();
+}
+
+size_t noFreePositions()
+{
+    size_t count = 0;
+    for (size_t i = P_STAND11; i <= P_STAND32; i++) {
+        if (paths[i]->is_clear())
+            count++;
+    }
+    return count;
+}
+
+void circuitFree()
+{
+    incomingCarCheck();
+    if ((paths[P_CIRCUIT]->is_clear()) && (noFreePositions() < 2)) {
+        randomCarGo();
+    }
 }
