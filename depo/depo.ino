@@ -65,26 +65,32 @@ void moveCarToPos2(int stand);
 size_t noFreePositions();
 void circuitFree();
 void timeLeavingLedUpdate();
+void setNextRunTime();
 
 /* -------------------------------------------------------------------------- */
 // Variables
 
-constexpr unsigned long CAR_LEAVE_HALL_TIMEOUT = 2000;
+constexpr unsigned long CAR_LEAVE_HALL_TIMEOUT = 3000;
 constexpr int TIME_LEAVING_LED = 45;
 constexpr int TIME_LEAVING_BUTTON = 36;
 constexpr int LEAVE_BUTTON = 28;
+
+constexpr unsigned long LEAVE_PERIOD_SEC_MIN = 15;
+constexpr unsigned long LEAVE_PERIOD_SEC_MAX = 30;
 
 Bounce *runButton;
 Bounce *timeLeavingButton;
 int carLeftStand = -1;
 unsigned long carLeftHallTimeout;
-unsigned long nextRunTime = 300000;
+unsigned long nextRunTime = 30000;
 bool timeLeavingActive = true;
 
 /* -------------------------------------------------------------------------- */
 
 void setup()
 {
+    setNextRunTime();
+
     pinMode(LEAVE_BUTTON, INPUT_PULLUP);
     runButton = new Bounce(LEAVE_BUTTON, 5);
     pinMode(TIME_LEAVING_BUTTON, INPUT_PULLUP);
@@ -162,21 +168,23 @@ void loop()
     timeLeavingButton->update();
     if (timeLeavingButton->fell()) {
         timeLeavingActive = !timeLeavingActive;
-        if (timeLeavingActive)
-            nextRunTime = millis() + (random(180, 420)*1000);
-        else
+        if (timeLeavingActive) {
+            setNextRunTime();
+        } else {
             digitalWrite(TIME_LEAVING_LED, LOW);
+        }
     }
 
     if ((carLeftStand > -1) && (millis() >= carLeftHallTimeout)) {
-        log("Car did not actually left!");
+        log("Car did not actually leave!");
         standToPath(carLeftStand, 2)->clear();
         moveCarToPos2(carLeftStand);
         carLeftStand = -1;
         circuitFree();
     }
 
-    if ((millis() > nextRunTime) && (paths[P_CIRCUIT]->is_clear())) {
+    if ((millis() >= nextRunTime) && (paths[P_CIRCUIT]->is_clear())) {
+        log("Time elapsed, going out with car...");
         randomCarGo();
     }
 
@@ -358,7 +366,7 @@ void onCarFromStop(int stop)
 {
     // assert paths[P_CIRCUIT]->is_clear()
     paths[P_CIRCUIT]->occupy();
-
+    carLeftStand = -1;
     moveCarToPos2(stop);
 
     junctions[VH1]->to_plus();
@@ -398,7 +406,7 @@ Semaphore *standToSemaphore(int stand, int pos)
 
 void randomCarGo()
 {
-    nextRunTime = millis() + (random(180, 420) * 1000);
+    setNextRunTime();
 
     if (!paths[P_CIRCUIT]->is_clear())
         return;
@@ -407,12 +415,13 @@ void randomCarGo()
         return;
 
     // Pick a stand
-    static int lastStand = 0;
+    static int lastDoubleStand = -1;
     do {
-        lastStand++;
-        if (lastStand == 4)
-            lastStand = 1;
-    } while (standToPath(lastStand, 2)->is_clear());
+        lastDoubleStand++;
+        if (lastDoubleStand == 6)
+            lastDoubleStand = 0;
+    } while (standToPath((lastDoubleStand/2) + 1, 2)->is_clear());
+    int lastStand = (lastDoubleStand/2) + 1;
 
     log("Going out with car " + String(lastStand));
     standToSemaphore(lastStand, 2)->signal_green();
@@ -469,4 +478,11 @@ void timeLeavingLedUpdate()
         lastState = !lastState;
         digitalWrite(TIME_LEAVING_LED, lastState);
     }
+}
+
+void setNextRunTime()
+{
+    int sec = random(LEAVE_PERIOD_SEC_MIN, LEAVE_PERIOD_SEC_MAX);
+    nextRunTime = millis() + (sec*1000);
+    log("Next run time in " + String(sec) + " sec");
 }
