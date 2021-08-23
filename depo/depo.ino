@@ -52,6 +52,7 @@ void hallProbeOnOccupied(HallProbe *);
 void outgoingCar();
 void incomingCar();
 void incomingCarGo(int stand);
+void incomingCarCheck();
 int freeStand();
 void pathBtnChanged(VPath *);
 void onCarFromStop(int stop);
@@ -225,14 +226,18 @@ void incomingCar()
     }
 }
 
+void incomingCarCheck()
+{
+    int stand = freeStand();
+    if ((paths[P_ENTRANCE]->is_occupied()) && (stand > 0) && (paths[P_CIRCUIT]->is_clear())) {
+        incomingCarGo(stand);
+    }
+}
+
 void outgoingCar()
 {
     paths[P_CIRCUIT]->clear();
-
-    int stand = freeStand();
-    if ((paths[P_ENTRANCE]->is_occupied()) && (stand > 0)) {
-        incomingCarGo(stand);
-    }
+    incomingCarCheck();
 }
 
 void incomingCarGo(int stand)
@@ -271,12 +276,8 @@ int freeStand()
 
 void pathBtnChanged(VPath *path)
 {
-    if ((path->is_clear()) && (paths[P_ENTRANCE]->is_occupied())
-        && ((path->id == P_STAND11) || (path->id == P_STAND21) || (path->id == P_STAND31))) {
-        int stand = freeStand();
-        if ((paths[P_CIRCUIT]->is_clear()) && (stand > 0)) {
-            incomingCarGo(stand);
-        }
+    if ((path->id == P_STAND11) || (path->id == P_STAND21) || (path->id == P_STAND31)) {
+        incomingCarCheck();
     }
 
     if (path->is_occupied()) {
@@ -381,4 +382,5 @@ void moveCarToPos2(int stand)
             standToSemaphore(stand, 2)->signal_red();
         }
     }
+    incomingCarCheck();
 }
