@@ -28,11 +28,14 @@ void HallProbe::update()
     if (_pin.fell() && _changeTime == 0)
         _changeTime = millis() + changeDelayMs;
 
-    if (_changeTime > 0 && millis() >= _changeTime) {
+    if ((!_ready) && (millis() >= _soonestEvent))
+        _ready = true;
+
+    if ((_changeTime > 0) && (millis() >= _changeTime)) {
         _changeTime = 0;
-        unsigned long period = millis() - _lastEventMs;
-        if ((this->onOccupied != nullptr) && (period >= MIN_EVENT_DELAY)) {
-            _lastEventMs = millis();
+        if ((this->onOccupied != nullptr) && (_ready)) {
+            _ready = false;
+            _soonestEvent = millis() + MIN_EVENT_DELAY;
             onOccupied(this);
         }
     }

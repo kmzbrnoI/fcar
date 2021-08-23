@@ -14,9 +14,10 @@ struct HallProbe {
     String name;
     Bounce _pin;
     int changeDelayMs;
-    unsigned long _lastEventMs = 0;
+    unsigned long _soonestEvent = 0;
     unsigned long _changeTime = 0;
     void (*onOccupied)(HallProbe *) = nullptr;
+    bool _ready = true;
 
     HallProbe(int id, int pin, const String &name, int changeDelayMs = 0);
 
