@@ -314,6 +314,10 @@ void onCarFromStop(int stop)
         standToSemaphore(stop, 1)->signal_green();
         standToSemaphore(stop, 2)->signal_red();
     }
+
+    junctions[VH1]->to_plus();
+    junctions[VH2]->to_plus();
+    junctions[VH3]->to_plus();
 }
 
 VPath* standToPath(int stand, int pos) {
