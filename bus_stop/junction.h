@@ -5,16 +5,15 @@
 // Vyhybka ovladana servem
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Arduino.h>
 #include "servo_handler.h"
+#include <Arduino.h>
 
 /* Constants for direction */
 enum class JDirection { plus, minus };
 
 /* Junction logic */
-class Junction
-{
-  public:
+class Junction {
+public:
     /*
      * Constructor
      * int pin (IN) arduino pin number
@@ -32,11 +31,10 @@ class Junction
     /* Turn junction to MINUS */
     void to_minus();
 
-  private:
-    ServoHandler* _servo_handler;   // ServoHandler, see servo_handler.h
-    const int _plus_angle;          // servo angle for plus direction
-    const int _minus_angle;         // servo angle for minus direction
-    JDirection _state;              // state of junction (plus or minus)
-
+private:
+    ServoHandler *_servo_handler; // ServoHandler, see servo_handler.h
+    const int _plus_angle; // servo angle for plus direction
+    const int _minus_angle; // servo angle for minus direction
+    JDirection _state; // state of junction (plus or minus)
 };
 #endif /* JUNCTION_H */

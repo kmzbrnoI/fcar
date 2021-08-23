@@ -5,16 +5,15 @@
 // Zastavovaci magnet ovladany servem
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Arduino.h>
 #include "servo_handler.h"
+#include <Arduino.h>
 
 /* Constant for signals */
 enum class SSignal { green, red };
 
 /* Semaphore logic */
-class Semaphore
-{
-  public:
+class Semaphore {
+public:
     /*
      * Constructor
      * int pin (IN) arduino pin number
@@ -32,11 +31,10 @@ class Semaphore
     /* Turn semaphore to red */
     void signal_red();
 
-  private:
-    ServoHandler* _servo_handler;   // ServoHandler, see servo_handler.h
-    const int _green_angle;         // servo angle for green signal
-    const int _red_angle;           // servo angle for red signal
-    SSignal _state;                 // state of semaphore (green or red)
-
+private:
+    ServoHandler *_servo_handler; // ServoHandler, see servo_handler.h
+    const int _green_angle; // servo angle for green signal
+    const int _red_angle; // servo angle for red signal
+    SSignal _state; // state of semaphore (green or red)
 };
 #endif /* SEMAPHORE_H */
