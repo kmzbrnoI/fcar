@@ -56,8 +56,11 @@ int freeStand();
 void pathBtnChanged(VPath *);
 void onCarFromStop(int stop);
 void randomCarGo();
+bool canCarGoOut();
 VPath* standToPath(int stand);
 Semaphore* standToSemaphore(int stand, int pos);
+void moveCarsToPos2();
+void moveCarToPos2(int stand);
 
 /* -------------------------------------------------------------------------- */
 // Variables
@@ -130,7 +133,7 @@ void loop()
         paths[P_CIRCUIT]->timeout();
     }
     runButton->update();
-    if (runButton->fell()) {
+    if ((runButton->fell()) && (canCarGoOut())) {
         randomCarGo();
     }
 
@@ -297,9 +300,9 @@ void pathBtnChanged(VPath *path)
             semaphores[S32]->signal_red();
             break;
         }
-    } else {
-        // TODO: move car to next position
     }
+
+    moveCarsToPos2();
 }
 
 void onCarFromStop(int stop)
@@ -307,14 +310,7 @@ void onCarFromStop(int stop)
     // assert paths[P_CIRCUIT]->is_clear()
     paths[P_CIRCUIT]->occupy();
 
-    if (standToPath(stop, 1)->is_clear()) {
-        standToSemaphore(stop, 1)->signal_red();
-    } else {
-        standToPath(stop, 2)->setState(standToPath(stop, 1)->state());
-        standToPath(stop, 1)->clear();
-        standToSemaphore(stop, 1)->signal_green();
-        standToSemaphore(stop, 2)->signal_red();
-    }
+    moveCarToPos2(stop);
 
     junctions[VH1]->to_plus();
     junctions[VH2]->to_plus();
@@ -359,4 +355,30 @@ void randomCarGo()
 
     log("Going out with car " + String(lastStand));
     standToSemaphore(lastStand, 2)->signal_green();
+}
+
+bool canCarGoOut()
+{
+    return paths[P_CIRCUIT]->is_clear();
+}
+
+void moveCarsToPos2()
+{
+    for (size_t stand = 1; stand < 3; stand++) {
+        moveCarToPos2(stand);
+    }
+}
+
+void moveCarToPos2(int stand)
+{
+    if (standToPath(stand, 1)->is_clear()) {
+        standToSemaphore(stand, 1)->signal_red();
+    } else {
+        if (standToPath(stand, 2)->is_clear()) {
+            standToPath(stand, 2)->setState(standToPath(stand, 1)->state());
+            standToPath(stand, 1)->clear();
+            standToSemaphore(stand, 1)->signal_green();
+            standToSemaphore(stand, 2)->signal_red();
+        }
+    }
 }

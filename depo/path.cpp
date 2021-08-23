@@ -69,7 +69,7 @@ void VPath::btnUpdate()
     _button->update();
 
     if (_button->fell()) {
-        if ((_state == VPathStatus::occupied) || (_state == VPathStatus::unknown))
+        if (_state == VPathStatus::occupied)
             this->clear();
         else
             this->occupy();
