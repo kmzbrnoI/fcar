@@ -1,13 +1,11 @@
 #include "path.h"
 #include "log.h"
 
-VPath::VPath(int id, const String &name, VPathStatus state, int pinLed, int pinBtn,
-             bool timeoutable)
+VPath::VPath(int id, const String &name, VPathStatus state, int pinLed, int pinBtn)
     : id(id)
     , name(name)
     , _state(state)
     , _pinLed(pinLed)
-    , _timeoutable(timeoutable)
 {
     if (pinLed > 0) {
         pinMode(pinLed, OUTPUT);
@@ -41,15 +39,6 @@ void VPath::occupy()
 }
 
 void VPath::clear() { setState(VPathStatus::clear); }
-
-void VPath::timeout()
-{
-    if (_state == VPathStatus::occupied && _timeoutable) {
-        if (millis() - _occupiedTime > PATH_TIMEOUT) {
-            this->clear();
-        }
-    }
-}
 
 void VPath::dump() const { log("Path " + name + ": " + String(int(_state))); }
 

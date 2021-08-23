@@ -14,7 +14,6 @@ struct VPath {
     const String name;
     VPathStatus _state;
     int _pinLed;
-    bool _timeoutable;
     int _ledState = 0;
     Bounce *_button = nullptr;
     void (*onBtnChanged)(VPath *);
@@ -22,8 +21,7 @@ struct VPath {
     // unsigned long _reservationTime = 0;
     unsigned long _occupiedTime = 0;
 
-    VPath(int id, const String &name, VPathStatus state, int pinLed = 0, int pinBtn = 0,
-          bool timeoutable = false);
+    VPath(int id, const String &name, VPathStatus state, int pinLed = 0, int pinBtn = 0);
 
     bool is_clear() const;
     bool is_occupied() const;
@@ -31,7 +29,6 @@ struct VPath {
 
     void occupy();
     void clear();
-    void timeout();
     void setState(VPathStatus);
     VPathStatus state() const;
 

@@ -97,7 +97,7 @@ void setup()
     }
 
     paths[P_ENTRANCE] = new VPath(P_ENTRANCE, "entrance", VPathStatus::clear);
-    paths[P_CIRCUIT] = new VPath(P_CIRCUIT, "circuit", VPathStatus::clear, 0, 0, true);
+    paths[P_CIRCUIT] = new VPath(P_CIRCUIT, "circuit", VPathStatus::clear, 0, 0);
     paths[P_STAND11] = new VPath(P_STAND11, "stand11", VPathStatus::unknown, 48, 40);
     paths[P_STAND12] = new VPath(P_STAND12, "stand12", VPathStatus::unknown, 42, 2);
     paths[P_STAND21] = new VPath(P_STAND21, "stand21", VPathStatus::unknown, 43, 38);
