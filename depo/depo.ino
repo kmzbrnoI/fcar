@@ -1,10 +1,10 @@
-#include <Bounce2.h>
 #include "blocks.h"
 #include "hall_probe.h"
 #include "junction.h"
 #include "log.h"
 #include "path.h"
 #include "semaphore.h"
+#include <Bounce2.h>
 
 HallProbe *probes[PROBE_COUNT];
 Semaphore *semaphores[SEMAPHORE_COUNT];
@@ -30,8 +30,8 @@ struct HPDef {
 };
 
 HPDef probe_defs[PROBE_COUNT] = {
-    { "HSSV1", 25, 0 }, { "HS11", 27, 0 }, { "HS12", 26, 500 },  { "HS21", 29, 0 },
-    { "HS22", 22, 500 },  { "HS31", 31, 0 }, { "HS32", 24, 500 }, { "HSSVJ", 33, 0 },
+    { "HSSV1", 25, 0 },  { "HS11", 27, 0 }, { "HS12", 26, 500 }, { "HS21", 29, 0 },
+    { "HS22", 22, 500 }, { "HS31", 31, 0 }, { "HS32", 24, 500 }, { "HSSVJ", 33, 0 },
 };
 
 ServoDef stop_defs[SEMAPHORE_COUNT] = {
@@ -58,8 +58,8 @@ void pathBtnChanged(VPath *);
 void onCarFromStop(int stop);
 void randomCarGo();
 bool canCarGoOut();
-VPath* standToPath(int stand);
-Semaphore* standToSemaphore(int stand, int pos);
+VPath *standToPath(int stand);
+Semaphore *standToSemaphore(int stand, int pos);
 void moveCarsToPos2();
 void moveCarToPos2(int stand);
 size_t noFreePositions();
@@ -101,8 +101,8 @@ void setup()
     }
 
     for (int i = 0; i < SEMAPHORE_COUNT; i++) {
-        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin,
-                                      stop_defs[i].anglePlus, stop_defs[i].angleMinus);
+        semaphores[i] = new Semaphore(stop_defs[i].name, stop_defs[i].pin, stop_defs[i].anglePlus,
+                                      stop_defs[i].angleMinus);
         delay(100); // to avoid large current due to a lot of servos moving
     }
 
@@ -344,22 +344,30 @@ void onCarFromStop(int stop)
     junctions[VH3]->to_plus();
 }
 
-VPath* standToPath(int stand, int pos) {
+VPath *standToPath(int stand, int pos)
+{
     switch (stand) {
-    case 1: return (pos == 1) ? paths[P_STAND11] : paths[P_STAND12];
-    case 2: return (pos == 1) ? paths[P_STAND21] : paths[P_STAND22];
-    case 3: return (pos == 1) ? paths[P_STAND31] : paths[P_STAND32];
+    case 1:
+        return (pos == 1) ? paths[P_STAND11] : paths[P_STAND12];
+    case 2:
+        return (pos == 1) ? paths[P_STAND21] : paths[P_STAND22];
+    case 3:
+        return (pos == 1) ? paths[P_STAND31] : paths[P_STAND32];
     default:
         log("Invalid stand!");
         return nullptr;
     }
 }
 
-Semaphore* standToSemaphore(int stand, int pos) {
+Semaphore *standToSemaphore(int stand, int pos)
+{
     switch (stand) {
-    case 1: return (pos == 1) ? semaphores[S11] : semaphores[S12];
-    case 2: return (pos == 1) ? semaphores[S21] : semaphores[S22];
-    case 3: return (pos == 1) ? semaphores[S31] : semaphores[S32];
+    case 1:
+        return (pos == 1) ? semaphores[S11] : semaphores[S12];
+    case 2:
+        return (pos == 1) ? semaphores[S21] : semaphores[S22];
+    case 3:
+        return (pos == 1) ? semaphores[S31] : semaphores[S32];
     default:
         log("Invalid stand!");
         return nullptr;
@@ -368,12 +376,12 @@ Semaphore* standToSemaphore(int stand, int pos) {
 
 void randomCarGo()
 {
-    nextRunTime = millis() + (random(180, 420)*1000);
+    nextRunTime = millis() + (random(180, 420) * 1000);
 
     if (!paths[P_CIRCUIT]->is_clear())
         return;
-    if ((paths[P_STAND12]->is_clear()) && (paths[P_STAND22]->is_clear()) &&
-        (paths[P_STAND32]->is_clear()))
+    if ((paths[P_STAND12]->is_clear()) && (paths[P_STAND22]->is_clear())
+        && (paths[P_STAND32]->is_clear()))
         return;
 
     // Pick a stand
@@ -390,10 +398,7 @@ void randomCarGo()
     carLeftHallTimeout = millis() + CAR_LEAVE_HALL_TIMEOUT;
 }
 
-bool canCarGoOut()
-{
-    return (paths[P_CIRCUIT]->is_clear()) && (carLeftStand == -1);
-}
+bool canCarGoOut() { return (paths[P_CIRCUIT]->is_clear()) && (carLeftStand == -1); }
 
 void moveCarsToPos2()
 {
