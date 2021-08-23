@@ -73,6 +73,7 @@ constexpr unsigned long CAR_LEAVE_HALL_TIMEOUT = 2000;
 Bounce *runButton;
 int carLeftStand = -1;
 unsigned long carLeftHallTimeout;
+unsigned long nextRunTime = 300000;
 
 /* -------------------------------------------------------------------------- */
 
@@ -151,6 +152,10 @@ void loop()
         moveCarToPos2(carLeftStand);
         carLeftStand = -1;
         circuitFree();
+    }
+
+    if ((millis() > nextRunTime) && (paths[P_CIRCUIT]->is_clear())) {
+        randomCarGo();
     }
 
     delay(1);
@@ -363,6 +368,10 @@ Semaphore* standToSemaphore(int stand, int pos) {
 
 void randomCarGo()
 {
+    nextRunTime = millis() + (random(180, 420)*1000);
+
+    if (!paths[P_CIRCUIT]->is_clear())
+        return;
     if ((paths[P_STAND12]->is_clear()) && (paths[P_STAND22]->is_clear()) &&
         (paths[P_STAND32]->is_clear()))
         return;
