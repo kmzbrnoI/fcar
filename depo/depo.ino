@@ -56,7 +56,8 @@ int freeStand();
 void pathBtnChanged(VPath *);
 void onCarFromStop(int stop);
 void randomCarGo();
-int standToPath(int stand);
+VPath* standToPath(int stand);
+Semaphore* standToSemaphore(int stand, int pos);
 
 /* -------------------------------------------------------------------------- */
 // Variables
@@ -295,6 +296,8 @@ void pathBtnChanged(VPath *path)
             semaphores[S32]->signal_red();
             break;
         }
+    } else {
+        // TODO: move car to next position
     }
 }
 
@@ -303,48 +306,35 @@ void onCarFromStop(int stop)
     // assert paths[P_CIRCUIT]->is_clear()
     paths[P_CIRCUIT]->occupy();
 
-    switch (stop) {
-    case 1:
-        if (paths[P_STAND11]->is_clear()) {
-            semaphores[S11]->signal_red();
-        } else {
-            paths[P_STAND12]->setState(paths[P_STAND11]->state());
-            paths[P_STAND11]->clear();
-            semaphores[S11]->signal_green();
-            semaphores[S12]->signal_red();
-        }
-        break;
-
-    case 2:
-        if (paths[P_STAND21]->is_clear()) {
-            semaphores[S21]->signal_red();
-        } else {
-            paths[P_STAND22]->setState(paths[P_STAND21]->state());
-            paths[P_STAND21]->clear();
-            semaphores[S21]->signal_green();
-            semaphores[S22]->signal_red();
-        }
-        break;
-
-    case 3:
-        if (paths[P_STAND31]->is_clear()) {
-            semaphores[S31]->signal_red();
-        } else {
-            paths[P_STAND32]->setState(paths[P_STAND31]->state());
-            paths[P_STAND31]->clear();
-            semaphores[S31]->signal_green();
-            semaphores[S32]->signal_red();
-        }
-        break;
+    if (standToPath(stop, 1)->is_clear()) {
+        standToSemaphore(stop, 1)->signal_red();
+    } else {
+        standToPath(stop, 2)->setState(standToPath(stop, 1)->state());
+        standToPath(stop, 1)->clear();
+        standToSemaphore(stop, 1)->signal_green();
+        standToSemaphore(stop, 2)->signal_red();
     }
 }
 
-int standToPath(int stand) {
+VPath* standToPath(int stand, int pos) {
     switch (stand) {
-    case 1: return P_STAND12;
-    case 2: return P_STAND22;
-    case 3: return P_STAND32;
-    default: return 0;
+    case 1: return (pos == 1) ? paths[P_STAND11] : paths[P_STAND12];
+    case 2: return (pos == 1) ? paths[P_STAND21] : paths[P_STAND22];
+    case 3: return (pos == 1) ? paths[P_STAND31] : paths[P_STAND32];
+    default:
+        log("Invalid stand!");
+        return nullptr;
+    }
+}
+
+Semaphore* standToSemaphore(int stand, int pos) {
+    switch (stand) {
+    case 1: return (pos == 1) ? semaphores[S11] : semaphores[S12];
+    case 2: return (pos == 1) ? semaphores[S21] : semaphores[S22];
+    case 3: return (pos == 1) ? semaphores[S31] : semaphores[S32];
+    default:
+        log("Invalid stand!");
+        return nullptr;
     }
 }
 
@@ -360,19 +350,8 @@ void randomCarGo()
         lastStand++;
         if (lastStand == 4)
             lastStand = 1;
-    } while (paths[standToPath(lastStand)]->is_clear());
+    } while (standToPath(lastStand, 2)->is_clear());
 
     log("Going out with car " + String(lastStand));
-
-    switch (lastStand) {
-    case 1:
-        semaphores[S12]->signal_green();
-        break;
-    case 2:
-        semaphores[S22]->signal_green();
-        break;
-    case 3:
-        semaphores[S32]->signal_green();
-        break;
-    }
+    standToSemaphore(lastStand, 2)->signal_green();
 }
