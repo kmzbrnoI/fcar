@@ -64,23 +64,32 @@ void moveCarsToPos2();
 void moveCarToPos2(int stand);
 size_t noFreePositions();
 void circuitFree();
+void timeLeavingLedUpdate();
 
 /* -------------------------------------------------------------------------- */
 // Variables
 
 constexpr unsigned long CAR_LEAVE_HALL_TIMEOUT = 2000;
+constexpr int TIME_LEAVING_LED = 45;
+constexpr int TIME_LEAVING_BUTTON = 36;
+constexpr int LEAVE_BUTTON = 28;
 
 Bounce *runButton;
+Bounce *timeLeavingButton;
 int carLeftStand = -1;
 unsigned long carLeftHallTimeout;
 unsigned long nextRunTime = 300000;
+bool timeLeavingActive = true;
 
 /* -------------------------------------------------------------------------- */
 
 void setup()
 {
-    pinMode(28, INPUT_PULLUP);
-    runButton = new Bounce(28, 5);
+    pinMode(LEAVE_BUTTON, INPUT_PULLUP);
+    runButton = new Bounce(LEAVE_BUTTON, 5);
+    pinMode(TIME_LEAVING_BUTTON, INPUT_PULLUP);
+    timeLeavingButton = new Bounce(TIME_LEAVING_BUTTON, 5);
+    pinMode(TIME_LEAVING_LED, OUTPUT);
 
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name, probe_defs[i].delay);
@@ -136,14 +145,27 @@ void loop()
         for (int i = 0; i < PATHS_COUNT; i++) {
             paths[i]->ledUpdate();
         }
+        timeLeavingLedUpdate();
     }
 
-    if (!paths[P_CIRCUIT]->is_clear()) {
-        paths[P_CIRCUIT]->timeout();
+    if (!paths[P_CIRCUIT]->is_occupied()) {
+        if (millis() - paths[P_CIRCUIT]->_occupiedTime > PATH_TIMEOUT) {
+            paths[P_CIRCUIT]->clear();
+            circuitFree();
+        }
     }
     runButton->update();
     if ((runButton->fell()) && (canCarGoOut())) {
         randomCarGo();
+    }
+
+    timeLeavingButton->update();
+    if (timeLeavingButton->fell()) {
+        timeLeavingActive = !timeLeavingActive;
+        if (timeLeavingActive)
+            nextRunTime = millis() + (random(180, 420)*1000);
+        else
+            digitalWrite(TIME_LEAVING_LED, LOW);
     }
 
     if ((carLeftStand > -1) && (millis() >= carLeftHallTimeout)) {
@@ -437,5 +459,14 @@ void circuitFree()
     incomingCarCheck();
     if ((paths[P_CIRCUIT]->is_clear()) && (noFreePositions() < 2)) {
         randomCarGo();
+    }
+}
+
+void timeLeavingLedUpdate()
+{
+    static bool lastState = true;
+    if (timeLeavingActive) {
+        lastState = !lastState;
+        digitalWrite(TIME_LEAVING_LED, lastState);
     }
 }
