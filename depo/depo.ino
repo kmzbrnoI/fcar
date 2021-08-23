@@ -39,10 +39,10 @@ ServoDef stop_defs[SEMAPHORE_COUNT] = {
     { "S22", 9, 20, 80 },  { "S31", 10, 10, 90 }, { "S32", 11, 10, 90 },
 };
 
-IODef junction_defs[JUNCTION_COUNT] = {
-    { "V1", 7 },
-    { "V2", 6 },
-    { "V3", 5 },
+ServoDef junction_defs[JUNCTION_COUNT] = {
+    { "V1", 7, 0, 40 },
+    { "V2", 6, 0, 40 },
+    { "V3", 5, 0, 40 },
 };
 
 /* -------------------------------------------------------------------------- */
@@ -96,7 +96,8 @@ void setup()
     }
 
     for (int i = 0; i < JUNCTION_COUNT; i++) {
-        junctions[i] = new Junction(junction_defs[i].name, junction_defs[i].pin, 0, 30);
+        junctions[i] = new Junction(junction_defs[i].name, junction_defs[i].pin,
+                                    junction_defs[i].anglePlus, junction_defs[i].angleMinus);
         delay(100); // to avoid large current due to a lot of servos moving
     }
 
