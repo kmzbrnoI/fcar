@@ -157,7 +157,7 @@ void loop()
     }
 
     if (paths[P_CIRCUIT]->is_occupied()) {
-        if ((millis()-paths[P_CIRCUIT]->_occupiedTime) >= PATH_TIMEOUT) {
+        if ((millis() - paths[P_CIRCUIT]->_occupiedTime) >= PATH_TIMEOUT) {
             log("Circuit timeout!");
             paths[P_CIRCUIT]->clear();
             circuitFree();
@@ -190,13 +190,14 @@ void loop()
         }
     }
 
-    if ((timeLeavingActive) && ((millis()/1000) >= nextRunTime) && (paths[P_CIRCUIT]->is_clear())) {
+    if ((timeLeavingActive) && ((millis() / 1000) >= nextRunTime)
+        && (paths[P_CIRCUIT]->is_clear())) {
         log("Time elapsed, going out with car...");
         initLeaving = false;
         randomCarGo();
     }
 
-    if (millis()%10000 < 2)
+    if (millis() % 10000 < 2)
         log("");
 
     delay(1);
@@ -432,8 +433,8 @@ void randomCarGo()
         lastDoubleStand++;
         if (lastDoubleStand == 6)
             lastDoubleStand = 0;
-    } while (standToPath((lastDoubleStand/2) + 1, 2)->is_clear());
-    int lastStand = (lastDoubleStand/2) + 1;
+    } while (standToPath((lastDoubleStand / 2) + 1, 2)->is_clear());
+    int lastStand = (lastDoubleStand / 2) + 1;
 
     log("Going out with car " + String(lastStand));
     standToSemaphore(lastStand, 2)->signal_green();
@@ -495,6 +496,6 @@ void timeLeavingLedUpdate()
 void setNextRunTime()
 {
     int sec = random(LEAVE_PERIOD_SEC_MIN, LEAVE_PERIOD_SEC_MAX);
-    nextRunTime = (millis()/1000) + sec;
+    nextRunTime = (millis() / 1000) + sec;
     log("Next run time in " + String(sec) + " sec: " + String(nextRunTime));
 }
