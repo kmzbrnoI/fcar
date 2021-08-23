@@ -18,7 +18,6 @@ struct VPath {
     Bounce *_button = nullptr;
     void (*onBtnChanged)(VPath *);
 
-    // unsigned long _reservationTime = 0;
     unsigned long _occupiedTime = 0;
 
     VPath(int id, const String &name, VPathStatus state, int pinLed = 0, int pinBtn = 0);

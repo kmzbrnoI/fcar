@@ -75,15 +75,16 @@ constexpr int TIME_LEAVING_LED = 45;
 constexpr int TIME_LEAVING_BUTTON = 36;
 constexpr int LEAVE_BUTTON = 28;
 
-constexpr unsigned long LEAVE_PERIOD_SEC_MIN = 15;
-constexpr unsigned long LEAVE_PERIOD_SEC_MAX = 30;
+constexpr unsigned long LEAVE_PERIOD_SEC_MIN = 60;
+constexpr unsigned long LEAVE_PERIOD_SEC_MAX = 100;
 
 Bounce *runButton;
 Bounce *timeLeavingButton;
 int carLeftStand = -1;
 unsigned long carLeftHallTimeout;
-unsigned long nextRunTime = 30000;
+unsigned long nextRunTime = 30;
 bool timeLeavingActive = true;
+bool initLeaving = true;
 
 /* -------------------------------------------------------------------------- */
 
@@ -129,6 +130,7 @@ void setup()
 
     Serial.begin(9600);
     log("Initialized Faller Depo!");
+    initLeaving = true;
     randomCarGo();
 }
 
@@ -154,14 +156,16 @@ void loop()
         timeLeavingLedUpdate();
     }
 
-    if (!paths[P_CIRCUIT]->is_occupied()) {
-        if (millis() - paths[P_CIRCUIT]->_occupiedTime > PATH_TIMEOUT) {
+    if (paths[P_CIRCUIT]->is_occupied()) {
+        if ((millis()-paths[P_CIRCUIT]->_occupiedTime) >= PATH_TIMEOUT) {
+            log("Circuit timeout!");
             paths[P_CIRCUIT]->clear();
             circuitFree();
         }
     }
     runButton->update();
     if ((runButton->fell()) && (canCarGoOut())) {
+        initLeaving = false;
         randomCarGo();
     }
 
@@ -181,12 +185,19 @@ void loop()
         moveCarToPos2(carLeftStand);
         carLeftStand = -1;
         circuitFree();
+        if ((paths[P_CIRCUIT]->is_clear()) && (!initLeaving)) {
+            randomCarGo();
+        }
     }
 
-    if ((millis() >= nextRunTime) && (paths[P_CIRCUIT]->is_clear())) {
+    if ((timeLeavingActive) && ((millis()/1000) >= nextRunTime) && (paths[P_CIRCUIT]->is_clear())) {
         log("Time elapsed, going out with car...");
+        initLeaving = false;
         randomCarGo();
     }
+
+    if (millis()%10000 < 2)
+        log("");
 
     delay(1);
 }
@@ -301,6 +312,7 @@ void incomingCarGo(int stand)
     // assert stand > 0
     log("Incoming car going to " + String(stand));
     paths[P_CIRCUIT]->occupy();
+    paths[P_ENTRANCE]->clear();
     semaphores[SVJ]->signal_green();
 
     switch (stand) {
@@ -433,7 +445,7 @@ bool canCarGoOut() { return (paths[P_CIRCUIT]->is_clear()) && (carLeftStand == -
 
 void moveCarsToPos2()
 {
-    for (size_t stand = 1; stand < 3; stand++) {
+    for (size_t stand = 1; stand <= 3; stand++) {
         moveCarToPos2(stand);
     }
 }
@@ -483,6 +495,6 @@ void timeLeavingLedUpdate()
 void setNextRunTime()
 {
     int sec = random(LEAVE_PERIOD_SEC_MIN, LEAVE_PERIOD_SEC_MAX);
-    nextRunTime = millis() + (sec*1000);
-    log("Next run time in " + String(sec) + " sec");
+    nextRunTime = (millis()/1000) + sec;
+    log("Next run time in " + String(sec) + " sec: " + String(nextRunTime));
 }
