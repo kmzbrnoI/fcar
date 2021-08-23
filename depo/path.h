@@ -6,7 +6,7 @@
 
 enum class VPathStatus { clear = 0, occupied = 1, unknown = 2 };
 
-const int PATH_TIMEOUT = 60000;
+const int PATH_TIMEOUT = 30000;
 const int BTN_DEBOUNCE_DELAY_MS = 5;
 
 struct VPath {
