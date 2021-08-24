@@ -11,11 +11,6 @@ Semaphore *semaphores[SEMAPHORE_COUNT];
 Junction *junctions[JUNCTION_COUNT];
 VPath *paths[PATHS_COUNT];
 
-struct IODef {
-    String name;
-    int pin;
-};
-
 struct ServoDef {
     String name;
     int pin;
