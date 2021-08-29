@@ -61,6 +61,7 @@ size_t noFreePositions();
 void circuitFree();
 void timeLeavingLedUpdate();
 void setNextRunTime();
+bool crossingFree();
 
 /* -------------------------------------------------------------------------- */
 // Variables
@@ -69,6 +70,7 @@ constexpr unsigned long CAR_LEAVE_HALL_TIMEOUT = 3000;
 constexpr int TIME_LEAVING_LED = 45;
 constexpr int TIME_LEAVING_BUTTON = 36;
 constexpr int LEAVE_BUTTON = 28;
+constexpr int CROSSING_PIN = 52;
 
 constexpr unsigned long LEAVE_PERIOD_SEC_MIN = 60;
 constexpr unsigned long LEAVE_PERIOD_SEC_MAX = 100;
@@ -92,6 +94,7 @@ void setup()
     pinMode(TIME_LEAVING_BUTTON, INPUT_PULLUP);
     timeLeavingButton = new Bounce(TIME_LEAVING_BUTTON, 5);
     pinMode(TIME_LEAVING_LED, OUTPUT);
+    pinMode(CROSSING_PIN, INPUT_PULLUP);
 
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name, probe_defs[i].delay);
@@ -158,6 +161,7 @@ void loop()
             circuitFree();
         }
     }
+
     runButton->update();
     if ((runButton->fell()) && (canCarGoOut())) {
         initLeaving = false;
@@ -180,13 +184,22 @@ void loop()
         moveCarToPos2(carLeftStand);
         carLeftStand = -1;
         circuitFree();
-        if ((paths[P_CIRCUIT]->is_clear()) && (!initLeaving)) {
+        if ((paths[P_CIRCUIT]->is_clear()) && (!initLeaving) && (crossingFree())) {
             randomCarGo();
         }
     }
 
-    if ((timeLeavingActive) && ((millis() / 1000) >= nextRunTime)
-        && (paths[P_CIRCUIT]->is_clear())) {
+    // Call circuitFree event caused by crossing got free
+    static bool crossingFreeOld = true;
+    if ((!crossingFreeOld) && (crossingFree())) {
+        if (paths[P_CIRCUIT]->is_clear()) {
+            circuitFree();
+        }
+    }
+    crossingFreeOld = crossingFree();
+
+    if ((timeLeavingActive) && ((millis()/1000) >= nextRunTime) && (paths[P_CIRCUIT]->is_clear())
+            && (crossingFree())) {
         log("Time elapsed, going out with car...");
         initLeaving = false;
         randomCarGo();
@@ -416,6 +429,8 @@ void randomCarGo()
 {
     setNextRunTime();
 
+    if (!crossingFree())
+        return;
     if (!paths[P_CIRCUIT]->is_clear())
         return;
     if ((paths[P_STAND12]->is_clear()) && (paths[P_STAND22]->is_clear())
@@ -474,7 +489,7 @@ size_t noFreePositions()
 void circuitFree()
 {
     incomingCarCheck();
-    if ((paths[P_CIRCUIT]->is_clear()) && (noFreePositions() < 2)) {
+    if ((paths[P_CIRCUIT]->is_clear()) && (noFreePositions() < 2) && (crossingFree())) {
         randomCarGo();
     }
 }
@@ -493,4 +508,9 @@ void setNextRunTime()
     int sec = random(LEAVE_PERIOD_SEC_MIN, LEAVE_PERIOD_SEC_MAX);
     nextRunTime = (millis() / 1000) + sec;
     log("Next run time in " + String(sec) + " sec: " + String(nextRunTime));
+}
+
+bool crossingFree()
+{
+    return digitalRead(CROSSING_PIN) == HIGH;
 }
