@@ -70,7 +70,9 @@ constexpr unsigned long CAR_LEAVE_HALL_TIMEOUT = 3000;
 constexpr int TIME_LEAVING_LED = 45;
 constexpr int TIME_LEAVING_BUTTON = 36;
 constexpr int LEAVE_BUTTON = 28;
-constexpr int CROSSING_PIN = 52;
+constexpr int CROSSING_PIN = 53;
+constexpr int CROSSING_INDICATION_PIN = 50;
+constexpr int CIRCUIT_INDICATION_PIN = 49;
 
 constexpr unsigned long LEAVE_PERIOD_SEC_MIN = 60;
 constexpr unsigned long LEAVE_PERIOD_SEC_MAX = 100;
@@ -95,6 +97,8 @@ void setup()
     timeLeavingButton = new Bounce(TIME_LEAVING_BUTTON, 5);
     pinMode(TIME_LEAVING_LED, OUTPUT);
     pinMode(CROSSING_PIN, INPUT_PULLUP);
+    pinMode(CROSSING_INDICATION_PIN, OUTPUT);
+    pinMode(CIRCUIT_INDICATION_PIN, OUTPUT);
 
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i] = new HallProbe(i, probe_defs[i].pin, probe_defs[i].name, probe_defs[i].delay);
@@ -205,7 +209,10 @@ void loop()
         randomCarGo();
     }
 
-    if (millis() % 10000 < 2)
+    digitalWrite(CROSSING_INDICATION_PIN, digitalRead(CROSSING_PIN) == LOW);
+    digitalWrite(CIRCUIT_INDICATION_PIN, !paths[P_CIRCUIT]->is_clear());
+
+    if (millis()%10000 < 2)
         log("");
 
     delay(1);
