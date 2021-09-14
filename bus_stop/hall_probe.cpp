@@ -1,31 +1,31 @@
 #include "hall_probe.h"
+#include "log.h"
 
-HallProbe::HallProbe(int pin)
-    : _pin(pin)
+HallProbe::HallProbe(int id, int pin, const String &name, int changeDelayMs)
+    : id(id)
+    , name(name)
+    , _pin(pin, DEBOUNCE_DELAY_MS)
+    , changeDelayMs(changeDelayMs)
 {
-    _last_positive_time = 0;
-
-    pinMode(_pin, INPUT_PULLUP);
+    pinMode(pin, INPUT_PULLUP);
 }
 
-void HallProbe::updateState()
+void HallProbe::update()
 {
-    _reading = digitalRead(_pin);
+    _pin.update();
 
-    if (_reading != _lastState) {
-        _lastDebounceTime = millis();
-    }
+    if (_pin.fell() && _changeTime == 0)
+        _changeTime = millis() + changeDelayMs;
 
-    if ((millis() - _lastDebounceTime) > DEBOUNCE_DELAY) {
-        if (_reading != _state) {
-            _state = _reading;
-            if (_state == LOW) {
-                _last_positive_time = millis();
-            }
+    if ((!_ready) && (millis() >= _soonestEvent))
+        _ready = true;
+
+    if ((_changeTime > 0) && (millis() >= _changeTime)) {
+        _changeTime = 0;
+        if ((this->onOccupied != nullptr) && (_ready)) {
+            _ready = false;
+            _soonestEvent = millis() + MIN_EVENT_DELAY;
+            onOccupied(this);
         }
     }
-
-    _lastState = _reading;
 }
-
-unsigned long HallProbe::getLastPositive() { return _last_positive_time; }
