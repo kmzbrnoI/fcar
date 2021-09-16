@@ -6,9 +6,6 @@
 
 enum class VPathStatus { clear = 0, occupied = 1 };
 
-const int PATH_TIMEOUT = 30000;
-const int BTN_DEBOUNCE_DELAY_MS = 5;
-
 struct VPath {
     int id;
     const String name;
@@ -25,6 +22,9 @@ struct VPath {
     void clear();
     void setState(VPathStatus);
     VPathStatus state() const;
+    void update();
+
+    void (*onOccupied)(VPath *) = nullptr;
 
     void dump() const;
 };

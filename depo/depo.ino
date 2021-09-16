@@ -202,8 +202,8 @@ void loop()
     }
     crossingFreeOld = crossingFree();
 
-    if ((timeLeavingActive) && ((millis()/1000) >= nextRunTime) && (paths[P_CIRCUIT]->is_clear())
-            && (crossingFree())) {
+    if ((timeLeavingActive) && ((millis() / 1000) >= nextRunTime) && (paths[P_CIRCUIT]->is_clear())
+        && (crossingFree())) {
         log("Time elapsed, going out with car...");
         initLeaving = false;
         randomCarGo();
@@ -212,7 +212,7 @@ void loop()
     digitalWrite(CROSSING_INDICATION_PIN, digitalRead(CROSSING_PIN) == LOW);
     digitalWrite(CIRCUIT_INDICATION_PIN, !paths[P_CIRCUIT]->is_clear());
 
-    if (millis()%10000 < 2)
+    if (millis() % 10000 < 2)
         log("");
 
     delay(1);
@@ -517,7 +517,4 @@ void setNextRunTime()
     log("Next run time in " + String(sec) + " sec: " + String(nextRunTime));
 }
 
-bool crossingFree()
-{
-    return digitalRead(CROSSING_PIN) == HIGH;
-}
+bool crossingFree() { return digitalRead(CROSSING_PIN) == HIGH; }

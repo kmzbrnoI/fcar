@@ -31,4 +31,11 @@ void VPath::occupy()
 
 void VPath::clear() { setState(VPathStatus::clear); }
 
+void VPath::update()
+{
+    if (_state == VPathStatus::occupied) {
+        onOccupied(this);
+    }
+}
+
 void VPath::dump() const { log("Path " + name + ": " + String(int(_state))); }

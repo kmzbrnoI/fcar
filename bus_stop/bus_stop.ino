@@ -13,9 +13,11 @@ Junction *junctions[JUNCTION_COUNT];
 VPath *paths[PATHS_COUNT];
 
 /* Time constants describing the situation */
-const int SWITCH_PASSAGE_TIME = 3000; // projeti vyhybkou
-const int TOTAL_PASSAGE_TIME = 12000; // projeti celym usekem zastavky
+const int SWITCH_PASSAGE_TIME = 3000; // projeti vyhybkou (cas, po kery je vyhybka blokovana)
+const int TOTAL_PASSAGE_TIME = 12000; // po tomto case odobsadi smer rovne (prujezd rovnym usekem)
+const int BAY_TIME = 20000; // cas cekani v zastavce
 const int CAR_INTERVAL = 30000; // auticka distribujeme v tomto intervalu
+const int PATH_TIMEOUT = 100000; // timeout useku
 
 unsigned long last_car_A;
 unsigned long last_car_B;
@@ -56,6 +58,7 @@ ServoDef junction_defs[JUNCTION_COUNT] = {
 void hallProbeOnOccupied(HallProbe *);
 void manage_bus_stop(Junction *junction, Semaphore *semaphore, VPath *bay, VPath *direct,
                      unsigned long last_car, bool is_bus);
+void vPathOnOccupied(VPath *path);
 
 void setup()
 {
@@ -81,6 +84,10 @@ void setup()
     paths[P_BAY_A] = new VPath(P_BAY_A, "bay_a", VPathStatus::clear);
     paths[P_BAY_B] = new VPath(P_BAY_B, "bay_b", VPathStatus::clear);
 
+    for (int i = 0; i < PATHS_COUNT; i++) {
+        paths[i]->onOccupied = vPathOnOccupied;
+    }
+
     last_car_A = 0;
     last_car_B = 0;
 
@@ -95,6 +102,10 @@ void loop()
 {
     for (int i = 0; i < PROBE_COUNT; i++) {
         probes[i]->update();
+    }
+
+    for (int i = 0; i < PATHS_COUNT; i++) {
+        paths[i]->update();
     }
 }
 
@@ -148,4 +159,39 @@ void manage_bus_stop(Junction *junction, Semaphore *semaphore, VPath *bay, VPath
     }
 
     is_bus = false;
+}
+
+void vPathOnOccupied(VPath *path)
+{
+
+    switch (path->id) {
+    case P_DIRECT_A:
+        if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
+            paths[P_DIRECT_A]->clear();
+        }
+        break;
+    case P_BAY_A:
+        if (paths[P_DIRECT_A]->is_clear() && ((millis() - path->_occupiedTime) >= BAY_TIME)
+            && (CAR_INTERVAL < (millis() - last_car_A))) {
+            semaphores[SEMA]->signal_green();
+            paths[P_BAY_A]->clear();
+            last_car_A = millis();
+        }
+
+        break;
+    case P_DIRECT_B:
+        if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
+            paths[P_DIRECT_B]->clear();
+        }
+        break;
+    case P_BAY_B:
+        if (paths[P_DIRECT_B]->is_clear() && ((millis() - path->_occupiedTime) >= BAY_TIME)
+            && (CAR_INTERVAL < (millis() - last_car_B))) {
+            semaphores[SEMB]->signal_green();
+            paths[P_BAY_B]->clear();
+            last_car_B = millis();
+        }
+
+        break;
+    }
 }
