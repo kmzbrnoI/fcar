@@ -13,8 +13,7 @@ Junction *junctions[JUNCTION_COUNT];
 VPath *paths[PATHS_COUNT];
 
 /* Time constants describing the situation */
-const unsigned long SWITCH_PASSAGE_TIME
-    = 3000; // projeti vyhybkou (cas, po kery je vyhybka blokovana)
+// const unsigned long SWITCH_PASSAGE_TIME = 3000; // projeti vyhybkou NEPOUZITO
 const unsigned long TOTAL_PASSAGE_TIME
     = 12000; // po tomto case odobsadi smer rovne (prujezd rovnym usekem)
 const unsigned long BAY_TIME = 20000; // cas cekani v zastavce
