@@ -13,11 +13,13 @@ Junction *junctions[JUNCTION_COUNT];
 VPath *paths[PATHS_COUNT];
 
 /* Time constants describing the situation */
-const int SWITCH_PASSAGE_TIME = 3000; // projeti vyhybkou (cas, po kery je vyhybka blokovana)
-const int TOTAL_PASSAGE_TIME = 12000; // po tomto case odobsadi smer rovne (prujezd rovnym usekem)
-const int BAY_TIME = 20000; // cas cekani v zastavce
-const int CAR_INTERVAL = 30000; // auticka distribujeme v tomto intervalu
-const int PATH_TIMEOUT = 100000; // timeout useku
+const unsigned long SWITCH_PASSAGE_TIME
+    = 3000; // projeti vyhybkou (cas, po kery je vyhybka blokovana)
+const unsigned long TOTAL_PASSAGE_TIME
+    = 12000; // po tomto case odobsadi smer rovne (prujezd rovnym usekem)
+const unsigned long BAY_TIME = 20000; // cas cekani v zastavce
+const unsigned long CAR_INTERVAL = 30000; // auticka distribujeme v tomto intervalu
+const unsigned long PATH_TIMEOUT = 100000; // timeout useku
 
 unsigned long last_car_A;
 unsigned long last_car_B;
@@ -163,10 +165,11 @@ void manage_bus_stop(Junction *junction, Semaphore *semaphore, VPath *bay, VPath
 
 void vPathOnOccupied(VPath *path)
 {
-
     switch (path->id) {
     case P_DIRECT_A:
         if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
+            paths[P_DIRECT_A]->clear();
+        } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
             paths[P_DIRECT_A]->clear();
         }
         break;
@@ -176,11 +179,17 @@ void vPathOnOccupied(VPath *path)
             semaphores[SEMA]->signal_green();
             paths[P_BAY_A]->clear();
             last_car_A = millis();
+        } else if ((PATH_TIMEOUT <= (millis() - path->_occupiedTime))
+                   && paths[P_DIRECT_A]->is_clear()) {
+            semaphores[SEMA]->signal_green();
+            paths[P_BAY_A]->clear();
+            last_car_A = millis();
         }
-
         break;
     case P_DIRECT_B:
         if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
+            paths[P_DIRECT_B]->clear();
+        } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
             paths[P_DIRECT_B]->clear();
         }
         break;
@@ -190,8 +199,12 @@ void vPathOnOccupied(VPath *path)
             semaphores[SEMB]->signal_green();
             paths[P_BAY_B]->clear();
             last_car_B = millis();
+        } else if ((PATH_TIMEOUT <= (millis() - path->_occupiedTime))
+                   && paths[P_DIRECT_B]->is_clear()) {
+            semaphores[SEMB]->signal_green();
+            paths[P_BAY_B]->clear();
+            last_car_B = millis();
         }
-
         break;
     }
 }
