@@ -9,6 +9,6 @@ clean:
 	rm -r build
 
 flash:
-	arduino-cli upload --fqbn arduino:avr:nano -v bus_stop.ino -p /dev/ttyACM0
+	arduino-cli upload --fqbn arduino:avr:nano -v bus_stop.ino -p /dev/ttyUSB0
 
 .PHONY: all clean flash

@@ -17,8 +17,8 @@ VPath *paths[PATHS_COUNT];
 const unsigned long TOTAL_PASSAGE_TIME
     = 12000; // po tomto case odobsadi smer rovne (prujezd rovnym usekem)
 const unsigned long BAY_TIME = 20000; // cas cekani v zastavce
-const unsigned long CAR_INTERVAL = 30000; // auticka distribujeme v tomto intervalu
-const unsigned long PATH_TIMEOUT = 100000; // timeout useku
+const unsigned long CAR_INTERVAL = 50000; // auticka distribujeme v tomto intervalu
+const unsigned long PATH_TIMEOUT = 70000; // timeout useku
 
 unsigned long last_car_A;
 unsigned long last_car_B;
@@ -53,7 +53,7 @@ ServoDef stop_defs[SEMAPHORE_COUNT] = {
 
 ServoDef junction_defs[JUNCTION_COUNT] = {
     { "JUNCTA", 9, 55, 20 },
-    { "JUNCTB", 6, 45, 5 },
+    { "JUNCTB", 6, 95, 45 },
 };
 
 void hallProbeOnOccupied(HallProbe *);
@@ -168,8 +168,10 @@ void vPathOnOccupied(VPath *path)
     case P_DIRECT_A:
         if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
             paths[P_DIRECT_A]->clear();
+            log("A DIRECT free\n");
         } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
             paths[P_DIRECT_A]->clear();
+            log("A DIRECT timeout\n");
         }
         break;
     case P_BAY_A:
@@ -178,18 +180,22 @@ void vPathOnOccupied(VPath *path)
             semaphores[SEMA]->signal_green();
             paths[P_BAY_A]->clear();
             last_car_A = millis();
+            log("Odjezd A vcas\n");
         } else if ((PATH_TIMEOUT <= (millis() - path->_occupiedTime))
                    && paths[P_DIRECT_A]->is_clear()) {
             semaphores[SEMA]->signal_green();
             paths[P_BAY_A]->clear();
             last_car_A = millis();
+            log("A timeout\n");
         }
         break;
     case P_DIRECT_B:
         if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
             paths[P_DIRECT_B]->clear();
+            log("B DIRECT free\n");
         } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
             paths[P_DIRECT_B]->clear();
+            log("B DIRECT timeout\n");
         }
         break;
     case P_BAY_B:
@@ -198,11 +204,13 @@ void vPathOnOccupied(VPath *path)
             semaphores[SEMB]->signal_green();
             paths[P_BAY_B]->clear();
             last_car_B = millis();
+            log("Odjezd B vcas\n");
         } else if ((PATH_TIMEOUT <= (millis() - path->_occupiedTime))
                    && paths[P_DIRECT_B]->is_clear()) {
             semaphores[SEMB]->signal_green();
             paths[P_BAY_B]->clear();
             last_car_B = millis();
+            log("B timeout\n");
         }
         break;
     }
