@@ -167,6 +167,9 @@ void vPathOnOccupied(VPath *path)
     switch (path->id) {
     case P_DIRECT_A:
         if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
+            if (paths[P_BAY_A]->is_occupied()) {
+                paths[P_BAY_A]->occupy();
+            }
             paths[P_DIRECT_A]->clear();
             log("A DIRECT free\n");
         } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
@@ -191,6 +194,9 @@ void vPathOnOccupied(VPath *path)
         break;
     case P_DIRECT_B:
         if ((millis() - path->_occupiedTime) >= TOTAL_PASSAGE_TIME) {
+            if (paths[P_BAY_B]->is_occupied()) {
+                paths[P_BAY_B]->occupy();
+            }
             paths[P_DIRECT_B]->clear();
             log("B DIRECT free\n");
         } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
