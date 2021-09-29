@@ -170,15 +170,17 @@ void vPathOnOccupied(VPath *path)
             if (paths[P_BAY_A]->is_occupied()) {
                 paths[P_BAY_A]->occupy();
             }
+            last_car_A = millis();
             paths[P_DIRECT_A]->clear();
             log("A DIRECT free\n");
         } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
+            last_car_A = millis();
             paths[P_DIRECT_A]->clear();
             log("A DIRECT timeout\n");
         }
         break;
     case P_BAY_A:
-        if (paths[P_DIRECT_A]->is_clear() && ((millis() - path->_occupiedTime) >= BAY_TIME)
+        if (paths[P_DIRECT_A]->is_clear() && ((millis() - path->_occupiedTime) >= BAY_TIME)last_car_B = millis();
             && (CAR_INTERVAL < (millis() - last_car_A))) {
             semaphores[SEMA]->signal_green();
             paths[P_BAY_A]->clear();
@@ -197,9 +199,11 @@ void vPathOnOccupied(VPath *path)
             if (paths[P_BAY_B]->is_occupied()) {
                 paths[P_BAY_B]->occupy();
             }
+            last_car_B = millis();
             paths[P_DIRECT_B]->clear();
             log("B DIRECT free\n");
         } else if (PATH_TIMEOUT <= (millis() - path->_occupiedTime)) {
+            last_car_B = millis();
             paths[P_DIRECT_B]->clear();
             log("B DIRECT timeout\n");
         }
