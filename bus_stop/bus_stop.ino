@@ -180,7 +180,7 @@ void vPathOnOccupied(VPath *path)
         }
         break;
     case P_BAY_A:
-        if (paths[P_DIRECT_A]->is_clear() && ((millis() - path->_occupiedTime) >= BAY_TIME)last_car_B = millis();
+        if (paths[P_DIRECT_A]->is_clear() && ((millis() - path->_occupiedTime) >= BAY_TIME)
             && (CAR_INTERVAL < (millis() - last_car_A))) {
             semaphores[SEMA]->signal_green();
             paths[P_BAY_A]->clear();
