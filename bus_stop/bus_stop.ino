@@ -48,7 +48,7 @@ HPDef probe_defs[PROBE_COUNT] = {
 
 ServoDef stop_defs[SEMAPHORE_COUNT] = {
     { "SEMA", 11, 0, 70 },
-    { "SEMB", 10, 0, 80 },
+    { "SEMB", 10, 90, 160 },
 };
 
 ServoDef junction_defs[JUNCTION_COUNT] = {
