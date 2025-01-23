@@ -33,3 +33,5 @@
 
 # Arduino user directory
 arduino
+
+__pycache__
